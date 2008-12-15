@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 require 'moonshine'
+require 'moonshine/cli'
+require 'moonshine/application'
+
 begin
 
   options = {}

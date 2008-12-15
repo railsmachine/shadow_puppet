@@ -11,12 +11,19 @@ Gem::Specification.new do |s|
   s.executables = ["moonshine"]
   s.files = [
     "bin/moonshine",
+    "lib/facts/moonshine.rb",
     "lib/moonshine.rb",
-    "lib/moonshine/cli.rb"
+    "lib/moonshine.pp",
+    "lib/moonshine/cli.rb",
+    "lib/moonshine/application.rb"
   ]
   s.has_rdoc = false
   s.homepage = %q{http://railsmachine.com}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.2.0}
   s.summary = %q{Moonshine deployment agent}
+
+  s.add_dependency(%q<puppet>, [">= 0.24.6"])
+  s.add_dependency(%q<facter>, [">= 1.5.2"])
+  s.add_dependency(%q<highline>, [">= 1.5.0"])
 end

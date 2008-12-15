@@ -9,8 +9,7 @@ module Moonshine
     CONFIG_FILE = "/etc/moonshine.conf"
 
     DEFAULT_OPTIONS = {
-      :applications => {},
-      :daemonize  => true,
+      :daemonize  => false,
       :interval   => 30,
       :log        => '/var/log/moonshine.log',
       :log_level  => 1,
@@ -18,7 +17,10 @@ module Moonshine
     }
 
     def initialize(options)
+      setup
       configure(options)
+      init_logger
+      load_applications
     end
 
     def configure(options)
@@ -39,8 +41,36 @@ module Moonshine
       @options
     end
 
+    def configure_first_application
+      require 'highline'
+      highline = HighLine.new
+      @logger.info "No application found, configuring one"
+      name = highline.ask("What's the name of the application you'd like to add?")
+      name = name.gsub(/\s*/,'')
+      uri = highline.ask("Where is the application's git repo?")
+      branch = highline.ask("Which branch of your application would you like to deploy?  ") { |q| q.default = "release" }
+      options = { :uri => uri }
+      f = File.new("/etc/moonshine/#{name}.conf", "w")
+      f.write(YAML.dump(options))
+      f.close
+    end
+
+    def load_applications
+      @applications = []
+      configure_first_application if Dir.glob("/etc/moonshine/*.conf") == []
+      Dir.glob("/etc/moonshine/*.conf").each do |application|
+        begin
+          name = File.basename(application, ".conf")
+          application = Moonshine::Application.new(name, YAML.load_file(application))
+          @applications << application
+          @logger.info "Loaded #{name}"
+        rescue
+          @logger.error "Error loading #{name}"
+        end
+      end
+    end
+
     def run
-      init_logger
       if @options[:daemonize]
         run_daemonized
       else
@@ -48,14 +78,40 @@ module Moonshine
       end
     end
 
-protected
+ protected
+
+    def setup
+      unless File.exist?("/var/lib/moonshine")
+        unless File.exist?("/var/lib")
+          Dir.mkdir("/var/lib")
+        end
+        Dir.mkdir("/var/lib/moonshine")
+      end
+      unless File.exist?("/var/cache/moonshine")
+        unless File.exist?("/var/cache")
+          Dir.mkdir("/var/cache")
+        end
+        Dir.mkdir("/var/cache/moonshine")
+      end
+      unless File.exist?("/etc/moonshine")
+        Dir.mkdir("/etc/moonshine")
+      end
+    end
 
     def update
       @logger.info "Checking for manifest updates..."
+      @applications.each do |app|
+        @logger.info "Checking #{app.name}"
+        app.update
+      end
     end
 
     def apply
       @logger.info "Applying manifests locally..."
+      @applications.each do |app|
+        @logger.info "Applying #{app.name}"
+        app.apply
+      end
     end
 
     def run_daemonized
