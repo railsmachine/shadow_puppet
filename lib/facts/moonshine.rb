@@ -1,4 +1,5 @@
 require 'moonshine'
+require 'facter'
 require 'moonshine/application'
 
 def applications
@@ -12,22 +13,10 @@ end
 
 Facter.add("moonshine") do
   setcode do
-    "true"
-  end
-end
-
-Facter.add("moonshine_applications") do
-  setcode do
-    applications.join(',')
-  end
-end
-
-applications.each do |app|
-  name = "#{app}_config"
-  config = YAML.load_file("/etc/moonshine/#{app}.conf")
-  Facter.add(name) do
-    setcode do
-      config
+    hash = {}
+    applications.each do |app|
+      hash[app.to_sym] = YAML.load_file("/etc/moonshine/#{app}.conf")
     end
+    hash
   end
 end

@@ -26,10 +26,9 @@ module Moonshine
     end
 
     def apply
-      factpath = File.expand_path(File.join(File.dirname(__FILE__), '..', 'facts'))
       if @options[:strategy] == :internal
-        manifest = File.expand_path(File.join(File.dirname(__FILE__), '..', 'moonshine.pp'))
-        execute "puppet --factpath #{factpath} #{manifest}"
+        require 'moonshine/manifest'
+        Moonshine::Manifest::Rails.new(@name)
       else
         #other node definition strategies?
       end

@@ -13,8 +13,9 @@ Gem::Specification.new do |s|
     "bin/moonshine",
     "lib/facts/moonshine.rb",
     "lib/moonshine.rb",
-    "lib/moonshine.pp",
     "lib/moonshine/cli.rb",
+    "lib/moonshine/manifest.rb",
+    "lib/moonshine/manifest/rails.rb",
     "lib/moonshine/application.rb"
   ]
   s.has_rdoc = false
