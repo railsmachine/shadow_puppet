@@ -1,0 +1,123 @@
+require 'optparse'
+require 'yaml'
+require 'logger'
+
+module Moonshine
+
+  class CLI
+
+    CONFIG_FILE = "/etc/moonshine.conf"
+
+    DEFAULT_OPTIONS = {
+      :applications => {},
+      :daemonize  => true,
+      :interval   => 30,
+      :log        => '/var/log/moonshine.log',
+      :log_level  => 1,
+      :pid        => '/var/run/moonshine.pid'
+    }
+
+    def initialize(options)
+      configure(options)
+    end
+
+    def configure(options)
+      @options = {}
+      @options.merge!(DEFAULT_OPTIONS)
+
+      if File.exists?('/etc/moonshine.conf')
+        config_file_options = YAML.load_file('/etc/moonshine.conf')
+        if config_file_options
+          config_file_options = config_file_options.inject({}) do |o, (key, value)|
+            o[(key.to_sym rescue key) || key] = value
+            o
+          end
+          @options.merge!(config_file_options)
+        end
+      end
+      @options.merge!(options)
+      @options
+    end
+
+    def run
+      init_logger
+      if @options[:daemonize]
+        run_daemonized
+      else
+        run_once
+      end
+    end
+
+protected
+
+    def update
+      @logger.info "Checking for manifest updates..."
+    end
+
+    def apply
+      @logger.info "Applying manifests locally..."
+    end
+
+    def run_daemonized
+      # trap and ignore SIGHUP
+      Signal.trap('HUP') {}
+
+      pid = fork do
+        begin
+          # reset file descriptors
+          STDIN.reopen "/dev/null"
+          STDOUT.reopen(File.expand_path(@options[:log]), "a")
+          STDERR.reopen STDOUT
+          STDOUT.sync = true
+
+          loop do
+            run_once
+            sleep @options[:interval]
+            GC.start
+          end
+
+        rescue => e
+          puts e.message
+          puts e.backtrace.join("\n")
+          abort "There was a fatal system error while starting moonshine (see above)"
+        end
+      end
+
+      File.open(File.expand_path(@options[:pid]), 'w') { |f| f.write pid }
+
+      ::Process.detach pid
+
+      exit(0)
+    end
+
+    def run_once
+      begin
+        update
+        apply
+      rescue Exception => e
+        if e.instance_of?(SystemExit)
+          raise
+        else
+          @logger.error "\n======"
+          @logger.error "Exception!"
+          @logger.error e.inspect
+          @logger.debug "\n\n" + e.backtrace.join("\n")
+          @logger.error "======"
+          exit(1) unless @options[:daemonize]
+        end
+      end
+      nil
+    end
+
+    def init_logger
+      if @options[:daemonize]
+        @logger = Logger.new(@options[:log])
+      else
+        @logger = Logger.new(STDOUT)
+      end
+      @logger.level = @options[:log_level]
+    end
+
+  end
+
+end

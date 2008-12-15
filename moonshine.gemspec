@@ -11,7 +11,8 @@ Gem::Specification.new do |s|
   s.executables = ["moonshine"]
   s.files = [
     "bin/moonshine",
-    "lib/moonshine.rb"
+    "lib/moonshine.rb",
+    "lib/moonshine/cli.rb"
   ]
   s.has_rdoc = false
   s.homepage = %q{http://railsmachine.com}
