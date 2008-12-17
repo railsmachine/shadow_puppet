@@ -7,6 +7,8 @@ module Moonshine
       def initialize(application)
         manifest = Moonshine::Manifest.new(application)
 
+        file "/tmp/facts.yaml", :contents => YAML.dump(Facter.to_hash)
+
         manifest.role :webserver do
           %w(
             apache2-mpm-worker
