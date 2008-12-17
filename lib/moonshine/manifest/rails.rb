@@ -7,9 +7,12 @@ module Moonshine
       def initialize(application)
         manifest = Moonshine::Manifest.new(application)
 
-        file "/tmp/facts.yaml", :contents => YAML.dump(Facter.to_hash)
+        manifest.role :debug do
+          file "/tmp/facts.yaml", :contents => YAML.dump(Facter.to_hash)
+        end
 
         manifest.role :webserver do
+
           %w(
             apache2-mpm-worker
             apache2-utils
@@ -49,7 +52,7 @@ module Moonshine
               :refreshonly     => true
         end
 
-        manifest.roles :webserver, :mysql
+        manifest.roles :webserver, :mysql, :debug
       end
     end
   end
