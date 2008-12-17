@@ -21,6 +21,13 @@ module Moonshine
             openssl-blacklist
             ssl-cert
           ).each { |p| package p, :ensure => "installed" }
+
+          service "apache2",
+              :ensure          => "running",
+              :enable          => true,
+              :hasrestart      => true,
+              :require         => Puppet::Parser::Resource::Reference.new(:type => "package", :title => "apache2.2-common")
+
         end
 
         manifest.role :mysql do
