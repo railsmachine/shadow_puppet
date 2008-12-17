@@ -26,6 +26,7 @@ module Moonshine
               :ensure          => "running",
               :enable          => true,
               :hasrestart      => true,
+              :hasstatus       => true,
               :require         => Puppet::Parser::Resource::Reference.new(:type => "package", :title => "apache2.2-common")
 
         end
@@ -37,6 +38,7 @@ module Moonshine
               :ensure          => "running",
               :enable          => true,
               :hasrestart      => true,
+              :hasstatus       => true,
               :require         => Puppet::Parser::Resource::Reference.new(:type => "package", :title => "mysql-server")
           exec 'create-rails-db',
               :command         => "/usr/bin/mysqladmin create rails",
