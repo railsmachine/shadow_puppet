@@ -28,7 +28,8 @@ module Moonshine
     def apply
       if @options[:strategy] == :internal
         require 'moonshine/manifest'
-        Moonshine::Manifest::Rails.new(@name)
+        rails = Moonshine::Manifest::Rails.new(@name)
+        rails.run
       else
         #other node definition strategies?
       end

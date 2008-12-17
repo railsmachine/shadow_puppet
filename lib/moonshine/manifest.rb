@@ -14,6 +14,13 @@ module Moonshine
       @application = application
     end
 
+    def manifest
+      self
+    end
+
+    def run
+    end
+
     def define(&block)
       @block = block
       instance_eval(&@block)

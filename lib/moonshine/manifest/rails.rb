@@ -4,11 +4,9 @@ require 'moonshine/manifest'
 module Moonshine
   class Manifest
     class Rails
-      def initialize(application)
-        manifest = Moonshine::Manifest.new(application)
-
+      def run
         manifest.role :debug do
-          file "/tmp/facts.yaml", :content => YAML.dump(Facter.to_hash)
+          file "/tmp/facts.yaml", :content => YAML.dump(facts.to_hash)
         end
 
         manifest.role :webserver do
