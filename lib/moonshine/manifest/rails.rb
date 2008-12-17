@@ -4,7 +4,7 @@ require 'moonshine/manifest'
 class Moonshine::Manifest::Rails < Moonshine::Manifest
   def run
     manifest.role :debug do
-      file "/tmp/facts.yaml", :content => YAML.dump(facts.to_hash)
+      file "/tmp/facts.yaml", :content => YAML.dump(Facter.to_hash)
     end
 
     manifest.role :webserver do

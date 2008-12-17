@@ -5,12 +5,10 @@ module Moonshine
   class Manifest
     include Puppet::DSL
 
-    attr_reader :facts
     attr_reader :application
 
     def initialize(application)
       init
-      @facts = Facter.to_hash
       @application = application
     end
 
