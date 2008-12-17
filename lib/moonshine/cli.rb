@@ -49,7 +49,7 @@ module Moonshine
       name = name.gsub(/\s*/,'')
       uri = highline.ask("Where is the application's git repo?")
       branch = highline.ask("Which branch of your application would you like to deploy?  ") { |q| q.default = "release" }
-      options = { :uri => uri }
+      options = { :uri => uri, :branch => branch }
       f = File.new("/etc/moonshine/#{name}.conf", "w")
       f.write(YAML.dump(options))
       f.close
