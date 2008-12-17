@@ -8,7 +8,7 @@ module Moonshine
         manifest = Moonshine::Manifest.new(application)
 
         manifest.role :debug do
-          file "/tmp/facts.yaml", :contents => YAML.dump(Facter.to_hash)
+          file "/tmp/facts.yaml", :content => YAML.dump(Facter.to_hash)
         end
 
         manifest.role :webserver do
