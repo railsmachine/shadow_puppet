@@ -7,6 +7,17 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
       file "/tmp/facts.yaml", :content => YAML.dump(Facter.to_hash)
     end
 
+    manifest.role :utils do
+
+      %w(
+        man
+        curl
+        wget
+        vim
+      ).each { |p| package p, :ensure => "installed" }
+
+    end
+
     manifest.role :webserver do
 
       %w(
@@ -26,7 +37,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :enable          => true,
           :hasrestart      => true,
           :hasstatus       => true,
-          :require         => Puppet::Parser::Resource::Reference.new(:type => "package", :title => "apache2.2-common")
+          :require         => reference(:package, "apache2.2-common")
 
     end
 
@@ -38,11 +49,11 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :enable          => true,
           :hasrestart      => true,
           :hasstatus       => true,
-          :require         => Puppet::Parser::Resource::Reference.new(:type => "package", :title => "mysql-server")
+          :require         => reference(:package, "mysql-server")
       exec 'create-rails-db',
           :command         => "/usr/bin/mysqladmin create rails",
           :unless          => "/usr/bin/mysqlcheck -s rails",
-          :notify          => Puppet::Parser::Resource::Reference.new(:type => "exec", :title => "create-rails-user")
+          :notify          => reference(:exec, "create-rails-user")
       exec "create-rails-user",
           :command         => "/usr/bin/mysql -e 'grant all privileges on rails.* to rails@localhost identified by \"rails\"'",
           :refreshonly     => true

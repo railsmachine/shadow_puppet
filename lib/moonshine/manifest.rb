@@ -19,6 +19,10 @@ module Moonshine
     def run
     end
 
+    def reference(type, title)
+      Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
+    end
+
     def define(&block)
       @block = block
       instance_eval(&@block)
