@@ -1,6 +1,12 @@
 require 'puppet'
 require 'puppet/dsl'
 
+class Puppet::DSL::Aspect
+  def reference(type, title)
+    Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
+  end
+end
+
 module Moonshine
   class Manifest
     include Puppet::DSL
@@ -35,11 +41,6 @@ module Moonshine
 
   end
 
-  class Aspect < Puppet::DSL::Aspect
-    def reference(type, title)
-      Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
-    end
-  end
 end
 
 Dir.glob(File.join(File.dirname(__FILE__), '..', 'facts', '*.rb')).each do |fact|
