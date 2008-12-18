@@ -19,17 +19,13 @@ module Moonshine
     def run
     end
 
-    def reference(type, title)
-      Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
-    end
-
     def define(&block)
       @block = block
       instance_eval(&@block)
     end
 
     def role(name, options = {}, &block)
-      Puppet::DSL::Aspect.new(name, options, &block)
+      Aspect.new(name, options, &block)
     end
 
     def roles(*names)
@@ -37,6 +33,12 @@ module Moonshine
       apply
     end
 
+  end
+
+  class Aspect < Puppet::DSL::Aspect
+    def reference(type, title)
+      Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
+    end
   end
 end
 
