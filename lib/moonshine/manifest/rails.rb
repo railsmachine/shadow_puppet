@@ -26,7 +26,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :group => "rails"
 
       exec 'passwd-rails',
-        :command         => "usermod rails -p `mkpasswd PASSWORD`",
+        :command         => "/usr/sbin/usermod rails -p `mkpasswd PASSWORD`",
         :refreshonly     => true
 
     end
