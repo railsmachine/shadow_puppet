@@ -90,6 +90,12 @@ module Moonshine
         end
         Dir.mkdir("/var/lib/moonshine/applications")
       end
+      unless File.exist?("/srv/moonshine")
+        unless File.exist?("/srv")
+          Dir.mkdir("/srv")
+        end
+        Dir.mkdir("/srv/moonshine")
+      end
       unless File.exist?("/var/cache/moonshine")
         unless File.exist?("/var/cache")
           Dir.mkdir("/var/cache")
