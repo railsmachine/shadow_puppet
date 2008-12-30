@@ -29,7 +29,7 @@ module Moonshine
       if @options[:strategy] == :rails
         require 'moonshine/manifest'
         rails = Moonshine::Manifest::Rails.new(@name)
-        #parse the environment configuration of the app
+        #parse moonshine.rb from the app
 
         # config.packages
         # config.server "foo.railsmachina.com", :rails
@@ -45,7 +45,7 @@ module Moonshine
   protected
 
     def path
-      @path ||= "/var/lib/moonshine/#{name}"
+      @path ||= "/var/lib/moonshine/applicatons/#{name}"
     end
 
     def setup
