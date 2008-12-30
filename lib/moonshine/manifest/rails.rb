@@ -16,13 +16,18 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :uid => 1001,
         :gid => 1001,
         :home => "/srv/rails",
-        :shell => "/bin/sh",
-        :allowdupe => false
+        :shell => "/bin/bash",
+        :allowdupe => false,
+        :notify => reference(:exec, "passwd-rails")
 
       file "/srv/rails",
         :ensure => "directory",
         :owner => "rails",
         :group => "rails"
+
+      exec 'passwd-rails',
+        :command         => "echo -n 'PASSWORD' | passwd rails",
+        :refreshonly     => true
 
     end
 
@@ -53,6 +58,17 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         exec "restart-passenger",
             :command         => "touch #{app_root}/tmp/restart.txt",
+            :refreshonly     => true
+
+        #parse database.yml if one exists. if not, create one.
+
+        exec "create-moonshine-db-#{application}",
+            :command         => "/usr/bin/mysqladmin create #{application}",
+            :unless          => "/usr/bin/mysqlcheck -s #{application}",
+            :notify          => reference(:exec, "create-moonshine-user-#{application}")
+
+        exec "create-moonshine-user-#{application}",
+            :command         => "/usr/bin/mysql -e 'grant all privileges on #{application}.* to #{application}@localhost identified by \"password\"'",
             :refreshonly     => true
 
       end
@@ -106,13 +122,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :hasrestart      => true,
           :hasstatus       => true,
           :require         => reference(:package, "mysql-server")
-      exec 'create-rails-db',
-          :command         => "/usr/bin/mysqladmin create rails",
-          :unless          => "/usr/bin/mysqlcheck -s rails",
-          :notify          => reference(:exec, "create-rails-user")
-      exec "create-rails-user",
-          :command         => "/usr/bin/mysql -e 'grant all privileges on rails.* to rails@localhost identified by \"rails\"'",
-          :refreshonly     => true
     end
 
     manifest.roles :webserver, :mysql, :debug, :rails
