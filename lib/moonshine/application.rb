@@ -45,7 +45,7 @@ module Moonshine
   protected
 
     def path
-      @path ||= "/var/lib/moonshine/#{name}"
+      @path ||= "/srv/moonshine/#{name}"
     end
 
     def setup

@@ -81,11 +81,11 @@ module Moonshine
  protected
 
     def setup
-      unless File.exist?("/var/lib/moonshine")
-        unless File.exist?("/var/lib")
-          Dir.mkdir("/var/lib")
+      unless File.exist?("/srv/moonshine")
+        unless File.exist?("/srv")
+          Dir.mkdir("/srv")
         end
-        Dir.mkdir("/var/lib/moonshine")
+        Dir.mkdir("srv/moonshine")
       end
       unless File.exist?("/var/cache/moonshine")
         unless File.exist?("/var/cache")
