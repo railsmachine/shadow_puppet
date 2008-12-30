@@ -4,7 +4,7 @@ require 'moonshine/manifest'
 class Moonshine::Manifest::Rails < Moonshine::Manifest
   def run
 
-    manifest :rails do
+    manifest.role :rails do
 
       group "rails",
         :ensure => "present",
@@ -19,11 +19,10 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :shell => "/bin/sh",
         :allowdupe => false
 
-        file "/srv/rails",
-          :ensure => "directory",
-          :owner => "rails",
-          :group => "rails"
-
+      file "/srv/rails",
+        :ensure => "directory",
+        :owner => "rails",
+        :group => "rails"
 
     end
 
