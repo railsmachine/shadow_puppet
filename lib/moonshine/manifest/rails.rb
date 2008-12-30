@@ -26,7 +26,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :group => "rails"
 
       exec 'passwd-rails',
-        :command         => "echo -n 'PASSWORD' | passwd rails",
+        :command         => "/bin/echo -n 'PASSWORD' | passwd rails",
         :refreshonly     => true
 
     end
