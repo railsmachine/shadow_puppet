@@ -26,7 +26,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :group => "rails"
 
       exec 'passwd-rails',
-        :command         => "/usr/sbin/usermod rails -p `mkpasswd PASSWORD`",
+        :command         => "/usr/sbin/usermod -p `mkpasswd PASSWORD` rails",
         :refreshonly     => true
 
     end
@@ -125,6 +125,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :require         => reference(:package, "mysql-server")
     end
 
-    manifest.roles :webserver, :mysql, :debug, :rails
+    manifest.roles :webserver, :utils, :mysql, :debug, :rails
   end
 end
