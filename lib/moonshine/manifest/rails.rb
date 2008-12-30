@@ -36,7 +36,30 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
     manifest.role :moonshine do
 
       Facter.to_hash[:moonshine].each do |application, config|
-        app_root = "/srv/rails/#{application}"
+        app_root = "/srv/moonshine/#{application}"
+        repo_path = "/var/lib/moonshine/applications/#{applications}"
+
+        exec "fix-repo-perms",
+          :command => "/bin/chgrp -R rails #{repo_path}"
+
+        exec "clone-repo",
+          :command  => "/usr/bin/git clone #{repo_path} #{app_root}",
+          :creates  => app_root,
+          :require  => reference(:exec, "fix-repo-perms"),
+          :notify   => reference(:exec, "create-release-branch")
+
+        exec "deploy-if-changes",
+          :cwd      => app_root
+          :command  => "true"
+          :unless   => "/usr/bin/git checkout #{config[:branch]} && /usr/bin/git pull origin #{config[:branch]} 2> /dev/null | grep 'up-to-date' > /dev/null",
+          :require  => reference(:exec, "fix-repo-perms"),
+          :notify   => reference(:exec, "create-release-branch")
+
+        exec "create-release-branch",
+          :cwd      => app_root,
+          :command  => "/usr/bin/git checkout -b `date -u +%Y%m%d%H%M%N`"
+
+        #parse database.yml if one exists. if not, create one.
 
         exec "create-moonshine-db-#{application}",
             :command  => "/usr/bin/mysqladmin create #{application}",
