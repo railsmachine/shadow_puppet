@@ -3,6 +3,63 @@ require 'moonshine/manifest'
 
 class Moonshine::Manifest::Rails < Moonshine::Manifest
   def run
+
+    manifest :rails do
+
+      group "rails",
+        :ensure => "present",
+        :gid => 1001,
+        :allowdupe => false
+
+      user "rails",
+        :ensure => "present",
+        :uid => 1001,
+        :gid => 1001,
+        :home => "/srv/rails",
+        :shell => "/bin/sh",
+        :allowdupe => false
+
+        file "/srv/rails",
+          :ensure => "directory",
+          :owner => "rails",
+          :group => "rails"
+
+
+    end
+
+    manifest.role :moonshine do
+
+      Facter.to_hash[:moonshine].each do |application, config|
+        app_root = "/srv/rails/#{application}"
+
+        #ensure git repo is present
+
+        #ensure mysql database is present
+
+        #ensure apache config is present
+
+        #if specified branch has changed, create timestamped branch and pull in changes
+
+        #run rake moonshine
+
+          #run rake moonshine:pre
+
+            #rake gems:install
+
+            #rake db:migrate
+
+          #run rake moonshine:restart
+
+          #run rake moonshine:post
+
+        exec "restart-passenger",
+            :command         => "touch #{app_root}/tmp/restart.txt",
+            :refreshonly     => true
+
+      end
+
+    end
+
     manifest.role :debug do
       file "/tmp/facts.yaml", :content => YAML.dump(Facter.to_hash)
     end

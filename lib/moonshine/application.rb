@@ -6,7 +6,7 @@ module Moonshine
 
     DEFAULT_OPTIONS = {
       :branch         => "release",
-      :strategy       => :internal
+      :strategy       => :rails
     }
 
     def initialize(name = "", options = {})
@@ -26,9 +26,16 @@ module Moonshine
     end
 
     def apply
-      if @options[:strategy] == :internal
+      if @options[:strategy] == :rails
         require 'moonshine/manifest'
         rails = Moonshine::Manifest::Rails.new(@name)
+        #parse the environment configuration of the app
+
+        # config.packages
+        # config.server "foo.railsmachina.com", :rails
+        # config.server "foodb.railsmachina.com", :mysql
+
+        #update the stock puppet manifest with whatever's been generated from the config
         rails.run
       else
         #other node definition strategies?
@@ -46,7 +53,7 @@ module Moonshine
     end
 
     def execute(command)
-      puts `#{command}`.chomp
+      `#{command}`.chomp
     end
 
   end
