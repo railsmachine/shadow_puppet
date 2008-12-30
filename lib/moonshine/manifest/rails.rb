@@ -26,7 +26,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :group => "rails"
 
       exec 'passwd-rails',
-        :command         => "/bin/echo -n 'PASSWORD' | passwd rails",
+        :command         => "usermod rails -p `mkpasswd PASSWORD`",
         :refreshonly     => true
 
     end
@@ -86,6 +86,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         curl
         wget
         vim
+        whois
       ).each { |p| package p, :ensure => "installed" }
 
     end
