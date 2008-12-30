@@ -78,7 +78,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
     manifest.role :debug do
       file "/tmp/facts.yaml", :content => YAML.dump(Facter.to_hash)
-      exec "whoami", :command => "/usr/bin/whoami"
+      exec "whoami", :command => "/usr/bin/whoami > /tmp/whoami.txt"
     end
 
     manifest.role :utils do
