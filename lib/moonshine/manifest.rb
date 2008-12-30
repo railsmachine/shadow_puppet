@@ -1,13 +1,13 @@
 require 'puppet'
 require 'puppet/dsl'
 
-module Moonshine
-  class Aspect < Puppet::DSL::Aspect
-    def reference(type, title)
-      Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
-    end
+class Puppet::DSL::Aspect
+  def reference(type, title)
+    Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
   end
+end
 
+module Moonshine
   class Manifest
     include Puppet::DSL
 
@@ -31,7 +31,7 @@ module Moonshine
     end
 
     def role(name, options = {}, &block)
-      Moonshine::Aspect.new(name, options, &block)
+      Aspect.new(name, options, &block)
     end
 
     def roles(*names)
