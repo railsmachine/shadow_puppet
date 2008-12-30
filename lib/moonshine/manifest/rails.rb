@@ -37,9 +37,14 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
       Facter.to_hash[:moonshine].each do |application, config|
         app_root = "/srv/rails/#{application}"
 
-        #ensure git repo is present
+        exec "create-moonshine-db-#{application}",
+            :command  => "/usr/bin/mysqladmin create #{application}",
+            :unless   => "/usr/bin/mysqlcheck -s #{application}",
+            :notify   => reference(:exec, "create-moonshine-user-#{application}")
 
-        #ensure mysql database is present
+        exec "create-moonshine-user-#{application}",
+            :command      => "/usr/bin/mysql -e 'grant all privileges on #{application}.* to #{application}@localhost identified by \"password\"'",
+            :refreshonly  => true
 
         #ensure apache config is present
 
@@ -59,17 +64,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         exec "restart-passenger",
             :command         => "touch #{app_root}/tmp/restart.txt",
-            :refreshonly     => true
-
-        #parse database.yml if one exists. if not, create one.
-
-        exec "create-moonshine-db-#{application}",
-            :command         => "/usr/bin/mysqladmin create #{application}",
-            :unless          => "/usr/bin/mysqlcheck -s #{application}",
-            :notify          => reference(:exec, "create-moonshine-user-#{application}")
-
-        exec "create-moonshine-user-#{application}",
-            :command         => "/usr/bin/mysql -e 'grant all privileges on #{application}.* to #{application}@localhost identified by \"password\"'",
             :refreshonly     => true
 
       end
