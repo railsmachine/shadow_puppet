@@ -115,6 +115,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :refreshonly     => true
     end
 
-    manifest.roles :webserver, :mysql, :debug
+    manifest.roles :webserver, :mysql, :debug, :rails
   end
 end
