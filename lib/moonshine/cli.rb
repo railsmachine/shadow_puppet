@@ -96,6 +96,9 @@ module Moonshine
       unless File.exist?("/etc/moonshine")
         Dir.mkdir("/etc/moonshine")
       end
+      unless File.exist?("/var/puppet")
+        Dir.mkdir("/var/puppet")
+      end
     end
 
     def update
