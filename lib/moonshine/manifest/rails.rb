@@ -11,14 +11,14 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :allowdupe => false
 
       user "create-rails-user",
-        :name => "user"
+        :name => "rails",
         :ensure => "present",
         :notify => reference(:exec, "passwd-rails")
 
       user "rails",
         :home => "/srv/rails",
         :shell => "/bin/bash",
-        :groups => "admin"
+        :groups => "admin",
         :allowdupe => false
 
       file "/srv/rails",
@@ -54,8 +54,8 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :user     => "rails"
 
         exec "#{application}-deploy-if-changes",
-          :cwd      => app_root
-          :command  => "true"
+          :cwd      => app_root,
+          :command  => "true",
           :unless   => "/usr/bin/git checkout #{config[:branch]} && /usr/bin/git pull origin #{config[:branch]} 2> /dev/null | grep 'up-to-date' > /dev/null",
           :require  => reference(:exec, "fix-repo-perms"),
           :notify   => reference(:exec, "#{application}-create-release-branch"),
