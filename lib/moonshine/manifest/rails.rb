@@ -57,7 +57,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :cwd      => app_root,
           :command  => "/bin/true",
           :unless   => "/usr/bin/git checkout #{config[:branch]} && /usr/bin/git pull origin #{config[:branch]} 2> /dev/null | grep 'up-to-date' > /dev/null",
-          :require  => reference(:exec, "fix-repo-perms"),
+          :require  => reference(:exec, "#{application}-fix-repo-perms"),
           :notify   => reference(:exec, "#{application}-create-release-branch"),
           :user     => "rails"
 
