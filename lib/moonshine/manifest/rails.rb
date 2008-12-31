@@ -80,8 +80,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         #ensure apache config is present
 
-        #if specified branch has changed, create timestamped branch and pull in changes
-
         #run rake moonshine
 
           #run rake moonshine:pre
