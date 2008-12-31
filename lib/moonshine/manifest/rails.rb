@@ -31,6 +31,10 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :require         => reference(:package, "whois"),
         :refreshonly     => true
 
+      package "rubygems", :ensure => "installed"
+
+      package "rails", :ensure => "installed", :provider => "gem"
+
     end
 
     manifest.role :moonshine do
