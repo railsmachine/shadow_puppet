@@ -39,7 +39,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
     manifest.role :moonshine do
 
-      Facter.to_hash[:moonshine].each do |application, config|
+      Facter.to_hash["moonshine"].each do |application, config|
         app_root = "/srv/moonshine/#{application}"
         repo_path = "/var/lib/moonshine/applications/#{applications}"
 
