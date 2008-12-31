@@ -152,6 +152,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :require         => reference(:package, "mysql-server")
     end
 
-    manifest.roles :webserver, :utils, :mysql, :debug, :rails
+    manifest.roles :webserver, :utils, :mysql, :moonshine, :rails
   end
 end
