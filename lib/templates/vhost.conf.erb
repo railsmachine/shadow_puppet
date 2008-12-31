@@ -1,0 +1,10 @@
+<VirtualHost *:80>
+  ServerName <%= server_name %>
+  ServerAlias <%= server_aliases.join(' ') %>
+  DocumentRoot <%= app_root %>
+  RailsEnv production
+  <directory <%= app_root %>>
+    Order allow,deny
+    Allow from all
+  </directory>
+</VirtualHost>
