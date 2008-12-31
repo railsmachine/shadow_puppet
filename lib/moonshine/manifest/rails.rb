@@ -39,34 +39,35 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         app_root = "/srv/moonshine/#{application}"
         repo_path = "/var/lib/moonshine/applications/#{applications}"
 
-        exec "fix-repo-perms",
+        exec "#{application}-fix-repo-perms",
           :command => "/bin/chgrp -R rails #{repo_path}"
 
-        exec "clone-repo",
+        exec "#{application}-clone-repo",
           :command  => "/usr/bin/git clone #{repo_path} #{app_root}",
           :creates  => app_root,
-          :require  => reference(:exec, "fix-repo-perms"),
-          :notify   => reference(:exec, "create-release-branch")
+          :require  => reference(:exec, "#{application}-fix-repo-perms"),
+          :notify   => reference(:exec, "#{application}-create-release-branch")
 
-        exec "deploy-if-changes",
+        exec "#{application}-deploy-if-changes",
           :cwd      => app_root
           :command  => "true"
           :unless   => "/usr/bin/git checkout #{config[:branch]} && /usr/bin/git pull origin #{config[:branch]} 2> /dev/null | grep 'up-to-date' > /dev/null",
           :require  => reference(:exec, "fix-repo-perms"),
-          :notify   => reference(:exec, "create-release-branch")
+          :notify   => reference(:exec, "#{application}-create-release-branch")
 
-        exec "create-release-branch",
-          :cwd      => app_root,
-          :command  => "/usr/bin/git checkout -b `date -u +%Y%m%d%H%M%N`"
+        exec "#{application}-create-release-branch",
+          :cwd          => app_root,
+          :command      => "/usr/bin/git checkout -b `date -u +%Y%m%d%H%M%N`",
+          :refreshonly  => true
 
-        #parse database.yml if one exists. if not, create one.
+        #TODO parse database.yml if one exists. if not, create one.
 
-        exec "create-moonshine-db-#{application}",
+        exec "#{application}-create-db",
             :command  => "/usr/bin/mysqladmin create #{application}",
             :unless   => "/usr/bin/mysqlcheck -s #{application}",
-            :notify   => reference(:exec, "create-moonshine-user-#{application}")
+            :notify   => reference(:exec, "#{application}-create-db-user")
 
-        exec "create-moonshine-user-#{application}",
+        exec "#{application}-create-db-user",
             :command      => "/usr/bin/mysql -e 'grant all privileges on #{application}.* to #{application}@localhost identified by \"password\"'",
             :refreshonly  => true
 
@@ -86,7 +87,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
           #run rake moonshine:post
 
-        exec "restart-passenger",
+        exec "#{application}-restart-passenger",
             :command         => "touch #{app_root}/tmp/restart.txt",
             :refreshonly     => true
 
