@@ -46,19 +46,22 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :command  => "/usr/bin/git clone #{repo_path} #{app_root}",
           :creates  => app_root,
           :require  => reference(:exec, "#{application}-fix-repo-perms"),
-          :notify   => reference(:exec, "#{application}-create-release-branch")
+          :notify   => reference(:exec, "#{application}-create-release-branch"),
+          :user     => "rails"
 
         exec "#{application}-deploy-if-changes",
           :cwd      => app_root
           :command  => "true"
           :unless   => "/usr/bin/git checkout #{config[:branch]} && /usr/bin/git pull origin #{config[:branch]} 2> /dev/null | grep 'up-to-date' > /dev/null",
           :require  => reference(:exec, "fix-repo-perms"),
-          :notify   => reference(:exec, "#{application}-create-release-branch")
+          :notify   => reference(:exec, "#{application}-create-release-branch"),
+          :user     => "rails"
 
         exec "#{application}-create-release-branch",
           :cwd          => app_root,
           :command      => "/usr/bin/git checkout -b `date -u +%Y%m%d%H%M%N`",
-          :refreshonly  => true
+          :refreshonly  => true,
+          :user         => "rails"
 
         #TODO parse database.yml if one exists. if not, create one.
 
@@ -88,8 +91,9 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           #run rake moonshine:post
 
         exec "#{application}-restart-passenger",
-            :command         => "touch #{app_root}/tmp/restart.txt",
-            :refreshonly     => true
+            :command      => "touch #{app_root}/tmp/restart.txt",
+            :refreshonly  => true,
+            :user         => "rails"
 
       end
 
