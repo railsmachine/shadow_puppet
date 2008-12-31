@@ -93,7 +93,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           #run rake moonshine:post
 
         exec "#{application}-restart-passenger",
-            :command      => "touch #{app_root}/tmp/restart.txt",
+            :command      => "/usr/bin/touch #{app_root}/tmp/restart.txt",
             :refreshonly  => true,
             :user         => "rails"
 
