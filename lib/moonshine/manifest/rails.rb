@@ -19,7 +19,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :home => "/srv/rails",
         :shell => "/bin/bash",
         :groups => "admin"
-        :allowdupe => false,
+        :allowdupe => false
 
       file "/srv/rails",
         :ensure => "directory",
