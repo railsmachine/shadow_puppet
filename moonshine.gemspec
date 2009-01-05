@@ -16,7 +16,8 @@ Gem::Specification.new do |s|
     "lib/moonshine/cli.rb",
     "lib/moonshine/manifest.rb",
     "lib/moonshine/manifest/rails.rb",
-    "lib/moonshine/application.rb"
+    "lib/moonshine/application.rb",
+    "lib/moonshine/templates/vhost.conf.erb"
   ]
   s.has_rdoc = false
   s.homepage = %q{http://railsmachine.com}
