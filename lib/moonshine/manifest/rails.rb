@@ -46,24 +46,26 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         exec "#{application}-clone-repo",
           :command  => "/usr/bin/git clone #{repo_path} #{app_root}",
           :creates  => app_root,
-          :require  => reference(:exec, "#{application}-fix-repo-perms"),
+          :require  => reference(:exec, "#{application}-repo-perms"),
           :notify   => reference(:exec, "#{application}-create-release-branch"),
           :user     => "rails"
 
         exec "#{application}-deploy-if-changes",
           :cwd      => app_root,
           :command  => "/bin/true",
-          :unless   => "/usr/bin/git checkout #{config[:branch]} && /usr/bin/git pull origin #{config[:branch]} 2> /dev/null | grep 'up-to-date' > /dev/null",
-          :require  => reference(:exec, "#{application}-fix-repo-perms"),
+          :unless   => "/usr/bin/test -d #{app_root} && /usr/bin/git checkout #{config[:branch]} && /usr/bin/git pull origin #{config[:branch]} 2> /dev/null | grep 'up-to-date' > /dev/null",
+          :require  => reference(:exec, "#{application}-repo-perms"),
           :notify   => reference(:exec, "#{application}-create-release-branch"),
           :user     => "rails"
 
-        exec "#{application}-fix-repo-perms",
+        exec "#{application}-repo-perms",
           :command      => "/bin/chgrp -R rails #{repo_path}",
           :refreshonly  => true,
           :require      => [
             reference(:user, "rails"),
-            reference(:file, "/srv/rails")
+            reference(:file, "/srv/rails"),
+            reference(:exec, "#{application}-db"),
+            reference(:exec, "#{application}-vhost")
           ]
 
         exec "#{application}-create-release-branch",
@@ -74,13 +76,13 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         #TODO parse database.yml if one exists. if not, create one.
 
-        exec "#{application}-create-db",
+        exec "#{application}-db",
             :command  => "/usr/bin/mysqladmin create #{application}",
             :unless   => "/usr/bin/mysqlcheck -s #{application}",
             :require  => reference(:service, "mysql"),
-            :notify   => reference(:exec, "#{application}-create-db-user")
+            :notify   => reference(:exec, "#{application}-db-user")
 
-        exec "#{application}-create-db-user",
+        exec "#{application}-db-user",
             :command      => "/usr/bin/mysql -e 'grant all privileges on #{application}.* to #{application}@localhost identified by \"password\"'",
             :refreshonly  => true
 
