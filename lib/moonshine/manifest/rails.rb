@@ -149,7 +149,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :enable          => true,
           :hasrestart      => true,
           :hasstatus       => true,
-          :require         => reference(:package, "apache2.2-common"),
+          :require         => reference(:package, "apache2.2-common")
 
       file "disable-default-site",
           :path     => "/etc/apache2/sites-enabled/000-default",
