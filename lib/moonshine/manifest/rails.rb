@@ -81,7 +81,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         #apache config
 
         file "/etc/apache2/sites-available/#{application}",
-          :content  => Erb.new(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb')).result(binding),
+          :content  => ERB.new(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb')).result(binding),
           :notify   => [
             reference(:exec, "#{application}-enable-site"),
             reference(:service, "apache2")
