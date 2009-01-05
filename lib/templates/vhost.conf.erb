@@ -1,9 +1,9 @@
 <VirtualHost *:80>
   ServerName <%= application %>
-  DocumentRoot <%= app_root %>
+  DocumentRoot <%= app_root + '/public' %>
   RailsEnv production
 
-  <Directory <%= app_root %>>
+  <Directory <%= app_root + '/public' %>>
     Options FollowSymLinks
     AllowOverride None
     Order allow,deny
@@ -14,7 +14,4 @@
   BrowserMatch ^Mozilla/4 gzip-only-text/html
   BrowserMatch ^Mozilla/4\.0[678] no-gzip
   BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
-
-  ErrorLog logs/<%= application %>-error_log
-  CustomLog logs/<%= application %>-access_log combined
 </VirtualHost>
