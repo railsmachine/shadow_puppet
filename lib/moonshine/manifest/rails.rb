@@ -83,11 +83,13 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         #apache config
 
-        file "/etc/apache2/sites-available/#{application}",
+        file "#{application}-vhost"
+          :path     => "/etc/apache2/sites-available/#{application}",
           :content  => ERB.new(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb')).result(binding),
-          :notify   => reference(:exec, "#{application}-enable-site")
+          :require  => reference(:package, "apache2.2-common"),
+          :notify   => reference(:exec, "#{application}-enable-vhost")
 
-        exec "#{application}-enable-site",
+        exec "#{application}-enable-vhost",
             :command      => "/usr/sbin/a2ensite #{application}",
             :refreshonly  => true,
             :notify       => reference(:service, "apache2")
