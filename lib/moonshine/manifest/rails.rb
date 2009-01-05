@@ -61,7 +61,10 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         exec "#{application}-fix-repo-perms",
           :command      => "/bin/chgrp -R rails #{repo_path}",
           :refreshonly  => true,
-          :require      => reference(:user, "rails")
+          :require      => [
+            reference(:user, "rails"),
+            reference(:file, "/srv/rails")
+          ]
 
         exec "#{application}-create-release-branch",
           :cwd          => app_root,
@@ -85,7 +88,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         file "#{application}-vhost",
           :path     => "/etc/apache2/sites-available/#{application}",
-          :content  => ERB.new(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb')).result(binding),
+          :content  => ERB.new(File.read(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb'))).result(binding),
           :require  => reference(:package, "apache2.2-common"),
           :notify   => reference(:exec, "#{application}-enable-vhost")
 
