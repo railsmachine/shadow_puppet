@@ -1,10 +1,20 @@
 <VirtualHost *:80>
-  ServerName <%= server_name %>
-  ServerAlias <%= server_aliases.join(' ') %>
+  ServerName <%= application %>
   DocumentRoot <%= app_root %>
   RailsEnv production
-  <directory <%= app_root %>>
+
+  <Directory <%= app_root %>>
+    Options FollowSymLinks
+    AllowOverride None
     Order allow,deny
     Allow from all
-  </directory>
+  </Directory>
+
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/x-javascript
+  BrowserMatch ^Mozilla/4 gzip-only-text/html
+  BrowserMatch ^Mozilla/4\.0[678] no-gzip
+  BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+
+  ErrorLog logs/<%= application %>-error_log
+  CustomLog logs/<%= application %>-access_log combined
 </VirtualHost>

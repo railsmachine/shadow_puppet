@@ -78,7 +78,19 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
             :command      => "/usr/bin/mysql -e 'grant all privileges on #{application}.* to #{application}@localhost identified by \"password\"'",
             :refreshonly  => true
 
-        #ensure apache config is present
+        #apache config
+
+        file "/etc/apache2/sites-available/#{application}",
+          :content  => Erb.new(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb')).result(binding),
+          :notify   => [
+            reference(:exec, "#{application}-enable-site"),
+            reference(:service, "apache2")
+          ]
+
+        exec "#{application}-enable-site",
+            :command      => "/usr/sbin/a2ensite #{application}",
+            :refreshonly  => true,
+            :notify       => reference(:service, "apache2")
 
         #run rake moonshine
 
@@ -137,7 +149,13 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :enable          => true,
           :hasrestart      => true,
           :hasstatus       => true,
-          :require         => reference(:package, "apache2.2-common")
+          :require         => reference(:package, "apache2.2-common"),
+
+      file "disable-default-site",
+          :path     => "/etc/apache2/sites-enabled/000-default",
+          :ensure   => "absent",
+          :require  => reference(:package, "apache2.2-common"),
+          :notify   => reference(:service, "apache2")
 
     end
 

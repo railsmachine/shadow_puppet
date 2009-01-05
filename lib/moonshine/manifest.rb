@@ -1,5 +1,6 @@
 require 'puppet'
 require 'puppet/dsl'
+require 'erb'
 
 class Puppet::DSL::Aspect
   def reference(type, title)
