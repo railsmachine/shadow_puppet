@@ -83,7 +83,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         #apache config
 
-        file "#{application}-vhost"
+        file "#{application}-vhost",
           :path     => "/etc/apache2/sites-available/#{application}",
           :content  => ERB.new(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb')).result(binding),
           :require  => reference(:package, "apache2.2-common"),
