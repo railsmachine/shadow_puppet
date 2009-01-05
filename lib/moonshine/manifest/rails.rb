@@ -74,7 +74,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         exec "#{application}-create-db",
             :command  => "/usr/bin/mysqladmin create #{application}",
             :unless   => "/usr/bin/mysqlcheck -s #{application}",
-            :require  => reference(:service, "mysql")
+            :require  => reference(:service, "mysql"),
             :notify   => reference(:exec, "#{application}-create-db-user")
 
         exec "#{application}-create-db-user",
@@ -115,7 +115,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
             :require      => [
               reference(:package, "libapache2-mod-passenger"),
               reference(:package, "rails")
-            ]
+            ],
             :user         => "rails"
 
       end
