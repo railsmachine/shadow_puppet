@@ -43,9 +43,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         app_root = "/srv/rails/#{application}"
         repo_path = "/var/lib/moonshine/applications/#{applications}"
 
-        exec "#{application}-fix-repo-perms",
-          :command => "/bin/chgrp -R rails #{repo_path}"
-
         exec "#{application}-clone-repo",
           :command  => "/usr/bin/git clone #{repo_path} #{app_root}",
           :creates  => app_root,
@@ -61,6 +58,11 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :notify   => reference(:exec, "#{application}-create-release-branch"),
           :user     => "rails"
 
+        exec "#{application}-fix-repo-perms",
+          :command      => "/bin/chgrp -R rails #{repo_path}",
+          :refreshonly  => true,
+          :require      => reference(:user, "rails")
+
         exec "#{application}-create-release-branch",
           :cwd          => app_root,
           :command      => "/usr/bin/git checkout -b `date -u +%Y%m%d%H%M%N`",
@@ -72,6 +74,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         exec "#{application}-create-db",
             :command  => "/usr/bin/mysqladmin create #{application}",
             :unless   => "/usr/bin/mysqlcheck -s #{application}",
+            :require  => reference(:service, "mysql")
             :notify   => reference(:exec, "#{application}-create-db-user")
 
         exec "#{application}-create-db-user",
@@ -82,6 +85,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         file "/etc/apache2/sites-available/#{application}",
           :content  => ERB.new(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb')).result(binding),
+          :require  => reference(:service, "apache2"),
           :notify   => [
             reference(:exec, "#{application}-enable-site"),
             reference(:service, "apache2")
@@ -90,6 +94,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         exec "#{application}-enable-site",
             :command      => "/usr/sbin/a2ensite #{application}",
             :refreshonly  => true,
+            :require      => reference(:service, "apache2"),
             :notify       => reference(:service, "apache2")
 
         #run rake moonshine
@@ -107,6 +112,10 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         exec "#{application}-restart-passenger",
             :command      => "/usr/bin/touch #{app_root}/tmp/restart.txt",
             :refreshonly  => true,
+            :require      => [
+              reference(:package, "libapache2-mod-passenger"),
+              reference(:package, "rails")
+            ]
             :user         => "rails"
 
       end
