@@ -54,7 +54,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           ],
           :notify => [
             reference(:exec, "#{application}-db"),
-          ]
+          ],
           :before => [
             reference(:exec, "#{application}-clone"),
             reference(:exec, "#{application}-update")
