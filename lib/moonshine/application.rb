@@ -1,3 +1,4 @@
+require 'activesupport'
 module Moonshine
 
   class Application
