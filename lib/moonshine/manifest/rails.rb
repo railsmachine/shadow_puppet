@@ -51,6 +51,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
             reference(:file, "/srv/rails"),
             reference(:exec, "#{application}-db"),
             reference(:file, "#{application}-vhost"),
+            reference(:package, "apache2.2-common"),
             reference(:package, "libapache2-mod-passenger"),
             reference(:package, "rails")
           ],
@@ -98,28 +99,27 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         #TODO parse database.yml if one exists. if not, create one.
 
         exec "#{application}-db",
-            :command      => "/usr/bin/mysqladmin create #{application}_production",
-            :unless       => "/usr/bin/mysqlcheck -s #{application}_production",
-            :require      => reference(:service, "mysql"),
-            :notify       => reference(:exec, "#{application}-db-user"),
-            :refreshonly  => true
+          :command      => "/usr/bin/mysqladmin create #{application}_production",
+          :unless       => "/usr/bin/mysqlcheck -s #{application}_production",
+          :require      => reference(:service, "mysql"),
+          :notify       => reference(:exec, "#{application}-db-user"),
+          :refreshonly  => true
 
         exec "#{application}-db-user",
-            :command      => "/usr/bin/mysql -e 'grant all privileges on #{application}_production.* to #{application}@localhost identified by \"password\"'",
-            :refreshonly  => true
+          :command      => "/usr/bin/mysql -e 'grant all privileges on #{application}_production.* to #{application}@localhost identified by \"password\"'",
+          :refreshonly  => true
 
         #apache config
 
         file "#{application}-vhost",
-          :path         => "/etc/apache2/sites-available/#{application}",
-          :content      => ERB.new(File.read(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb'))).result(binding),
-          :require      => reference(:package, "apache2.2-common"),
-          :notify       => reference(:exec, "#{application}-enable-vhost")
+          :path     => "/etc/apache2/sites-available/#{application}",
+          :content  => ERB.new(File.read(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb'))).result(binding),
+          :notify   => reference(:exec, "#{application}-enable-vhost")
 
         exec "#{application}-enable-vhost",
-            :command      => "/usr/sbin/a2ensite #{application}",
-            :refreshonly  => true,
-            :notify       => reference(:service, "apache2")
+          :command      => "/usr/sbin/a2dissite default && /usr/sbin/a2ensite #{application}",
+          :refreshonly  => true,
+          :notify       => reference(:service, "apache2")
 
         #clone
 
@@ -217,12 +217,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :hasrestart      => true,
           :hasstatus       => true,
           :require         => reference(:package, "apache2.2-common")
-
-      file "disable-default-site",
-          :path     => "/etc/apache2/sites-enabled/000-default",
-          :ensure   => "absent",
-          :require  => reference(:service, "apache2"),
-          :notify   => reference(:service, "apache2")
 
     end
 
