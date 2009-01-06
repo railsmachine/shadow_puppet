@@ -2,8 +2,7 @@ require 'moonshine'
 require 'moonshine/manifest'
 
 class Moonshine::Manifest::Rails < Moonshine::Manifest
-  def initialize
-
+  def run
     manifest.role :rails do
 
       group "rails",

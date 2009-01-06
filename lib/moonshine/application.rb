@@ -33,11 +33,12 @@ module Moonshine
         require 'moonshine/manifest'
         glob = Dir.glob(manifest_path)
         raise_manifest_load_error if glob == []
-        glob.each do |manifest|
+        glob.each do |manifest_path|
           #TODO: only load named servers
-          klass = File.basename(manifest, ".rb")
-          require manifest
-          applied_manifest = klass.classify.constantize.new
+          klass = File.basename(manifest_path, ".rb")
+          require manifest_path
+          manifest = klass.classify.constantize.new
+          manifest.run
         end
       else
         #other node definition strategies?
