@@ -74,13 +74,13 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         #TODO parse database.yml if one exists. if not, create one.
 
         exec "#{application}-db",
-            :command  => "/usr/bin/mysqladmin create #{application}",
-            :unless   => "/usr/bin/mysqlcheck -s #{application}",
+            :command  => "/usr/bin/mysqladmin create #{application}_production",
+            :unless   => "/usr/bin/mysqlcheck -s #{application}_production",
             :require  => reference(:service, "mysql"),
             :notify   => reference(:exec, "#{application}-db-user")
 
         exec "#{application}-db-user",
-            :command      => "/usr/bin/mysql -e 'grant all privileges on #{application}.* to #{application}@localhost identified by \"password\"'",
+            :command      => "/usr/bin/mysql -e 'grant all privileges on #{application}_production.* to #{application}@localhost identified by \"password\"'",
             :refreshonly  => true
 
         #apache config
