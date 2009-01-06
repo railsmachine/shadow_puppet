@@ -103,7 +103,11 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :unless       => "/usr/bin/mysqlcheck -s #{application}_production",
           :require      => reference(:service, "mysql"),
           :notify       => reference(:exec, "#{application}-db-user"),
-          :refreshonly  => true
+          :refreshonly  => true,
+          :before => [
+            reference(:exec, "#{application}-clone"),
+            reference(:exec, "#{application}-update")
+          ]
 
         exec "#{application}-db-user",
           :command      => "/usr/bin/mysql -e 'grant all privileges on #{application}_production.* to #{application}@localhost identified by \"password\"'",
@@ -114,10 +118,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         file "#{application}-vhost",
           :path     => "/etc/apache2/sites-available/#{application}",
           :content  => ERB.new(File.read(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb'))).result(binding),
-          :require  => [
-            reference(:package, "apache2.2-common"),
-            reference(:package, "libapache2-mod-passenger")
-          ],
+          :require  => reference(:service, "apache2"),
           :notify   => reference(:exec, "#{application}-enable-vhost")
 
         exec "#{application}-enable-vhost",
@@ -132,7 +133,8 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :creates      => app_root,
           :require      => reference(:exec, "#{application}-repo-perms"),
           :refreshonly  => true,
-          :user         => "rails"
+          :user         => "rails",
+          :before       => reference(:exec, "#{application}-finalize-update")
 
         #update
 
@@ -142,7 +144,8 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :unless       => "/usr/bin/git checkout #{config[:branch]} && /usr/bin/git pull origin #{config[:branch]} 2> /dev/null | grep 'up-to-date' > /dev/null",
           :require      => reference(:exec, "#{application}-repo-perms"),
           :refreshonly  => true,
-          :user         => "rails"
+          :user         => "rails",
+          :before       => reference(:exec, "#{application}-finalize-update")
 
         exec "#{application}-repo-perms",
           :command      => "/bin/chgrp -R rails #{repo_path}",
@@ -155,13 +158,15 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :environment  => "RAILS_ENV=production",
           :command      => "/usr/bin/rake db:migrate",
           :refreshonly  => true,
-          :user         => "rails"
+          :user         => "rails",
+          :before       => reference(:exec, "#{application}-restart")
 
         exec "#{application}-create-release-branch",
           :cwd          => app_root,
           :command      => "/usr/bin/git checkout -b `date -u +%Y%m%d%H%M%N`",
           :refreshonly  => true,
-          :user         => "rails"
+          :user         => "rails",
+          :before       => reference(:exec, "#{application}-restart")
 
         #run rake moonshine
 
@@ -178,7 +183,8 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         exec "#{application}-restart-passenger",
             :command      => "/usr/bin/touch #{app_root}/tmp/restart.txt",
             :refreshonly  => true,
-            :user         => "rails"
+            :user         => "rails",
+            :before       => reference(:exec, "#{application}-finish")
 
       end
 
@@ -213,26 +219,36 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         libpq5
         openssl-blacklist
         ssl-cert
-      ).each { |p| package p, :ensure => "installed" }
+      ).each do |p|
+        package p,
+          :ensure => "installed",
+          :before => reference(:service, "apache2")
+      end
 
       service "apache2",
           :ensure          => "running",
           :enable          => true,
           :hasrestart      => true,
-          :hasstatus       => true,
-          :require         => reference(:package, "apache2.2-common")
+          :hasstatus       => true
 
     end
 
     manifest.role :mysql do
-      package "mysql-server", :ensure => "installed"
-      package "libmysql-ruby", :ensure => "installed"
+
+      %w(
+        mysql-server
+        libmysql-ruby
+      ).each do |p|
+        package p,
+          :ensure => "installed",
+          :before => reference(:service, "mysql")
+      end
+
       service "mysql",
           :ensure          => "running",
           :enable          => true,
           :hasrestart      => true,
-          :hasstatus       => true,
-          :require         => reference(:package, "mysql-server")
+          :hasstatus       => true
     end
 
     manifest.roles :webserver, :utils, :mysql, :moonshine, :rails
