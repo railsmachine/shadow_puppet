@@ -105,7 +105,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :command      => "/usr/sbin/a2dissite default && /usr/sbin/a2ensite #{application}",
           :refreshonly  => true,
           :notify       => reference(:service, "apache2"),
-          :subscribe    => reference(:exec, "#{application}-vhost")
+          :subscribe    => reference(:file, "#{application}-vhost")
 
         #clone
 
