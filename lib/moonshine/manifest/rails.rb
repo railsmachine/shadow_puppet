@@ -91,12 +91,20 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :unless       => "/usr/bin/mysqlcheck -s #{application}_production",
           :require      => reference(:service, "mysql"),
           :refreshonly  => true,
-          :subscribe    => reference(:exec, "#{application}-setup")
+          :subscribe    => reference(:exec, "#{application}-setup"),
+          :before       => [
+            reference(:exec, "#{application}-clone"),
+            reference(:exec, "#{application}-update")
+          ]
 
         exec "#{application}-db-user",
           :command      => "/usr/bin/mysql -e 'grant all privileges on #{application}_production.* to #{application}@localhost identified by \"password\"'",
           :refreshonly  => true,
-          :subscribe    => reference(:exec, "#{application}-db")
+          :subscribe    => reference(:exec, "#{application}-db"),
+          :before       => [
+            reference(:exec, "#{application}-clone"),
+            reference(:exec, "#{application}-update")
+          ]
 
         #apache config
 
@@ -109,7 +117,11 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :command      => "/usr/sbin/a2dissite default && /usr/sbin/a2ensite #{application}",
           :refreshonly  => true,
           :notify       => reference(:service, "apache2"),
-          :subscribe    => reference(:file, "#{application}-vhost")
+          :subscribe    => reference(:file, "#{application}-vhost"),
+          :before       => [
+            reference(:exec, "#{application}-clone"),
+            reference(:exec, "#{application}-update")
+          ]
 
         #clone
 
@@ -119,7 +131,8 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :require      => reference(:exec, "#{application}-repo-perms"),
           :refreshonly  => true,
           :user         => "rails",
-          :subscribe    => reference(:exec, "#{application}-clone")
+          :subscribe    => reference(:exec, "#{application}-clone"),
+          :before       => reference(:exec, "#{application}-finalize-update")
 
         #update
 
@@ -130,7 +143,8 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :require      => reference(:exec, "#{application}-repo-perms"),
           :refreshonly  => true,
           :user         => "rails",
-          :subscribe    => reference(:exec, "#{application}-update")
+          :subscribe    => reference(:exec, "#{application}-update"),
+          :before       => reference(:exec, "#{application}-finalize-update")
 
         exec "#{application}-repo-perms",
           :command      => "/bin/chgrp -R rails #{repo_path}",
@@ -144,14 +158,16 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :command      => "/usr/bin/rake db:migrate",
           :refreshonly  => true,
           :user         => "rails",
-          :subscribe    => reference(:exec, "#{application}-finalize-update")
+          :subscribe    => reference(:exec, "#{application}-finalize-update"),
+          :before       => reference(:exec, "#{application}-restart")
 
         exec "#{application}-create-release-branch",
           :cwd          => app_root,
           :command      => "/usr/bin/git checkout -b `date -u +%Y%m%d%H%M%N`",
           :refreshonly  => true,
           :user         => "rails",
-          :subscribe    => reference(:exec, "#{application}-finalize-update")
+          :subscribe    => reference(:exec, "#{application}-finalize-update"),
+          :before       => reference(:exec, "#{application}-migrate")
 
         #run rake moonshine
 
@@ -169,7 +185,8 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
             :command      => "/usr/bin/touch #{app_root}/tmp/restart.txt",
             :refreshonly  => true,
             :user         => "rails",
-            :subscribe    => reference(:exec, "#{application}-restart")
+            :subscribe    => reference(:exec, "#{application}-restart"),
+            :before       => reference(:exec, "#{application}-finish")
 
       end
 
