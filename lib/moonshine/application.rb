@@ -37,7 +37,7 @@ module Moonshine
           #TODO: only load named servers
           klass = File.basename(manifest_path, ".rb")
           require manifest_path
-          manifest = klass.classify.constantize.new
+          manifest = klass.classify.constantize.new(@name)
           manifest.run
         end
       else
