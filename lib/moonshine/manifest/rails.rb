@@ -114,7 +114,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :path         => "/etc/apache2/sites-available/#{application}",
           :content      => ERB.new(File.read(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb'))).result(binding),
           :require      => reference(:package, "apache2.2-common"),
-          :refreshonly  => true,
           :notify       => reference(:exec, "#{application}-enable-vhost")
 
         exec "#{application}-enable-vhost",
