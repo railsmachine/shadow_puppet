@@ -6,7 +6,8 @@ module Moonshine
 
     DEFAULT_OPTIONS = {
       :branch         => "release",
-      :strategy       => :rails
+      :strategy       => :rails,
+      :manifest_glob  => "config/moonshine/*.rb"
     }
 
     def initialize(name = "", options = {})
@@ -28,21 +29,28 @@ module Moonshine
     def apply
       if @options[:strategy] == :rails
         require 'moonshine/manifest'
-        rails = Moonshine::Manifest::Rails.new(@name)
-        #parse moonshine.rb from the app
-
-        # config.packages
-        # config.server "foo.railsmachina.com", :rails
-        # config.server "foodb.railsmachina.com", :mysql
-
-        #update the stock puppet manifest with whatever's been generated from the config
-        rails.run
+        glob = Dir.glob(manifest_path)
+        raise_manifest_load_error if glob == []
+        glob.each do |manifest|
+          #TODO: only load named servers
+          klass = File.basename(manifest, ".rb")
+          require manifest
+          applied_manifest = klass.classify.constantize.new
+        end
       else
         #other node definition strategies?
       end
     end
 
   protected
+
+    def raise_manifest_load_error
+      raise LoadError, "Moonshine Manifests expected at #{manifest_path}, none found."
+    end
+
+    def manifest_path
+      @manifest_path ||= File.join(path,"/#{@options[:manifest_glob]}")
+    end
 
     def path
       @path ||= "/var/lib/moonshine/applications/#{name}"

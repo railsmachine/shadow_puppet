@@ -2,7 +2,7 @@ require 'moonshine'
 require 'moonshine/manifest'
 
 class Moonshine::Manifest::Rails < Moonshine::Manifest
-  def run
+  def initialize
 
     manifest.role :rails do
 
