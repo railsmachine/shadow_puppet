@@ -65,7 +65,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
             reference(:user, "rails"),
             reference(:file, "/srv/rails"),
             reference(:exec, "#{application}-db"),
-            reference(:exec, "#{application}-vhost")
+            reference(:file, "#{application}-vhost")
           ]
 
         exec "#{application}-create-release-branch",
