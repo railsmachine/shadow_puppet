@@ -126,7 +126,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         #clone
 
         exec "#{application}-clone-repo",
-          :command      => "/usr/bin/git clone #{repo_path} #{app_root}",
+          :command      => "/usr/bin/git clone #{repo_path} #{app_root} && /usr/bin/git checkout -b release",
           :creates      => app_root,
           :refreshonly  => true,
           :user         => "rails",
