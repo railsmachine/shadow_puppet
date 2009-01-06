@@ -8,19 +8,15 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
       group "rails",
         :ensure => "present",
         :allowdupe => false,
-        :require => reference(:user, "rails-user")
+        :require => reference(:user, "rails")
 
-      user "rails-user",
-        :name => "rails",
+      user "rails",
         :ensure => "present",
-        :notify => reference(:exec, "passwd-rails")
-
-      user "rails-user-settings",
-        :name => "rails",
         :home => "/srv/rails",
         :shell => "/bin/bash",
         :groups => "admin",
-        :allowdupe => false
+        :allowdupe => false,
+        :notify => reference(:exec, "passwd-rails")
 
       file "/srv/rails",
         :ensure => "directory",
