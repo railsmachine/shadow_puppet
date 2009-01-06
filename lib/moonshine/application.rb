@@ -1,4 +1,5 @@
-require 'activesupport'
+gem "activesupport"
+require 'active_support/inflector'
 module Moonshine
 
   class Application
