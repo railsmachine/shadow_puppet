@@ -63,7 +63,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         exec "#{application}-update",
           :command  => "/bin/true",
           :onlyif   => "/usr/bin/test -d #{app_root}",
-          :require => [
+          :notify => [
             reference(:exec, "#{application}-update-repo")
           ],
           :before   => reference(:exec, "#{application}-finalize-update")
@@ -71,14 +71,14 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         exec "#{application}-clone",
           :command  => "/bin/true",
           :unless   => "/usr/bin/test -d #{app_root}",
-          :require => [
+          :notify => [
             reference(:exec, "#{application}-clone-repo")
           ],
           :before   => reference(:exec, "#{application}-finalize-update")
 
         exec "#{application}-finalize-update",
           :command => "/bin/true",
-          :require => [
+          :notify => [
             reference(:exec, "#{application}-migrate"),
             reference(:exec, "#{application}-create-release-branch")
           ],
@@ -86,7 +86,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         exec "#{application}-restart",
           :command => "/bin/true",
-          :require => [
+          :notify => [
             reference(:exec, "#{application}-restart-passenger")
           ],
           :before => reference(:exec, "#{application}-finish")
