@@ -128,7 +128,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         exec "#{application}-clone-repo",
           :command      => "/usr/bin/git clone #{repo_path} #{app_root}",
           :creates      => app_root,
-          :require      => reference(:exec, "#{application}-repo-perms"),
           :refreshonly  => true,
           :user         => "rails",
           :subscribe    => reference(:exec, "#{application}-clone"),
@@ -138,9 +137,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         exec "#{application}-update-repo",
           :cwd          => app_root,
-          :command      => "/bin/true",
-          :unless       => "/usr/bin/git checkout #{config[:branch]} && /usr/bin/git pull origin #{config[:branch]} 2> /dev/null | grep 'up-to-date' > /dev/null",
-          :require      => reference(:exec, "#{application}-repo-perms"),
+          :command      => "/usr/bin/git checkout #{config[:branch]} && /usr/bin/git pull origin #{config[:branch]}",
           :refreshonly  => true,
           :user         => "rails",
           :subscribe    => reference(:exec, "#{application}-update"),
@@ -148,7 +145,12 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         exec "#{application}-repo-perms",
           :command      => "/bin/chgrp -R rails #{repo_path}",
-          :refreshonly  => true
+          :refreshonly  => true,
+          :subscribe    => reference(:exec, "#{application}-setup"),
+          :before       => [
+            reference(:exec, "#{application}-clone"),
+            reference(:exec, "#{application}-update")
+          ]
 
         #finalize-update
 
