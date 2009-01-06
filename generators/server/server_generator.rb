@@ -9,7 +9,7 @@ class ServerGenerator < Rails::Generator::Base
   def initialize(runtime_args, runtime_options = {})
     Dir.mkdir('lib/tasks') unless File.directory?('lib/tasks')
 
-    @server_name = (args.shift || 'master')
+    @server_name = (runtime_args.shift || 'master')
 
     super
   end
