@@ -2,6 +2,10 @@ require 'puppet'
 require 'puppet/dsl'
 require 'erb'
 
+class Puppet::Util::Log
+  @loglevel = 0
+end
+
 class Puppet::DSL::Aspect
   def reference(type, title)
     Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
