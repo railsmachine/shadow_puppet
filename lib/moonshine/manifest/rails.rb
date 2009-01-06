@@ -7,14 +7,16 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
       group "rails",
         :ensure => "present",
-        :allowdupe => false
+        :allowdupe => false,
+        :require => reference(:user, "rails-user")
 
-      user "create-rails-user",
+      user "rails-user",
         :name => "rails",
         :ensure => "present",
         :notify => reference(:exec, "passwd-rails")
 
-      user "rails",
+      user "rails-user-settings",
+        :name => "rails",
         :home => "/srv/rails",
         :shell => "/bin/bash",
         :groups => "admin",
