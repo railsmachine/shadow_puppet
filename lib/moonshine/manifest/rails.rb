@@ -42,15 +42,19 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         exec "#{application}-begin",
           :command  => "/bin/true",
+          :require => [
+            reference(:user, "rails"),
+            reference(:file, "/srv/rails"),
+            reference(:package, "rails"),
+            reference(:service, "apache2")
+            reference(:service, "mysql")
+          ],
           :before   => reference(:exec, "#{application}-setup")
 
         exec "#{application}-setup",
           :command => "/bin/true",
           :require => [
-            reference(:user, "rails"),
-            reference(:file, "/srv/rails"),
-            reference(:file, "#{application}-vhost"),
-            reference(:package, "rails")
+            reference(:file, "#{application}-vhost")
           ],
           :before => [
             reference(:exec, "#{application}-clone"),
@@ -98,8 +102,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         file "#{application}-vhost",
           :path     => "/etc/apache2/sites-available/#{application}",
-          :content  => ERB.new(File.read(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb'))).result(binding),
-          :require  => reference(:service, "apache2")
+          :content  => ERB.new(File.read(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb'))).result(binding)
 
         exec "#{application}-enable-vhost",
           :command      => "/usr/sbin/a2dissite default && /usr/sbin/a2ensite #{application}",
