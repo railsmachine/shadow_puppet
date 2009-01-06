@@ -102,7 +102,8 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         file "#{application}-vhost",
           :path     => "/etc/apache2/sites-available/#{application}",
-          :content  => ERB.new(File.read(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb'))).result(binding)
+          :content  => ERB.new(File.read(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb'))).result(binding),
+          :require  => reference(:package, "apache2.2-common")
 
         exec "#{application}-enable-vhost",
           :command      => "/usr/sbin/a2dissite default && /usr/sbin/a2ensite #{application}",
