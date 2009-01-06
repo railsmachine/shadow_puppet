@@ -148,7 +148,8 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
         exec "#{application}-migrate",
           :cwd          => app_root,
-          :command      => "RAILS_ENV=production rake:db:migrate",
+          :environment  => "RAILS_ENV=production",
+          :command      => "/usr/bin/rake db:migrate",
           :refreshonly  => true,
           :user         => "rails"
 
