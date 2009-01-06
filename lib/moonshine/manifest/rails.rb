@@ -46,7 +46,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
             reference(:user, "rails"),
             reference(:file, "/srv/rails"),
             reference(:package, "rails"),
-            reference(:service, "apache2")
+            reference(:service, "apache2"),
             reference(:service, "mysql")
           ],
           :before   => reference(:exec, "#{application}-setup")
