@@ -49,12 +49,12 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :require => [
             reference(:user, "rails"),
             reference(:file, "/srv/rails"),
-            reference(:exec, "#{application}-db"),
             reference(:file, "#{application}-vhost"),
-            reference(:package, "apache2.2-common"),
-            reference(:package, "libapache2-mod-passenger"),
             reference(:package, "rails")
           ],
+          :notify => [
+            reference(:exec, "#{application}-db"),
+          ]
           :before => [
             reference(:exec, "#{application}-clone"),
             reference(:exec, "#{application}-update")
@@ -114,6 +114,10 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         file "#{application}-vhost",
           :path     => "/etc/apache2/sites-available/#{application}",
           :content  => ERB.new(File.read(File.join(File.dirname(__FILE__), '..', '..', 'templates', 'vhost.conf.erb'))).result(binding),
+          :require  => [
+            reference(:package, "apache2.2-common"),
+            reference(:package, "libapache2-mod-passenger")
+          ],
           :notify   => reference(:exec, "#{application}-enable-vhost")
 
         exec "#{application}-enable-vhost",
