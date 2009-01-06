@@ -40,11 +40,11 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         app_root = "/srv/rails/#{application}"
         repo_path = "/var/lib/moonshine/applications/#{applications}"
 
-        exec "#{application}-begin"
+        exec "#{application}-begin",
           :command  => "/bin/true",
           :before   => reference(:exec, "#{application}-setup")
 
-        exec "#{application}-setup"
+        exec "#{application}-setup",
           :command => "/bin/true",
           :require => [
             reference(:user, "rails"),
@@ -59,7 +59,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
             reference(:exec, "#{application}-update")
           ]
 
-        exec "#{application}-update"
+        exec "#{application}-update",
           :command  => "/bin/true",
           :onlyif   => "/usr/bin/test -d #{app_root}",
           :require => [
@@ -67,7 +67,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           ],
           :before   => reference(:exec, "#{application}-finalize-update")
 
-        exec "#{application}-clone"
+        exec "#{application}-clone",
           :command  => "/bin/true",
           :unless   => "/usr/bin/test -d #{app_root}",
           :require => [
@@ -75,7 +75,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           ],
           :before   => reference(:exec, "#{application}-finalize-update")
 
-        exec "#{application}-finalize-update"
+        exec "#{application}-finalize-update",
           :command => "/bin/true",
           :require => [
             reference(:exec, "#{application}-migrate"),
@@ -83,14 +83,14 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           ],
           :before => reference(:exec, "#{application}-restart")
 
-        exec "#{application}-restart"
+        exec "#{application}-restart",
           :command => "/bin/true",
           :require => [
             reference(:exec, "#{application}-restart-passenger")
           ],
           :before => reference(:exec, "#{application}-finish")
 
-        exec "#{application}-finish"
+        exec "#{application}-finish",
           :command => "/bin/true"
 
         #setup
