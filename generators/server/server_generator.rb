@@ -20,7 +20,7 @@ class ServerGenerator < Rails::Generator::Base
       # m.file      'script/moonshine',   'moonshine.rb',    script_options
 
       m.directory 'config/moonshine'
-      m.template  'server.rb',        "config/moonshine/#{server_name}.rb"
+      m.template  'server.rb',        "config/moonshine/#{server_name}_moonshine_server.rb"
     end
   end
 

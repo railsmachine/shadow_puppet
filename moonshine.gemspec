@@ -10,6 +10,11 @@ Gem::Specification.new do |s|
   s.default_executable = %q{moonshine}
   s.executables = ["moonshine"]
   s.files = [
+    "init.rb",
+    "rails/init.rb",
+    "Readme",
+    "generators/server/server_generator.rb",
+    "generators/server/templates/server.rb",
     "bin/moonshine",
     "lib/facts/moonshine.rb",
     "lib/moonshine.rb",
@@ -23,7 +28,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://railsmachine.com}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.2.0}
-  s.summary = %q{Moonshine deployment agent}
+  s.summary = %q{Moonshine deployment management}
 
   s.add_dependency(%q<puppet>, [">= 0.24.6"])
   s.add_dependency(%q<facter>, [">= 1.5.2"])
