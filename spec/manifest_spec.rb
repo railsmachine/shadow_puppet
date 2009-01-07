@@ -80,3 +80,31 @@ describe "A manifest" do
   end
 
 end
+
+describe "Executing a manifest" do
+  before(:each) do
+    @manifest = ClassLevelRole.new
+    @aspect = @manifest.role "uname" do
+      exec "uname", :command => "/usr/bin/uname > /tmp/uname.txt"
+    end
+  end
+
+  it "should acquire all defined roles" do
+    @manifest.should_receive(:apply_roles).with(:debug,:uname)
+    @manifest.run
+  end
+
+  it "should perform all tasks" do
+    @manifest.run
+    File.read("/tmp/uname.txt").should == `uname`
+    File.read("/tmp/whoami.txt").should == `whoami`
+  end
+
+  after(:each) do
+    begin
+      File.delete("/tmp/uname.txt")
+      File.delete("/tmp/whoami.txt")
+    rescue
+    end
+  end
+end

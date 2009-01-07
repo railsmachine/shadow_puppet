@@ -59,11 +59,11 @@ module Moonshine
     end
 
     def run
-      acquire(*self.class_roles)
-      acquire(*@instance_roles)
-      apply
+      class_role_names = self.class_roles.map { |r| r.name }
+      instance_role_names = instance_roles.map { |r| r.name }
+      role_names = class_role_names + instance_role_names
+      apply_roles(*role_names) if role_names
     end
-    alias_method :apply_all, :run
 
     def role(name, options = {}, &block)
       a = Aspect.new(name, options, &block)
