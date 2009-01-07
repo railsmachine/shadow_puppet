@@ -1,6 +1,9 @@
 require 'puppet'
 require 'puppet/dsl'
 require 'erb'
+gem "activesupport"
+require 'active_support/core_ext/class/attribute_accessors'
+require 'active_support/inflector'
 
 class Puppet::Util::Log
   @loglevel = 0
@@ -17,10 +20,18 @@ module Moonshine
     include Puppet::DSL
 
     attr_reader :application
+    attr_reader :instance_roles
+    class_inheritable_accessor :class_roles
+    @@class_roles = []
 
-    def initialize(application)
+    def initialize(application = nil)
       init
       @application = application
+      @instance_roles = []
+    end
+
+    def self.role(name, options = {}, &block)
+      @@defined_roles << Aspect.new(name, options, &block)
     end
 
     def manifest
@@ -28,18 +39,17 @@ module Moonshine
     end
 
     def run
+      aquire(*@@class_roles)
+      aquire(*@instance_roles)
+      apply
     end
-
-    def define(&block)
-      @block = block
-      instance_eval(&@block)
-    end
+    alias_method :apply_all, :run
 
     def role(name, options = {}, &block)
-      Aspect.new(name, options, &block)
+      @instance_roles << Aspect.new(name, options, &block)
     end
 
-    def roles(*names)
+    def apply_roles(*names)
       acquire(*names)
       apply
     end
@@ -50,6 +60,10 @@ end
 
 Dir.glob(File.join(File.dirname(__FILE__), '..', 'facts', '*.rb')).each do |fact|
   require fact
+end
+Dir.glob(File.join(File.dirname(__FILE__), 'modules', '*.rb')).each do |mod|
+  require mod
+  Moonshine::Manifest.send(:extend, File.basename(mod, ".rb").classify.constantize)
 end
 Dir.glob(File.join(File.dirname(__FILE__), 'manifest', '*.rb')).each do |manifest|
   require manifest

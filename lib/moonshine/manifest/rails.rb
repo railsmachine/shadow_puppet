@@ -3,7 +3,12 @@ require 'moonshine/manifest'
 
 class Moonshine::Manifest::Rails < Moonshine::Manifest
   def run
-    manifest.role :rails do
+    manifest.role :user do
+
+      %w(
+        makepasswd
+        whois
+      ).each { |p| package p, :ensure => "installed" }
 
       group "rails",
         :ensure => "present",
@@ -12,21 +17,30 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
       user "rails",
         :ensure => "present",
-        :home => "/srv/rails",
         :shell => "/bin/bash",
         :groups => "admin",
         :allowdupe => false
+
+      exec 'generate-passwd-rails',
+        :command         => "/usr/sbin/mkpassword --char=10 > /root/rails_password.txt",
+        :require         => reference(:package, "whois"),
+        :refreshonly     => true,
+        :subscribe       => reference(:user, "rails")
+
+      exec 'set-passwd-rails',
+        :command         => "/usr/sbin/usermod -p `mkpasswd $(/bin/cat /root/rails_password.txt)` rails",
+        :require         => reference(:package, "whois"),
+        :refreshonly     => true,
+        :subscribe       => reference(:user, "generate-passwd-rails")
+
+    end
+
+    manifest.role :rails do
 
       file "/srv/rails",
         :ensure => "directory",
         :owner => "rails",
         :group => "rails"
-
-      exec 'passwd-rails',
-        :command         => "/usr/sbin/usermod -p `mkpasswd PASSWORD` rails",
-        :require         => reference(:package, "whois"),
-        :refreshonly     => true,
-        :subscribe       => reference(:user, "rails")
 
       package "rubygems", :ensure => "installed"
 
