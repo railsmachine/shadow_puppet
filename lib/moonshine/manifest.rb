@@ -59,7 +59,7 @@ module Moonshine
     end
 
     def run
-      acquire(*@@class_roles)
+      acquire(*self.class_roles)
       acquire(*@instance_roles)
       apply
     end
