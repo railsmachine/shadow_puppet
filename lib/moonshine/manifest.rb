@@ -22,13 +22,14 @@ class Puppet::DSL::Aspect
   #a resource
   Puppet::Type.loadall
   Puppet::Type.eachtype do |type|
-      define_method(type.name) do |*args|
-        if args && args.size == 1
-          reference(type.name, args.first)
-        else
-          newresource(type, *args)
-        end
+    undef_method(type.name)
+    define_method(type.name) do |*args|
+      if args && args.flatten.size == 1
+        reference(type.name, args.first)
+      else
+        newresource(type, *args)
       end
+    end
   end
 
 end

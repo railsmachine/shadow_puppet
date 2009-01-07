@@ -26,7 +26,7 @@ module MoonshineUser
         :refreshonly     => true,
         :subscribe       => user(name)
 
-      exec "#{user}-set-passwd",
+      exec "#{name}-set-passwd",
         :command         => "/usr/sbin/usermod -p `mkpasswd $(/bin/cat /root/#{name}_password.txt)` #{name}",
         :require         => package("whois"),
         :refreshonly     => true,
