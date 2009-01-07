@@ -31,7 +31,7 @@ module Moonshine
     end
 
     def self.role(name, options = {}, &block)
-      @@defined_roles << Aspect.new(name, options, &block)
+      @@class_roles << Aspect.new(name, options, &block)
     end
 
     def manifest
