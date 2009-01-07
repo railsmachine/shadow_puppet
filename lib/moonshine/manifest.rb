@@ -3,6 +3,7 @@ require 'puppet/dsl'
 require 'erb'
 gem "activesupport"
 require 'active_support/core_ext/class/attribute_accessors'
+require 'active_support/core_ext/class/inheritable_attributes'
 require 'active_support/inflector'
 
 class Puppet::Util::Log
