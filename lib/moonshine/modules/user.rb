@@ -21,7 +21,7 @@ module MoonshineUser
         :allowdupe => false
 
       exec "#{name}-generate-passwd",
-        :command         => "/usr/sbin/makepasswd --char=10 > /root/#{name}_password.txt",
+        :command         => "/usr/bin/makepasswd --char=10 > /root/#{name}_password.txt",
         :require         => reference(:package, "makepasswd"),
         :refreshonly     => true,
         :subscribe       => user(name)
