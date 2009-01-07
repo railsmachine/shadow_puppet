@@ -1,3 +1,3 @@
 class UserManifest < Moonshine::Manifest
-  moonshine_user("foo")
+  user("foo")
 end
