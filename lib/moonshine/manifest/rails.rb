@@ -1,3 +1,14 @@
+#    class UrServer < Moonshine::Manifest::Rails
+#      user "rails"
+#      gems_from_rails_environment
+#      service("memcached", %w(memcache libmemcached))
+#
+#      role :something_else do
+#        exec "foo", :command => "echo 'normal puppet stuff here' > /tmp/test"
+#      end
+#    end
+#    server = UrServer.new("name_of_application")
+#    server.runclass Moonshine::Manifest::Rails < Moonshine::Manifest
 class Moonshine::Manifest::Rails < Moonshine::Manifest
   role :rails do
 

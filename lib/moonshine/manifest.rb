@@ -34,6 +34,13 @@ class Puppet::DSL::Aspect
 
 end
 
+#    class UrServer < Moonshine::Manifest
+#      role :something_else do
+#        exec "foo", :command => "echo 'normal puppet stuff here' > /tmp/test"
+#      end
+#    end
+#    server = UrServer.new("name_of_application")
+#    server.run
 module Moonshine
   class Manifest
     include Puppet::DSL
