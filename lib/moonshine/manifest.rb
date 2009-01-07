@@ -13,6 +13,24 @@ class Puppet::DSL::Aspect
   def reference(type, title)
     Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
   end
+
+  def facts
+    Facter.to_hash
+  end
+
+  #Create an instance method for every type that either creates or references
+  #a resource
+  Puppet::Type.loadall
+  Puppet::Type.eachtype do |type|
+      define_method(type.name) do |*args|
+        if args && args.size == 1
+          reference(type.name, args.first)
+        else
+          newresource(type, *args)
+        end
+      end
+  end
+
 end
 
 module Moonshine
@@ -31,7 +49,9 @@ module Moonshine
     end
 
     def self.role(name, options = {}, &block)
-      self.class_roles << Aspect.new(name, options, &block)
+      a = Aspect.new(name, options, &block)
+      self.class_roles << a
+      a
     end
 
     def manifest
@@ -46,7 +66,9 @@ module Moonshine
     alias_method :apply_all, :run
 
     def role(name, options = {}, &block)
-      @instance_roles << Aspect.new(name, options, &block)
+      a = Aspect.new(name, options, &block)
+      @instance_roles << a
+      a
     end
 
     def apply_roles(*names)

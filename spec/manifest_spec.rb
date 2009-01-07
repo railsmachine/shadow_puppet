@@ -61,4 +61,22 @@ describe "A manifest" do
 
   end
 
+  describe "dependencies" do
+    before(:each) do
+      @manifest = BlankManifest.new
+      @aspect = @manifest.role :debug do
+        exec "whoami", :command => "/usr/bin/whoami > /tmp/whoami.txt"
+      end
+    end
+
+    it "should be able to be created using the 'reference' method" do
+      @aspect.reference(:exec, "whoami").to_ref.should == ['exec', 'whoami']
+    end
+
+    it "should be able to be created using a call to the named method with only one arg" do
+      @aspect.exec("whoami").to_ref.should == ['exec', 'whoami']
+    end
+
+  end
+
 end
