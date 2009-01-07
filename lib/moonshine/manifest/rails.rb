@@ -1,7 +1,4 @@
-require 'moonshine'
-require 'moonshine/manifest'
-
-class Moonshine::Manifest::Rails < Moonshine::Manifest
+class Moonshine::Manifest::RailsManifest < Moonshine::Manifest
   def run
     manifest.role :user do
 

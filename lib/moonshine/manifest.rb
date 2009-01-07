@@ -22,7 +22,7 @@ module Moonshine
     attr_reader :application
     attr_reader :instance_roles
     class_inheritable_accessor :class_roles
-    @@class_roles = []
+    self.class_roles = []
 
     def initialize(application = nil)
       init
@@ -31,7 +31,7 @@ module Moonshine
     end
 
     def self.role(name, options = {}, &block)
-      @@class_roles << Aspect.new(name, options, &block)
+      self.class_roles << Aspect.new(name, options, &block)
     end
 
     def manifest
