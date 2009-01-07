@@ -85,7 +85,6 @@ Dir.glob(File.join(File.dirname(__FILE__), '..', 'facts', '*.rb')).each do |fact
 end
 Dir.glob(File.join(File.dirname(__FILE__), 'modules', '*.rb')).each do |mod|
   require mod
-  Moonshine::Manifest.send(:extend, File.basename(mod, ".rb").classify.constantize)
 end
 Dir.glob(File.join(File.dirname(__FILE__), 'manifest', '*.rb')).each do |manifest|
   require manifest

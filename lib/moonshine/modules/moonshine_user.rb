@@ -34,6 +34,7 @@ module MoonshineUser
     end
   end
 end
+Moonshine::Manifest.send(:extend, MoonshineUser)
 
 module UserAspectMethods
   def moonshine_user
