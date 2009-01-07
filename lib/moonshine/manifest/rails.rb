@@ -189,32 +189,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
   end
 
-  role :webserver do
-
-    %w(
-      apache2-mpm-worker
-      apache2-utils
-      apache2.2-common
-      libapache2-mod-passenger
-      libapr1
-      libaprutil1
-      libpq5
-      openssl-blacklist
-      ssl-cert
-    ).each do |p|
-      package p,
-        :ensure => "installed",
-        :before => service("apache2")
-    end
-
-    service "apache2",
-        :ensure          => "running",
-        :enable          => true,
-        :hasrestart      => true,
-        :hasstatus       => true
-
-  end
-
   service "mysql",
     %w(
       mysql-server
