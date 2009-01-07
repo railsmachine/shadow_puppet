@@ -2,9 +2,7 @@ require 'puppet'
 require 'puppet/dsl'
 require 'erb'
 gem "activesupport"
-require 'active_support/core_ext/class/attribute_accessors'
-require 'active_support/core_ext/class/inheritable_attributes'
-require 'active_support/inflector'
+require 'active_support'
 
 class Puppet::Util::Log
   @loglevel = 0
