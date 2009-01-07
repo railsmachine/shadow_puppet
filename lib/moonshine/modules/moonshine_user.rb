@@ -1,5 +1,8 @@
 module MoonshineUser
+  mattr_accessor :user
+
   def moonshine_user(user)
+    self.user = user
     role "#{user}-user" do
       %w(
         makepasswd
@@ -31,3 +34,10 @@ module MoonshineUser
     end
   end
 end
+
+module UserAspectMethods
+  def moonshine_user
+    MoonshineUser.user
+  end
+end
+Puppet::DSL::Aspect.send(:include, UserAspectMethods)
