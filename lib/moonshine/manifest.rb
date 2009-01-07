@@ -39,8 +39,8 @@ module Moonshine
     end
 
     def run
-      aquire(*@@class_roles)
-      aquire(*@instance_roles)
+      acquire(*@@class_roles)
+      acquire(*@instance_roles)
       apply
     end
     alias_method :apply_all, :run
