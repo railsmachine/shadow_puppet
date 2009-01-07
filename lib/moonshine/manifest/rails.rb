@@ -1,4 +1,4 @@
-class Moonshine::Manifest::RailsManifest < Moonshine::Manifest
+class Moonshine::Manifest::Rails < Moonshine::Manifest
   role :rails do
 
     file "/srv/rails",
