@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
     "lib/moonshine/manifest.rb",
     "lib/moonshine/manifest/rails.rb",
     "lib/moonshine/modules/user.rb",
+    "lib/moonshine/modules/service.rb",
     "lib/moonshine/application.rb",
     "lib/templates/vhost.conf.erb"
   ]
