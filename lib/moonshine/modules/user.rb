@@ -26,7 +26,7 @@ module MoonshineUser
         :ensure => "directory",
         :mode   => "700",
         :owner  => name,
-        :group  => name
+        :group  => name,
         :before => [
           exec("#{name}-ssh-dsa"),
           exec("#{name}-ssh-rsa")
