@@ -129,6 +129,17 @@ module Moonshine
       end
     end
 
+    def facts
+      Facter.to_hash
+    end
+
+    def application_config
+      facts["moonshine"].each do |app_name, config|
+        return config if app_name.to_sym == application.to_sym
+      end
+      return nil
+    end
+
     def run?
       @run
     end
