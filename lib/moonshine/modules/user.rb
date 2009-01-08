@@ -10,15 +10,24 @@ module MoonshineUser
       ).each { |p| package p, :ensure => "installed" }
 
       group name,
-        :ensure => "present",
-        :allowdupe => false,
-        :require => user(name)
+        :ensure     => "present",
+        :allowdupe  => false,
+        :require    => user(name)
 
       user name,
-        :ensure => "present",
-        :shell => "/bin/bash",
-        :groups => "admin",
-        :allowdupe => false
+        :ensure     => "present",
+        :shell      => "/bin/bash",
+        :groups     => "admin",
+        :allowdupe  => false,
+        :before     => file("/home/#{name}/.ssh")
+
+      file "/home/#{name}/.ssh",
+        :ensure => "directory",
+        :mode   => "700",
+        :before => [
+          exec("#{name}-ssh-dsa"),
+          exec("#{name}-ssh-rsa")
+        ]
 
       exec "#{name}-ssh-dsa",
         :command      => "/usr/bin/ssh-keygen -f /home/#{name}/.ssh/id_dsa -t dsa -N '' -q",
@@ -35,16 +44,16 @@ module MoonshineUser
         :user         => name
 
       exec "#{name}-generate-passwd",
-        :command         => "/usr/bin/makepasswd --char=10 > /root/#{name}_password.txt",
-        :require         => reference(:package, "makepasswd"),
-        :refreshonly     => true,
-        :subscribe       => user(name)
+        :command      => "/usr/bin/makepasswd --char=10 > /root/#{name}_password.txt",
+        :require      => reference(:package, "makepasswd"),
+        :refreshonly  => true,
+        :subscribe    => user(name)
 
       exec "#{name}-set-passwd",
-        :command         => "/usr/sbin/usermod -p `mkpasswd $(/bin/cat /root/#{name}_password.txt)` #{name}",
-        :require         => package("whois"),
-        :refreshonly     => true,
-        :subscribe       => exec("#{name}-generate-passwd")
+        :command      => "/usr/sbin/usermod -p `mkpasswd $(/bin/cat /root/#{name}_password.txt)` #{name}",
+        :require      => package("whois"),
+        :refreshonly  => true,
+        :subscribe    => exec("#{name}-generate-passwd")
     end
   end
 end
