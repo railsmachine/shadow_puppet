@@ -2,8 +2,9 @@ module MoonshineUser
   mattr_accessor :moonshine_user
 
   def user(name = "")
-    user = user.gsub(/\s*/,'')
-    return if user == ''
+    return if name.nil?
+    name = name.gsub(/\s*/,'')
+    return if name == ''
     self.moonshine_user = name
     home = "#{home}"
     role "#{name}-user" do
