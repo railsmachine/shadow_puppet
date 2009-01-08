@@ -6,6 +6,35 @@ class UserConfigurationManifest < Moonshine::Manifest
   include MoonshineUser
 end
 
+class MonshineSetupManifest < Moonshine::Manifest
+  role "moonshine_setup" do
+    group "moonshine",
+      :ensure     => "present",
+      :allowdupe  => false
+
+    file "/var/lib",
+      :ensure => "directory"
+
+    file "/var/puppet",
+      :ensure => "directory"
+
+    file "/etc/moonshine",
+      :ensure => "directory"
+
+    file "/var/lib/moonshine",
+      :ensure  => "directory",
+      :owner   => "root",
+      :group   => "moonshine",
+      :mode    => "770"
+
+    file "/var/lib/moonshine/applications",
+      :ensure  => "directory",
+      :owner   => "root",
+      :group   => "moonshine",
+      :mode    => "770"
+  end
+end
+
 module Moonshine
 
   class CLI
@@ -104,27 +133,8 @@ HERE
  protected
 
     def setup
-      unless File.exist?("/var/lib/moonshine/applications")
-        unless File.exist?("/var/lib/moonshine")
-          unless File.exist?("/var/lib")
-            Dir.mkdir("/var/lib")
-          end
-          Dir.mkdir("/var/lib/moonshine")
-        end
-        Dir.mkdir("/var/lib/moonshine/applications")
-      end
-      unless File.exist?("/var/cache/moonshine")
-        unless File.exist?("/var/cache")
-          Dir.mkdir("/var/cache")
-        end
-        Dir.mkdir("/var/cache/moonshine")
-      end
-      unless File.exist?("/etc/moonshine")
-        Dir.mkdir("/etc/moonshine")
-      end
-      unless File.exist?("/var/puppet")
-        Dir.mkdir("/var/puppet")
-      end
+      m = MonshineSetupManifest.new
+      m.run
     end
 
     def setup_user(u)
