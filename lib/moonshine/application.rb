@@ -23,26 +23,30 @@ module Moonshine
     end
 
     def update
-      if File.exist?(path)
-        execute "cd #{path} && git checkout #{@options[:branch]}"
-      else
-        execute "git clone #{@options[:uri]} #{path}"
-        execute "cd #{path} && git checkout -b #{@options[:branch]}"
+      as_user(options[:user]) do
+        if File.exist?(path)
+          execute "cd #{path} && git checkout #{@options[:branch]}"
+        else
+          execute "git clone #{@options[:uri]} #{path}"
+          execute "cd #{path} && git checkout -b #{@options[:branch]}"
+        end
+        execute "cd #{path} && git pull origin #{@options[:branch]}"
       end
-      execute "cd #{path} && git pull origin #{@options[:branch]}"
     end
 
     def test_clone
-      while true
-        puts("Press ENTER to test cloning #{@options[:uri]}")
-        gets
-        temp_path = "/tmp/#{Time.new.to_f.to_s.gsub(/\./,'')}.moonshine_clone_test"
-        system("git clone #{@options[:uri]} #{temp_path}")
-        system("ls #{temp_path}")
-        FileUtils.remove_entry_secure(temp_path)
-        puts("Was the clone successful? [Yn]")
-        success = gets
-        break if success.chomp.upcase != 'N'
+      as_user(options[:user]) do
+        while true
+          puts("Press ENTER to test cloning #{@options[:uri]}")
+          gets
+          temp_path = "/tmp/#{Time.new.to_f.to_s.gsub(/\./,'')}.moonshine_clone_test"
+          system("git clone #{@options[:uri]} #{temp_path}")
+          system("ls #{temp_path}")
+          FileUtils.remove_entry_secure(temp_path)
+          puts("Was the clone successful? [Yn]")
+          success = gets
+          break if success.chomp.upcase != 'N'
+        end
       end
     end
 
@@ -69,6 +73,19 @@ module Moonshine
     end
 
   protected
+
+    def as_user(user, &block)
+      require 'etc'
+      begin
+        old_euid = Process.euid
+        Process.euid = Etc.getpwnam(user).uid
+        yield
+      rescue Exception => e
+        raise e
+      ensure
+        Process.euid = old_euid
+      end
+    end
 
     def raise_manifest_load_error
       raise LoadError, "Moonshine Manifests expected at #{manifest_path}, none found. \n\nPlease install the moonshine plugin into your app, and run ./script/generate server [ServerName]"
