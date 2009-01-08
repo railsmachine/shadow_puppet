@@ -79,8 +79,8 @@ Gitosis: http://scie.nti.st/2007/11/14/hosting-git-repositories-the-easy-and-sec
 HERE
       console.say(rsa+"\n\n")
       while true
-        console.ask("Press ENTER to test cloning #{uri}")
-        app.test_clone
+        test = console.ask("Press ENTER to test cloning #{uri}")
+        app.test_clone(console)
         success = console.ask("Was the clone successful? [Yn]") { |q| q.default = "Y" }
         break if success.upcase == 'Y'
       end

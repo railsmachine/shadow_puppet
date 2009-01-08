@@ -32,10 +32,10 @@ module Moonshine
       execute "cd #{path} && git pull origin #{@options[:branch]}"
     end
 
-    def test_clone
+    def test_clone(console)
       temp_path = "/tmp/#{Time.new.to_f.to_s.gsub(/\./,'')}.#{name}.moonshine_clone_test"
-      puts execute("git clone #{@options[:uri]} #{temp_path}")
-      puts execute("ls #{temp_path}")
+      console.say execute("git clone #{@options[:uri]} #{temp_path}")
+      console.say execute("ls #{temp_path}")
       FileUtils.remove_entry_secure(temp_path)
     end
 
