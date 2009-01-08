@@ -100,20 +100,19 @@ describe "A manifest" do
   describe "dependencies" do
 
     before(:each) do
-      @manifest = BlankManifest.new
+      @manifest = ClassLevelRole.new
       @aspect = @manifest.role :debug do
-        exec "whoami", :command => "/usr/bin/whoami > /tmp/whoami.txt"
+        exec "uname", :command => "/usr/bin/uname > /tmp/uname.txt"
       end
     end
 
-    it "should be able to be created using the 'reference' method" do
-      @aspect.reference(:exec, "whoami").to_ref.should == ['exec', 'whoami']
+    it "should be able to be create scpoed reference using a call to the named method with only one arg" do
+      @aspect.exec("uname").to_ref.should == ['exec', "#{@manifest.object_id}:uname"]
     end
 
-    it "should be able to be created using a call to the named method with only one arg" do
-      @aspect.exec("whoami").to_ref.should == ['exec', 'whoami']
+    it "should be able to reference resource created in the class" do
+      @aspect.class_reference(:exec, 'whoami').to_ref.should == ['exec', "#{ClassLevelRole.object_id}:whoami"]
     end
-
   end
 
   describe "facts" do
@@ -126,10 +125,6 @@ describe "A manifest" do
 
     it "should be able to reference the facts inside an aspect" do
       @aspect.facts.should == Facter.to_hash
-    end
-
-    it "should be able to be created using a call to the named method with only one arg" do
-      @aspect.exec("whoami").to_ref.should == ['exec', 'whoami']
     end
 
   end
@@ -149,21 +144,83 @@ describe "Executing a manifest" do
     end
   end
 
-  it "should perform all tasks" do
-    @manifest.run
-    File.read("/tmp/whoami.txt").should == `whoami`
-    File.read("/tmp/uname.txt").should == `uname`
-  end
-
   it "should not be able to be run twice" do
     lambda do
       @manifest.run
+      File.read("/tmp/whoami.txt").should == `whoami`
+      File.read("/tmp/uname.txt").should == `uname`
     end.should_not(raise_error)
     lambda do
       @manifest.run
     end.should(raise_error)
   end
 
+end
+
+describe "Two manifest instances of the same class" do
+  before(:each) do
+    begin
+      File.delete("/tmp/uname1.txt")
+      File.delete("/tmp/uname2.txt")
+    rescue
+    end
+    @manifest1 = BlankManifest.new
+    @manifest2 = BlankManifest.new
+  end
+
+  describe "with wildly conflicting names" do
+    before(:each) do
+      @manifest1.role "conflicting_uname" do
+        exec "conflicting_uname", :command => "/usr/bin/uname > /tmp/uname1.txt"
+      end
+      @manifest2.role "conflicting_uname" do
+        exec "conflicting_uname", :command => "/usr/bin/uname > /tmp/uname2.txt"
+      end
+    end
+
+    it "perform all tasks when run" do
+      @manifest1.run
+      @manifest2.run
+      File.read("/tmp/uname1.txt").should == `uname`
+      File.read("/tmp/uname2.txt").should == `uname`
+    end
+  end
+
+  describe "with unique exec names" do
+    before(:each) do
+      @manifest1.role "sameuname" do
+        exec "uname13", :command => "/usr/bin/uname > /tmp/uname1.txt"
+      end
+      @manifest2.role "sameuname" do
+        exec "uname14", :command => "/usr/bin/uname > /tmp/uname2.txt"
+      end
+    end
+
+    it "perform all tasks when run" do
+      @manifest1.run
+      @manifest2.run
+      File.read("/tmp/uname1.txt").should == `uname`
+      File.read("/tmp/uname2.txt").should == `uname`
+    end
+  end
+
+  describe "with unique role and exec names" do
+    before(:each) do
+      @manifest1.role "uname1" do
+        exec "uname1-exec", :command => "/usr/bin/uname > /tmp/uname1.txt"
+      end
+      @manifest2.role "uname2" do
+        exec "uname2-exec", :command => "/usr/bin/uname > /tmp/uname2.txt"
+      end
+    end
+
+    it "perform all tasks when run" do
+      @manifest1.run
+      @manifest2.run
+      File.read("/tmp/uname1.txt").should == `uname`
+      File.read("/tmp/uname2.txt").should == `uname`
+    end
+  end
 end
 
 describe "Multiple manifests inherited from the same parent" do

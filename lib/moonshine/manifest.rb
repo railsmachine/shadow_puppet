@@ -5,8 +5,49 @@ gem "activesupport"
 require 'active_support'
 
 class Puppet::DSL::Aspect
+  attr_accessor :uniq_id
+  attr_accessor :parent_uniq_id
+
+  def initialize(name, options = {}, &block)
+    if @uniq_id = options[:id]
+      @name = symbolize(uniquify(name))
+    else
+      @name = symbolize(name)
+    end
+    @parent_uniq_id = options[:parent_id]
+    if block
+      @block = block
+    end
+    if pname = options[:inherits]
+      if pname.is_a?(self.class)
+        @parent = pname
+      elsif parent = self.class[pname]
+        @parent = parent
+      else
+        raise "Could not find parent aspect %s" % pname
+      end
+    end
+
+    @resources = []
+
+    self.class[name] = self
+  end
+
   def reference(type, title)
     Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
+  end
+
+  def scoped_reference(type,title)
+    reference(type,uniquify(title))
+  end
+
+  def class_reference(type,title)
+    reference(type,uniquify(title, :parent_uniq_id))
+  end
+
+  def uniquify(name = '', method = :uniq_id)
+    return name if self.send(method).nil?
+    (self.send(method).to_s + ':' + name.to_s)
   end
 
   def facts
@@ -20,11 +61,15 @@ class Puppet::DSL::Aspect
     undef_method(type.name)
     define_method(type.name) do |*args|
       if args && args.flatten.size == 1
-        reference(type.name, args.first)
+        scoped_reference(type.name, args.first)
       else
-        newresource(type, *args)
+        scoped_resource(type, args.first, args.last)
       end
     end
+  end
+
+  def scoped_resource(type, name, params = {})
+    newresource(type, uniquify(name), params)
   end
 
 end
@@ -59,19 +104,27 @@ module Moonshine
     end
 
     def self.role(name, options = {}, &block)
-      a = Puppet::DSL::Aspect.new(name, options, &block)
+      a = Puppet::DSL::Aspect.new(name, options.merge({:id => object_id}), &block)
       self.aspects << a
       a
     end
 
     def role(name, options = {}, &block)
-      a = Puppet::DSL::Aspect.new(name, options, &block)
+      a = Puppet::DSL::Aspect.new(name, options.merge({:id => object_id, :parent_id => self.class.object_id}), &block)
       @instance_aspects << a
       a
     end
 
     def aspects
       self.class.aspects + instance_aspects
+    end
+
+    def aspect(name)
+      begin
+        self.aspects.detect { |a| a.name.to_sym == name.to_sym }
+      rescue
+        nil
+      end
     end
 
     def run?
@@ -85,37 +138,40 @@ module Moonshine
 
     def run_roles(*names)
       raise Exception if run?
-      evaluate(*names)
-      bucket = export()
+      bucket = evaluate_and_export(*names)
       catalog = bucket.to_catalog
       applied_catalog = catalog.apply
       @run = true
       applied_catalog
     end
 
-    def evaluate(*names)
+    def evaluate_and_export(*names)
+      #evaluate
+      evaluated_aspects = []
       names.each do |name|
-        #TODO scope this per class
-        if aspect = Puppet::DSL::Aspect[name]
+        if aspect = aspect(name)
           unless aspect.evaluated?
             aspect.evaluate
+            evaluated_aspects << aspect
           end
         else
           raise "Could not find aspect %s" % name
         end
       end
-    end
 
-    def export
-      objects = aspects.map{ |r| [r.name, r] }.collect do |name, aspect|
-          if aspect.evaluated?
-              aspect.export
-          end
-      end.reject { |a| a.nil? }.flatten.collect do |obj|
-          obj.to_trans
+      #export
+      objects_for_export = []
+      objects = evaluated_aspects.collect do |aspect|
+        if aspect.evaluated?
+          evaluated_aspect = aspect.export
+          objects_for_export << evaluated_aspect unless evaluated_aspect.nil?
+        end
       end
-      bucket = Puppet::TransBucket.new(objects)
-      bucket.name = "moonshine.#{Time.new.to_f.to_s.gsub(/\./,'')}"
+      trans_objects = objects.flatten.collect do |obj|
+        obj.to_trans
+      end
+      bucket = Puppet::TransBucket.new(trans_objects)
+      bucket.name = "moonshine:#{object_id}"
       bucket.type = "class"
 
       return bucket
