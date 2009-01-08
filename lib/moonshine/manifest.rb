@@ -47,7 +47,7 @@ class Puppet::DSL::Aspect
 
   def uniquify(name = '', method = :uniq_id)
     return name if self.send(method).nil?
-    (self.send(method).to_s + ':' + name.to_s)
+    (name.to_s + ':' + self.send(method).to_s)
   end
 
   def facts
@@ -61,15 +61,17 @@ class Puppet::DSL::Aspect
     undef_method(type.name)
     define_method(type.name) do |*args|
       if args && args.flatten.size == 1
-        scoped_reference(type.name, args.first)
+        reference(type.name, args.first)
+        # scoped_reference(type.name, args.first)
       else
-        scoped_resource(type, args.first, args.last)
+        newresource(type, args.first, args.last)
+        # scoped_resource(type, args.first, args.last)
       end
     end
   end
 
   def scoped_resource(type, name, params = {})
-    newresource(type, uniquify(name), params)
+    newresource(type, name, params.merge({:alias => uniquify(name)}))
   end
 
 end
