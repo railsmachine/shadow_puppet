@@ -2,6 +2,10 @@ require 'optparse'
 require 'yaml'
 require 'logger'
 
+class UserConfigurationManifest < Moonshine::Manifest
+  include MoonshineUser
+end
+
 module Moonshine
 
   class CLI
@@ -128,11 +132,8 @@ HERE
     end
 
     def setup_user(u)
-      require 'moonshine/manifest'
-      class UserConfigurationManifest < Moonshine::Manifest
-        user(u)
-      end
       m = UserConfigurationManifest.new
+      m.user(u)
       m.run
     end
 

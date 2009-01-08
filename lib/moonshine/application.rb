@@ -1,6 +1,5 @@
 gem "activesupport"
 require 'active_support/inflector'
-require 'moonshine/manifest'
 require 'fileutils'
 
 module Moonshine
