@@ -1,21 +1,26 @@
 gem "activesupport"
 require 'active_support/inflector'
+require 'moonshine/manifest'
+require 'file_utils'
+
 module Moonshine
 
   class Application
 
-    attr_reader :name
+    attr_reader :name, :options, :config_file
 
     DEFAULT_OPTIONS = {
       :branch         => "release",
       :strategy       => :rails,
+      :user           => "rails",
       :manifest_glob  => "config/moonshine/*.rb"
     }
 
-    def initialize(name = "", options = {})
-      @name = name.gsub(/\s*/,'')
-      @options = DEFAULT_OPTIONS.merge(options)
-      setup
+    def initialize(app_config_file)
+      @config_file = app_config_file
+      @name = File.basename(app_config_file, ".conf").gsub(/\s*/,'')
+      raise ArgumentError if @name == ""
+      @options = DEFAULT_OPTIONS.merge(YAML.load_file(app_config_file))
     end
 
     def update
@@ -28,9 +33,15 @@ module Moonshine
       execute "cd #{path} && git pull origin #{@options[:branch]}"
     end
 
+    def test_clone
+      temp_path = "/tmp/#{Time.new.to_f.to_s.gsub(/\./,'')}.#{name}.moonshine_clone_test"
+      execute "git clone #{@options[:uri]} #{temp_path}"
+      execute "ls #{temp_path}"
+      File.remove_entry_secure(temp_path)
+    end
+
     def apply
       if @options[:strategy] == :rails
-        require 'moonshine/manifest'
         glob = Dir.glob(manifest_path)
         raise_manifest_load_error if glob == []
         glob.each do |manifest_path|
@@ -45,6 +56,12 @@ module Moonshine
       end
     end
 
+    def update_config_file
+      f = File.new(config_file, "w")
+      f.write(YAML.dump(options))
+      f.close
+    end
+
   protected
 
     def raise_manifest_load_error
@@ -57,10 +74,6 @@ module Moonshine
 
     def path
       @path ||= "/var/lib/moonshine/applications/#{name}"
-    end
-
-    def setup
-      raise if @name == ""
     end
 
     def execute(command)

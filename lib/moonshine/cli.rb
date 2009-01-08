@@ -43,30 +43,53 @@ module Moonshine
 
     def configure_first_application
       require 'highline'
-      highline = HighLine.new
-      @logger.info "No application found, configuring one"
-      name = highline.ask("What's the name of the application you'd like to add?")
+      console = HighLine.new
+
+      console.say "Configuring first application"
+      name = console.ask("Application name:")
       name = name.gsub(/\s*/,'')
-      uri = highline.ask("Where is the application's git repo?")
-      branch = highline.ask("Which branch of your application would you like to deploy?  ") { |q| q.default = "release" }
-      options = { :uri => uri, :branch => branch }
-      f = File.new("/etc/moonshine/#{name}.conf", "w")
-      f.write(YAML.dump(options))
+
+      uri = console.ask("Git Repo: (ex. git@github.com:you/yourapp.git)")
+
+      branch = console.ask("Deploy from branch:") { |q| q.default = "release" }
+
+      user = console.ask("User: (this user will created if it doesn't already exist)") { |q| q.default = "rails" }
+      user = name.user(/\s*/,'')
+      setup_user(user)
+
+      #save initial version of the config
+      app_config_file = "/etc/moonshine/#{name}.conf"
+      f = File.new(app_config_file, "w")
+      f.write(YAML.dump({ :uri => uri, :branch => branch, :user => user }))
       f.close
+      app = Moonshine::Application.new(app_config_file)
+
+      rsa = File.read("/home/#{user}/.ssh/id_rsa.pub")
+      say <<-HERE
+Below is your SSH Public Key (/home/#{user}/.ssh/id_rsa.pub)
+
+Please provide this key to the host of your Git Repository.
+
+GitHub: http://github.com/guides/understanding-deploy-keys
+Gitosis: http://scie.nti.st/2007/11/14/hosting-git-repositories-the-easy-and-secure-way
+
+HERE
+      say(rsa+"\n\n")
+      while true
+        console.ask("Press ENTER to test cloning #{uri}")
+        app.test_clone
+        success = console.ask("Was the clone successful? [Yn]") { |q| q.default = "Y" }
+        break if success.upcase == 'Y'
+      end
+      app.update_config_file
     end
 
     def load_applications
       @applications = []
       configure_first_application if Dir.glob("/etc/moonshine/*.conf") == []
-      Dir.glob("/etc/moonshine/*.conf").each do |application|
-        begin
-          name = File.basename(application, ".conf")
-          application = Moonshine::Application.new(name, YAML.load_file(application))
-          @applications << application
-          @logger.info "Loaded #{name}"
-        rescue
-          @logger.error "Error loading #{name}"
-        end
+      Dir.glob("/etc/moonshine/*.conf").each do |app_config_file|
+        @applications << Moonshine::Application.new(app_config_file)
+        @logger.debug "Loaded #{app_config_file}"
       end
     end
 
@@ -104,18 +127,27 @@ module Moonshine
       end
     end
 
+    def setup_user(u)
+      require 'moonshine/manifest'
+      class UserConfigurationManifest < Moonshine::Manifest
+        user(u)
+      end
+      m = UserConfigurationManifest.new
+      m.run
+    end
+
     def update
-      @logger.info "Checking for manifest updates..."
+      @logger.info "Updating manifests"
       @applications.each do |app|
-        @logger.info "Checking #{app.name}"
+        @logger.debug "  #{app.name}"
         app.update
       end
     end
 
     def apply
-      @logger.info "Applying manifests locally..."
+      @logger.info "Applying manifests"
       @applications.each do |app|
-        @logger.info "Applying #{app.name}"
+        @logger.debug "  #{app.name}"
         app.apply
       end
     end

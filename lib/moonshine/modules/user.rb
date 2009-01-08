@@ -20,6 +20,20 @@ module MoonshineUser
         :groups => "admin",
         :allowdupe => false
 
+      exec "#{name}-ssh-dsa",
+        :command      => "/usr/bin/ssh-keygen -f /home/#{name}/.ssh/id_dsa -t dsa -N '' -q",
+        :unless       => "/usr/bin/test -f /home/#{name}/.ssh/id_dsa",
+        :refreshonly  => true,
+        :subscribe    => user(name),
+        :user         => name
+
+      exec "#{name}-ssh-rsa",
+        :command      => "/usr/bin/ssh-keygen -f /home/#{name}/.ssh/id_rsa -t rsa -N '' -q",
+        :unless       => "/usr/bin/test -f /home/#{name}/.ssh/id_rsa",
+        :refreshonly  => true,
+        :subscribe    => user(name),
+        :user         => name
+
       exec "#{name}-generate-passwd",
         :command         => "/usr/bin/makepasswd --char=10 > /root/#{name}_password.txt",
         :require         => reference(:package, "makepasswd"),
