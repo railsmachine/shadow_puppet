@@ -3,6 +3,7 @@ module MoonshineUser
 
   def user(name)
     self.moonshine_user = name
+    home = "#{home}"
     role "#{name}-user" do
       %w(
         makepasswd
@@ -19,26 +20,30 @@ module MoonshineUser
         :shell      => "/bin/bash",
         :groups     => "admin",
         :allowdupe  => false,
-        :before     => file("/home/#{name}/.ssh")
+        :before     => file("#{home}/.ssh")
 
-      file "/home/#{name}/.ssh",
+      file "#{home}/.ssh",
         :ensure => "directory",
         :mode   => "700",
+        :owner  => name,
+        :group  => name
         :before => [
           exec("#{name}-ssh-dsa"),
           exec("#{name}-ssh-rsa")
         ]
 
       exec "#{name}-ssh-dsa",
-        :command      => "/usr/bin/ssh-keygen -f /home/#{name}/.ssh/id_dsa -t dsa -N '' -q",
-        :unless       => "/usr/bin/test -f /home/#{name}/.ssh/id_dsa",
+        :cwd          => home,
+        :command      => "/usr/bin/ssh-keygen -f #{home}/.ssh/id_dsa -t dsa -N '' -q",
+        :unless       => "/usr/bin/test -f #{home}/.ssh/id_dsa",
         :refreshonly  => true,
         :subscribe    => user(name),
         :user         => name
 
       exec "#{name}-ssh-rsa",
-        :command      => "/usr/bin/ssh-keygen -f /home/#{name}/.ssh/id_rsa -t rsa -N '' -q",
-        :unless       => "/usr/bin/test -f /home/#{name}/.ssh/id_rsa",
+        :cwd          => home,
+        :command      => "/usr/bin/ssh-keygen -f #{home}/.ssh/id_rsa -t rsa -N '' -q",
+        :unless       => "/usr/bin/test -f #{home}/.ssh/id_rsa",
         :refreshonly  => true,
         :subscribe    => user(name),
         :user         => name
