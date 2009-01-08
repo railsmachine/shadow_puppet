@@ -33,10 +33,15 @@ module Moonshine
     end
 
     def test_clone(console)
-      temp_path = "/tmp/#{Time.new.to_f.to_s.gsub(/\./,'')}.#{name}.moonshine_clone_test"
-      console.say execute("git clone #{@options[:uri]} #{temp_path}")
-      console.say execute("ls #{temp_path}")
-      FileUtils.remove_entry_secure(temp_path)
+      while true
+        gets("Press ENTER to test cloning #{uri}")
+        temp_path = "/tmp/#{Time.new.to_f.to_s.gsub(/\./,'')}.#{name}.moonshine_clone_test"
+        system("git clone #{@options[:uri]} #{temp_path}")
+        system("ls #{temp_path}")
+        FileUtils.remove_entry_secure(temp_path)
+        success = gets("Was the clone successful? [Yn]")
+        break if success.chomp.upcase != 'N'
+      end
     end
 
     def apply
