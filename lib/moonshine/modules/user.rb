@@ -21,7 +21,7 @@ module MoonshineUser
       user name,
         :ensure     => "present",
         :shell      => "/bin/bash",
-        :groups     => "admin",
+        :groups     => ["admin", "moonshine"],
         :allowdupe  => false,
         :before     => file("#{home}/.ssh")
 
