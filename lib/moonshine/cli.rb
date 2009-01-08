@@ -68,7 +68,7 @@ module Moonshine
       app = Moonshine::Application.new(app_config_file)
 
       rsa = File.read("/home/#{user}/.ssh/id_rsa.pub")
-      say <<-HERE
+      console.say <<-HERE
 Below is your SSH Public Key (/home/#{user}/.ssh/id_rsa.pub)
 
 Please provide this key to the host of your Git Repository.
@@ -77,7 +77,7 @@ GitHub: http://github.com/guides/understanding-deploy-keys
 Gitosis: http://scie.nti.st/2007/11/14/hosting-git-repositories-the-easy-and-secure-way
 
 HERE
-      say(rsa+"\n\n")
+      console.say(rsa+"\n\n")
       while true
         console.ask("Press ENTER to test cloning #{uri}")
         app.test_clone
