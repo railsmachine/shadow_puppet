@@ -32,7 +32,7 @@ module Moonshine
       execute "cd #{path} && git pull origin #{@options[:branch]}"
     end
 
-    def test_clone(console)
+    def test_clone
       while true
         gets("Press ENTER to test cloning #{uri}")
         temp_path = "/tmp/#{Time.new.to_f.to_s.gsub(/\./,'')}.#{name}.moonshine_clone_test"
