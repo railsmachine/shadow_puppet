@@ -58,7 +58,7 @@ module Moonshine
       branch = console.ask("Deploy from branch:") { |q| q.default = "release" }
 
       user = console.ask("User: (this user will created if it doesn't already exist)") { |q| q.default = "rails" }
-      user = user(/\s*/,'')
+      user = user.gsub(/\s*/,'')
       setup_user(user)
 
       #save initial version of the config
