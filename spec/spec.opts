@@ -1,5 +1,5 @@
 --colour
 --format s
 --loadby mtime
---random
+--reverse
 --backtrace

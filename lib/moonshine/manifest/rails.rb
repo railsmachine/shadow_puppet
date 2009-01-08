@@ -25,7 +25,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
   role :moonshine do
 
-    Facter.to_hash["moonshine"].each do |application, config|
+    facts["moonshine"].each do |application, config|
       app_root = "/srv/rails/#{application}"
       repo_path = "/var/lib/moonshine/applications/#{applications}"
 

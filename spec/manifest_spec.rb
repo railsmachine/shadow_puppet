@@ -62,6 +62,7 @@ describe "A manifest" do
   end
 
   describe "dependencies" do
+
     before(:each) do
       @manifest = BlankManifest.new
       @aspect = @manifest.role :debug do
@@ -79,10 +80,33 @@ describe "A manifest" do
 
   end
 
+  describe "facts" do
+    before(:each) do
+      @manifest = BlankManifest.new
+      @aspect = @manifest.role :debug do
+        exec "whoami", :command => "/usr/bin/whoami > /tmp/whoami.txt"
+      end
+    end
+
+    it "should be able to reference the facts inside an aspect" do
+      @aspect.facts.should == Facter.to_hash
+    end
+
+    it "should be able to be created using a call to the named method with only one arg" do
+      @aspect.exec("whoami").to_ref.should == ['exec', 'whoami']
+    end
+
+  end
+
 end
 
 describe "Executing a manifest" do
   before(:each) do
+    begin
+      File.delete("/tmp/uname.txt")
+      File.delete("/tmp/whoami.txt")
+    rescue
+    end
     @manifest = ClassLevelRole.new
     @aspect = @manifest.role "uname" do
       exec "uname", :command => "/usr/bin/uname > /tmp/uname.txt"
@@ -98,13 +122,5 @@ describe "Executing a manifest" do
     @manifest.run
     File.read("/tmp/uname.txt").should == `uname`
     File.read("/tmp/whoami.txt").should == `whoami`
-  end
-
-  after(:each) do
-    begin
-      File.delete("/tmp/uname.txt")
-      File.delete("/tmp/whoami.txt")
-    rescue
-    end
   end
 end
