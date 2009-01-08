@@ -6,7 +6,7 @@ module MoonshineUser
     name = name.gsub(/\s*/,'')
     return if name == ''
     self.moonshine_user = name
-    home = "#{home}"
+    home = "/home/#{name}"
     role "#{name}-user" do
       %w(
         makepasswd
