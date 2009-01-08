@@ -78,12 +78,22 @@ module Moonshine
       require 'etc'
       begin
         old_euid = Process.euid
+        old_user = ENV["USER"]
+        old_home = ENV["HOME"]
+        Process.uid = Etc.getpwnam(user).uid
         Process.euid = Etc.getpwnam(user).uid
+        ENV["USER"] = user
+        ENV["LOGNAME"] = user
+        ENV["HOME"] = "/home/#{user}"
         yield
       rescue Exception => e
         raise e
       ensure
+        Process.uid = old_euid
         Process.euid = old_euid
+        ENV["USER"] = old_user
+        ENV["LOGNAME"] = old_user
+        ENV["HOME"] = old_home
       end
     end
 
