@@ -4,10 +4,6 @@ require 'erb'
 gem "activesupport"
 require 'active_support'
 
-class Puppet::Util::Log
-  @loglevel = 0
-end
-
 class Puppet::DSL::Aspect
   def reference(type, title)
     Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
@@ -62,23 +58,10 @@ module Moonshine
       @run = false
     end
 
-    def run?
-      @run
-    end
-
     def self.role(name, options = {}, &block)
       a = Puppet::DSL::Aspect.new(name, options, &block)
       self.aspects << a
       a
-    end
-
-    def manifest
-      self
-    end
-
-    def run
-      role_names = aspects.map { |r| r.name }
-      run_roles(*role_names) if role_names
     end
 
     def role(name, options = {}, &block)
@@ -91,29 +74,36 @@ module Moonshine
       self.class.aspects + instance_aspects
     end
 
+    def run?
+      @run
+    end
+
+    def run
+      role_names = aspects.map { |r| r.name }
+      run_roles(*role_names) if role_names
+    end
+
     def run_roles(*names)
       raise Exception if run?
-      acquire(*names)
-      b = apply
+      evaluate(*names)
+      bucket = export()
+      catalog = bucket.to_catalog
+      applied_catalog = catalog.apply
       @run = true
+      applied_catalog
     end
 
-    def apply
-        bucket = export()
-        catalog = bucket.to_catalog
-        catalog.apply
-    end
-
-    def acquire(*names)
-        names.each do |name|
-            if aspect = Puppet::DSL::Aspect[name]
-                unless aspect.evaluated?
-                    aspect.evaluate
-                end
-            else
-                raise "Could not find aspect %s" % name
-            end
+    def evaluate(*names)
+      names.each do |name|
+        #TODO scope this per class
+        if aspect = Puppet::DSL::Aspect[name]
+          unless aspect.evaluated?
+            aspect.evaluate
+          end
+        else
+          raise "Could not find aspect %s" % name
         end
+      end
     end
 
     def export
