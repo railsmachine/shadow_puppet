@@ -6,7 +6,7 @@ class UserConfigurationManifest < Moonshine::Manifest
   include MoonshineUser
 end
 
-class MonshineSetupManifest < Moonshine::Manifest
+class MoonshineSetupManifest < Moonshine::Manifest
   role "moonshine_setup" do
     group "moonshine",
       :ensure     => "present",
@@ -133,7 +133,7 @@ HERE
  protected
 
     def setup
-      m = MonshineSetupManifest.new
+      m = MoonshineSetupManifest.new
       m.run
     end
 
