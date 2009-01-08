@@ -34,12 +34,14 @@ module Moonshine
 
     def test_clone
       while true
-        gets("Press ENTER to test cloning #{@options[:uri]}")
+        puts("Press ENTER to test cloning #{@options[:uri]}")
+        gets
         temp_path = "/tmp/#{Time.new.to_f.to_s.gsub(/\./,'')}.moonshine_clone_test"
         system("git clone #{@options[:uri]} #{temp_path}")
         system("ls #{temp_path}")
         FileUtils.remove_entry_secure(temp_path)
-        success = gets("Was the clone successful? [Yn]")
+        puts("Was the clone successful? [Yn]")
+        success = gets
         break if success.chomp.upcase != 'N'
       end
     end
