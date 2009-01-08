@@ -42,22 +42,33 @@ end
 #    server.run
 module Moonshine
   class Manifest
-    include Puppet::DSL
 
     attr_reader :application
-    attr_reader :instance_roles
-    class_inheritable_accessor :class_roles
-    self.class_roles = []
+    attr_reader :instance_aspects
+    class_inheritable_accessor :aspects
+    self.aspects = []
 
     def initialize(application = nil)
-      init
+      unless Process.uid == 0
+          Puppet[:confdir] = File.expand_path("~/.puppet")
+          Puppet[:vardir] = File.expand_path("~/.puppet/var")
+      end
+      Puppet[:user] = Process.uid
+      Puppet[:group] = Process.gid
+      Puppet::Util::Log.newdestination(:console)
+      Puppet::Util::Log.level = :info
       @application = application
-      @instance_roles = []
+      @instance_aspects = []
+      @run = false
+    end
+
+    def run?
+      @run
     end
 
     def self.role(name, options = {}, &block)
-      a = Aspect.new(name, options, &block)
-      self.class_roles << a
+      a = Puppet::DSL::Aspect.new(name, options, &block)
+      self.aspects << a
       a
     end
 
@@ -66,23 +77,59 @@ module Moonshine
     end
 
     def run
-      class_role_names = self.class_roles.map { |r| r.name }
-      instance_role_names = instance_roles.map { |r| r.name }
-      role_names = class_role_names + instance_role_names
-      apply_roles(*role_names) if role_names
+      role_names = aspects.map { |r| r.name }
+      run_roles(*role_names) if role_names
     end
 
     def role(name, options = {}, &block)
-      a = Aspect.new(name, options, &block)
-      @instance_roles << a
+      a = Puppet::DSL::Aspect.new(name, options, &block)
+      @instance_aspects << a
       a
     end
 
-    def apply_roles(*names)
-      acquire(*names)
-      apply
+    def aspects
+      self.class.aspects + instance_aspects
     end
 
+    def run_roles(*names)
+      raise Exception if run?
+      acquire(*names)
+      b = apply
+      @run = true
+    end
+
+    def apply
+        bucket = export()
+        catalog = bucket.to_catalog
+        catalog.apply
+    end
+
+    def acquire(*names)
+        names.each do |name|
+            if aspect = Puppet::DSL::Aspect[name]
+                unless aspect.evaluated?
+                    aspect.evaluate
+                end
+            else
+                raise "Could not find aspect %s" % name
+            end
+        end
+    end
+
+    def export
+      objects = aspects.map{ |r| [r.name, r] }.collect do |name, aspect|
+          if aspect.evaluated?
+              aspect.export
+          end
+      end.reject { |a| a.nil? }.flatten.collect do |obj|
+          obj.to_trans
+      end
+      bucket = Puppet::TransBucket.new(objects)
+      bucket.name = "moonshine.#{Time.new.to_f.to_s.gsub(/\./,'')}"
+      bucket.type = "class"
+
+      return bucket
+    end
   end
 
 end
