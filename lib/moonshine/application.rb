@@ -34,9 +34,9 @@ module Moonshine
 
     def test_clone
       temp_path = "/tmp/#{Time.new.to_f.to_s.gsub(/\./,'')}.#{name}.moonshine_clone_test"
-      execute "git clone #{@options[:uri]} #{temp_path}"
-      execute "ls #{temp_path}"
-      File.remove_entry_secure(temp_path)
+      puts execute("git clone #{@options[:uri]} #{temp_path}")
+      puts execute("ls #{temp_path}")
+      FileUtils.remove_entry_secure(temp_path)
     end
 
     def apply
