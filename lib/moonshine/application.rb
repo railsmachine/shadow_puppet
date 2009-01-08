@@ -71,7 +71,7 @@ module Moonshine
   protected
 
     def raise_manifest_load_error
-      raise LoadError, "Moonshine Manifests expected at #{manifest_path}, none found."
+      raise LoadError, "Moonshine Manifests expected at #{manifest_path}, none found. \n\nPlease install the moonshine plugin into your app, and run ./script/generate server [ServerName]"
     end
 
     def manifest_path
