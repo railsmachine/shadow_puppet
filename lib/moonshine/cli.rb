@@ -134,6 +134,8 @@ HERE
       m = UserConfigurationManifest.new
       m.user(u)
       m.run
+      #clear out one aspect before running the others?
+      Puppet::DSL::Aspect.clear
     end
 
     def update
