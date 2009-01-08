@@ -35,7 +35,6 @@ module MoonshineUser
         ]
 
       exec "#{name}-ssh-dsa",
-        :cwd          => home,
         :command      => "/usr/bin/ssh-keygen -f #{home}/.ssh/id_dsa -t dsa -N '' -q",
         :unless       => "/usr/bin/test -f #{home}/.ssh/id_dsa",
         :refreshonly  => true,
@@ -43,7 +42,6 @@ module MoonshineUser
         :user         => name
 
       exec "#{name}-ssh-rsa",
-        :cwd          => home,
         :command      => "/usr/bin/ssh-keygen -f #{home}/.ssh/id_rsa -t rsa -N '' -q",
         :unless       => "/usr/bin/test -f #{home}/.ssh/id_rsa",
         :refreshonly  => true,
