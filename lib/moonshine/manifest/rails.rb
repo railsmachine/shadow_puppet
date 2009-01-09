@@ -10,16 +10,15 @@
 #    server = UrServer.new("name_of_application")
 #    server.runclass Moonshine::Manifest::Rails < Moonshine::Manifest
 class Moonshine::Manifest::Rails < Moonshine::Manifest
+  ruby(:enterprise, 'http://rubyforge.org/frs/download.php/48623/ruby-enterprise-1.8.6-20081215.tar.gz')
   gem('rails')
 
-  role :rails do
+  role :moonshine do
+
     file "/srv/rails",
       :ensure => "directory",
       :owner => moonshine_user,
       :group => moonshine_user
-  end
-
-  role :moonshine do
 
     facts["moonshine"].each do |application, config|
       app_root = "/srv/rails/#{application}"
@@ -30,8 +29,8 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :require => [
           user(moonshine_user),
           file("/srv/rails"),
+          exec("install-ruby"),
           package("rails"),
-          package("rake"),
           service("apache2"),
           service("mysql")
         ],
@@ -198,6 +197,11 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
       wget
       vim
       whois
+      make
+      build-essential
+      zlib1g-dev
+      libssl-dev
+      sendmail
     ).each { |p| package p, :ensure => "installed" }
 
   end
@@ -206,11 +210,13 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
     %w(
       mysql-server
       libmysql-ruby
+      libmysqlclient-dev
     )
 
   service "apache2",
     %w(
-      apache2-mpm-worker
+      apache2-mpm-prefork
+      apache2-prefork-dev
       apache2-utils
       apache2.2-common
       libapache2-mod-passenger
