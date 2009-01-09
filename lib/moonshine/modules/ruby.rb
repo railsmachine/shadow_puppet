@@ -3,13 +3,11 @@ module MoonshineRuby
 
   def ruby(interpreter, uri = "")
     self.interpreter = interpreter
-    begin
-      tarball = uri.split("/").last
-      stub = tarball.gsub(/\.tar\.gz/, '').gsub(/\.tgz/, '')
-    rescue
-    end
     case interpreter
     when :enterprise
+
+    tarball = uri.split("/").last
+    stub = tarball.gsub(/\.tar\.gz/, '').gsub(/\.tgz/, '')
 
     role "ruby" do
 
@@ -37,7 +35,7 @@ module MoonshineRuby
       exec "untar-enterprise",
         :cwd          => "/var/lib/moonshine/packages",
         :command      => "/usr/bin/tar xzvf /var/lib/moonshine/packages/#{tarball}",
-        :creates      => "/var/lib/moonshine/packages/#{tarball}",
+        :creates      => "/var/lib/moonshine/packages/#{stub}",
         :refreshonly  => true,
         :subscribe    => exec("download-enterprise"),
         :before       => exec("install-enterprise")
