@@ -1,5 +1,5 @@
 class MoonshineUpdateManifest < Moonshine::Manifest
-  def update_application(name, option)
+  def update_application(name, options)
     uri = options[:uri]
     user = options[:user]
     branch = options[:branch]
