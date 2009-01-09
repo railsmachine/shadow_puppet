@@ -42,7 +42,8 @@ module MoonshineRuby
       exec "install-enterprise",
         :command      => "/usr/bin/yes | /var/lib/moonshine/packages/#{stub}/installer -a /opt/#{stub}",
         :refreshonly  => true,
-        :subscribe    => exec("download-enterprise"),
+        :timeout      => -1,
+        :subscribe    => exec("untar-enterprise"),
         :before       => exec("symlink-enterprise")
 
       exec "symlink-enterprise",
