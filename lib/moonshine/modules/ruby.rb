@@ -34,7 +34,7 @@ module MoonshineRuby
 
       exec "untar-enterprise",
         :cwd          => "/var/lib/moonshine/packages",
-        :command      => "/usr/bin/tar xzvf /var/lib/moonshine/packages/#{tarball}",
+        :command      => "/bin/tar xzvf /var/lib/moonshine/packages/#{tarball}",
         :creates      => "/var/lib/moonshine/packages/#{stub}",
         :refreshonly  => true,
         :subscribe    => exec("download-enterprise"),
