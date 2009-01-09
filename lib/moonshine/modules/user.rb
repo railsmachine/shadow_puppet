@@ -23,7 +23,20 @@ module MoonshineUser
         :shell      => "/bin/bash",
         :groups     => ["admin", "moonshine"],
         :allowdupe  => false,
-        :before     => file("#{home}/.ssh")
+        :before     => [
+          file("#{home}/.ssh"),
+          file("#{home}")
+        ]
+
+      file "#{home}",
+        :ensure => "directory",
+        :mode   => "755",
+        :owner  => name,
+        :group  => name,
+        :before => [
+          exec("#{name}-ssh-dsa"),
+          exec("#{name}-ssh-rsa")
+        ]
 
       file "#{home}/.ssh",
         :ensure => "directory",
