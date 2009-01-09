@@ -10,6 +10,8 @@
 #    server = UrServer.new("name_of_application")
 #    server.runclass Moonshine::Manifest::Rails < Moonshine::Manifest
 class Moonshine::Manifest::Rails < Moonshine::Manifest
+  user(moonshine_user)
+
   role :rails do
 
     file "/srv/rails",
@@ -24,8 +26,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
   end
 
   role :moonshine do
-
-    user moonshine_user, :ensure => "present"
 
     facts["moonshine"].each do |application, config|
       app_root = "/srv/rails/#{application}"
