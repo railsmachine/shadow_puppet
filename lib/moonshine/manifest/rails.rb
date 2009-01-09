@@ -10,8 +10,6 @@
 #    server = UrServer.new("name_of_application")
 #    server.runclass Moonshine::Manifest::Rails < Moonshine::Manifest
 class Moonshine::Manifest::Rails < Moonshine::Manifest
-  # don't think this is needed anymore
-  # user(moonshine_user)
 
   role :rails do
 
