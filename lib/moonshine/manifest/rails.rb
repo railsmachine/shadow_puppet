@@ -25,6 +25,8 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
   role :moonshine do
 
+    user moonshine_user, :ensure => "present"
+
     facts["moonshine"].each do |application, config|
       app_root = "/srv/rails/#{application}"
       repo_path = "/var/lib/moonshine/applications/#{applications}"
@@ -115,7 +117,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
       #clone
 
       exec "#{application}-clone-repo",
-        :command      => "/usr/bin/git clone #{repo_path} #{app_root} && && cd #{app_root} && /usr/bin/git checkout -b release",
+        :command      => "/usr/bin/git clone #{repo_path} #{app_root} && cd #{app_root} && /usr/bin/git checkout -b release",
         :creates      => app_root,
         :refreshonly  => true,
         :user         => moonshine_user,
