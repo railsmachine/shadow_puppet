@@ -7,9 +7,10 @@ class MoonshineUpdateManifest < Moonshine::Manifest
     role "#{name}-moonshine-update" do
       exec "#{name}-moonshine-clone-repo",
         :cwd          => "/var/lib/moonshine/applications/",
-        :command      => "/usr/bin/git clone #{uri} && /usr/bin/git checkout -b #{branch}",
+        :command      => "/usr/bin/git clone #{uri} && cd #{path} && usr/bin/git checkout -b #{branch}",
         :creates      => path,
         :user         => user,
+        :group        => "moonshine",
         :unless       => "/usr/bin/test -d #{path}",
         :before       => [
           exec("#{name}-moonshine-checkout-#{branch}"),
@@ -20,13 +21,15 @@ class MoonshineUpdateManifest < Moonshine::Manifest
         :cwd          => path,
         :command      => "/usr/bin/git checkout #{branch}",
         :user         => user,
+        :group        => "moonshine",
         :onlyif       => "/usr/bin/test -d #{path}",
         :before       => exec("#{name}-moonshine-update-repo")
 
       exec "#{name}-moonshine-update-repo",
         :cwd          => path,
         :command      => "/usr/bin/git pull origin #{branch}",
-        :user         => user
+        :user         => user,
+        :group        => "moonshine"
     end
   end
 end
