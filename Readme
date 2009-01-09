@@ -1,15 +1,19 @@
+= Testing Moonshine
+
 == Installation
 
-For now, *imagine* that you're doing a `apt-get install moonshine`, and instead, do the following as root:
+For now, *imagine* that you're doing a `apt-get install moonshine`, and instead, do the following:
 
-  # apt-get install libopenssl-ruby git-core
-  # scp oper@gw01.gnax.railsmachine.net:moonshine-0.0.1.gem
-  # gem install moonshine-0.0.1.gem
+  # sudo apt-get install rubygems libopenssl-ruby git-core
+  # sudo scp oper@gw01.gnax.railsmachine.net:moonshine-0.0.1.gem .
+  # sudo gem install moonshine-0.0.1.gem  --no-rdoc --no-ri
 
 == Running Moonshine
 
-You'll want to run this as root. Ubuntu is stupid about gems, so you'll have to specify the whole (weird) path:
+This is a gem binary. Ubuntu is stupid about gems and sudo (SECURE_PATH issues), so you'll have to specify the whole (weird) path:
 
-  # /var/lib/gems/1.8/bin/moonshine
+  # sudo /var/lib/gems/1.8/bin/moonshine
 
-Follow the provided instructions. git@git.railsmachine.com:test_rails_app is a good test rails app if you need one
+Follow the provided instructions. git@git.railsmachine.com:test_rails_app is a good test rails app if you need one.
+
+When the setup prompts you to add your SSH key to your git host, please ping me, I'll add it.
