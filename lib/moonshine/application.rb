@@ -19,36 +19,13 @@ module Moonshine
       @config_file = app_config_file
       @name = File.basename(app_config_file, ".conf").gsub(/\s*/,'')
       raise ArgumentError if @name == ""
+      @update_manifest = MoonshineUpdateManifest.new
       @options = DEFAULT_OPTIONS.merge(YAML.load_file(app_config_file))
     end
 
     def update
-      update_manifest = Moonshine::Manifest.new
-      update_manifest.role "#{name}-moonshine-update" do
-        exec "#{name}-moonshine-clone-repo",
-          :cwd          => "/var/lib/moonshine/applications/",
-          :command      => "/usr/bin/git clone #{@options[:uri]} && /usr/bin/git checkout -b #{@options[:branch]}",
-          :creates      => path,
-          :user         => @options[:user],
-          :unless       => "/usr/bin/test -d #{@path}",
-          :before       => [
-            exec("#{name}-moonshine-checkout-#{@options[:branch]}"),
-            exec("#{name}-moonshine-update-repo")
-          ]
-
-        exec "#{name}-moonshine-checkout-#{@options[:branch]}",
-          :cwd          => path,
-          :command      => "/usr/bin/git checkout #{@options[:branch]}",
-          :user         => @options[:user],
-          :onlyif       => "/usr/bin/test -d #{path}",
-          :before       => exec("#{name}-moonshine-update-repo")
-
-        exec "#{name}-moonshine-update-repo",
-          :cwd          => path,
-          :command      => "/usr/bin/git pull origin #{@options[:branch]}",
-          :user         => @options[:user]
-      end
-      update_manifest.run
+      @update_manifest = update_application(@name, options)
+      @update_manifest.run
     end
 
     def test_clone
