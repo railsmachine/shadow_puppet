@@ -22,7 +22,10 @@ module MoonshineRuby
         :cwd      => "/var/lib/moonshine/packages",
         :command  => "/usr/bin/wget #{uri}",
         :creates  => "/var/lib/moonshine/packages/#{tarball}",
-        :before   => exec("untar-enterprise"),
+        :before   => [
+          exec("untar-enterprise"),
+          service("apache2")
+        ],
         :require    => [
            package("apache2-prefork-dev"),
            package("libmysqlclient-dev"),
@@ -42,7 +45,7 @@ module MoonshineRuby
       exec "install-enterprise",
         :command      => "/usr/bin/yes | /var/lib/moonshine/packages/#{stub}/installer -a /opt/#{stub}",
         :refreshonly  => true,
-        :timeout      => -1,
+        :timeout      => "-1",
         :subscribe    => exec("untar-enterprise"),
         :before       => exec("symlink-enterprise")
 
@@ -67,14 +70,14 @@ module MoonshineRuby
       exec "install-passenger",
         :command      => "/usr/bin/yes /opt/ree/bin/passenger-install-apache2-module",
         :refreshonly  => true,
+        :timeout      => "-1",
         :subscribe    => exec("symlink-rake"),
         :before       => exec("install-ruby")
 
       exec "install-ruby",
         :refreshonly  => true,
         :subscribe    => exec("install-passenger"),
-        :command      => "/bin/true",
-        :before       => service("apache2")
+        :command      => "/bin/true"
 
     end
 
