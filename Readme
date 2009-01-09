@@ -1,10 +1,17 @@
 = Testing Moonshine
 
+Testing Targets:
+
+* Official Ubuntu ec2 instances: ami-814aaee8 (32) and ami-a84aaec1 (64)
+* VMWare ubuntu 8.10 server install
+* Slicehost Ubuntu
+* RM Ubuntu (in development)
+
 == Installation
 
 For now, *imagine* that you're doing a `apt-get install moonshine`, and instead, do the following:
 
-  # sudo apt-get install rubygems libopenssl-ruby git-core
+  # sudo apt-get install puppet git-core
   # sudo scp oper@gw01.gnax.railsmachine.net:moonshine-0.0.1.gem .
   # sudo gem install moonshine-0.0.1.gem  --no-rdoc --no-ri
 
