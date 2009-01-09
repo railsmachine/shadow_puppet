@@ -107,13 +107,7 @@ describe "A manifest" do
     end
 
     it "should be able to be create scpoed reference using a call to the named method with only one arg" do
-      # @aspect.exec("uname").to_ref.should == ['exec', "uname:#{@manifest.object_id}"]
       @aspect.exec("uname").to_ref.should == ['exec', "uname"]
-    end
-
-    it "should be able to reference resource created in the class" do
-      pending("needs fixed scoping")
-      @aspect.class_reference(:exec, 'w!hoami').to_ref.should == ['exec', "whoami:#{ClassLevelRole.object_id}"]
     end
   end
 

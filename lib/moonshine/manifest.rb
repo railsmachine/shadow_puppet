@@ -5,16 +5,9 @@ gem "activesupport"
 require 'active_support'
 
 class Puppet::DSL::Aspect
-  attr_accessor :uniq_id
-  attr_accessor :parent_uniq_id
 
   def initialize(name, options = {}, &block)
-    if @uniq_id = options[:id]
-      @name = symbolize(uniquify(name))
-    else
-      @name = symbolize(name)
-    end
-    @parent_uniq_id = options[:parent_id]
+    @name = symbolize(name)
     if block
       @block = block
     end
@@ -34,20 +27,7 @@ class Puppet::DSL::Aspect
   end
 
   def reference(type, title)
-    Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s)
-  end
-
-  def scoped_reference(type,title)
-    reference(type,uniquify(title))
-  end
-
-  def class_reference(type,title)
-    reference(type,uniquify(title, :parent_uniq_id))
-  end
-
-  def uniquify(name = '', method = :uniq_id)
-    return name if self.send(method).nil?
-    (name.to_s + ':' + self.send(method).to_s)
+    Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s, :scope => scope)
   end
 
   def facts
@@ -63,16 +43,28 @@ class Puppet::DSL::Aspect
     define_method(type.name) do |*args|
       if args && args.flatten.size == 1
         reference(type.name, args.first)
-        # scoped_reference(type.name, args.first)
       else
         newresource(type, args.first, args.last)
-        # scoped_resource(type, args.first, args.last)
       end
     end
   end
 
-  def scoped_resource(type, name, params = {})
-    newresource(type, name, params.merge({:alias => uniquify(name)}))
+  def scope
+      unless defined?(@scope)
+          # Set the code to something innocuous; we just need the
+          # scopes, not the interpreter.  Hackish, but true.
+          Puppet[:code] = " "
+          @interp = Puppet::Parser::Interpreter.new
+          require 'puppet/node'
+          @node = Puppet::Node.new(Facter.value(:hostname))
+          if env = Puppet[:environment] and env == ""
+              env = nil
+          end
+          @node.parameters = Facter.to_hash
+          @compile = Puppet::Parser::Compiler.new(@node, @interp.send(:parser, env))
+          @scope = @compile.topscope
+      end
+      @scope
   end
 
 end
@@ -107,13 +99,13 @@ module Moonshine
     end
 
     def self.role(name, options = {}, &block)
-      a = Puppet::DSL::Aspect.new(name, options.merge({:id => object_id}), &block)
+      a = Puppet::DSL::Aspect.new(name, options, &block)
       self.aspects << a
       a
     end
 
     def role(name, options = {}, &block)
-      a = Puppet::DSL::Aspect.new(name, options.merge({:id => object_id, :parent_id => self.class.object_id}), &block)
+      a = Puppet::DSL::Aspect.new(name, options, &block)
       @instance_aspects << a
       a
     end
