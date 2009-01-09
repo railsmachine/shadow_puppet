@@ -19,6 +19,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
       :group => moonshine_user
 
     package "rubygems", :ensure => "installed"
+    package "rake", :ensure => "installed"
 
     package "rails", :ensure => "installed", :provider => "gem"
 
@@ -36,6 +37,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           user(moonshine_user),
           file("/srv/rails"),
           package("rails"),
+          package("rake"),
           service("apache2"),
           service("mysql")
         ],
