@@ -1,1 +1,15 @@
-create repo
+== Installation
+
+For now, *imagine* that you're doing a `apt-get install moonshine`, and instead, do the following as root:
+
+  # apt-get install libopenssl-ruby git-core
+  # scp oper@gw01.gnax.railsmachine.net:moonshine-0.0.1.gem
+  # gem install moonshine-0.0.1.gem
+
+== Running Moonshine
+
+You'll want to run this as root. Ubuntu is stupid about gems, so you'll have to specify the whole (weird) path:
+
+  # /var/lib/gems/1.8/bin/moonshine
+
+Follow the provided instructions. git@git.railsmachine.com:test_rails_app is a good test rails app if you need one
