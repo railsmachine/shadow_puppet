@@ -23,7 +23,7 @@ module MoonshineRuby
         :command  => "/usr/bin/wget #{uri}",
         :creates  => "/var/lib/moonshine/packages/#{tarball}",
         :before   => exec("untar-enterprise"),
-        :requires   => [
+        :require    => [
            package("apache2-prefork-dev"),
            package("libmysqlclient-dev"),
            package("build-essential"),
