@@ -24,7 +24,7 @@ module Moonshine
     end
 
     def update
-      @update_manifest = update_application(@name, options)
+      @update_manifest.update_application(@name, options)
       @update_manifest.run
     end
 
