@@ -175,7 +175,6 @@ describe "Two manifest instances of the same class" do
     end
 
     it "perform all tasks when run" do
-      pending("needs fixed scoping")
       @manifest1.run
       @manifest2.run
       File.read("/tmp/uname1.txt").should == `uname`
@@ -194,7 +193,6 @@ describe "Two manifest instances of the same class" do
     end
 
     it "perform all tasks when run" do
-      pending("needs fixed scoping")
       @manifest1.run
       @manifest2.run
       File.read("/tmp/uname1.txt").should == `uname`

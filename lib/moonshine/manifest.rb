@@ -149,6 +149,8 @@ module Moonshine
       catalog = bucket.to_catalog
       applied_catalog = catalog.apply
       @run = true
+      catalog.clear(true)
+      Puppet::DSL::Aspect.clear
       applied_catalog
     end
 
