@@ -54,7 +54,7 @@ module Moonshine
       branch = console.ask("Deploy from branch:") { |q| q.default = "release" }
 
       user = console.ask("User: (this user will created if it doesn't already exist)") { |q| q.default = "rails" }
-      setup_user(user)
+      setup_user(user, console)
 
       #save initial version of the config
       app_config_file = "/etc/moonshine/#{name}.conf"
@@ -104,10 +104,17 @@ HERE
       m.run
     end
 
-    def setup_user(u)
+    def setup_user(user, console)
       m = UserConfigurationManifest.new
-      m.user(u)
+      m.user(user)
       m.run
+      begin
+        password = File.read("/root/#{user}_password.txt")
+      rescue
+      else
+        console.say "The password for #{user} has been set to:\n\n"
+        console.say "    #{password}\n"
+      end
     end
 
     def update
