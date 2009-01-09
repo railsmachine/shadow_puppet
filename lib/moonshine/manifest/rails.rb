@@ -10,19 +10,13 @@
 #    server = UrServer.new("name_of_application")
 #    server.runclass Moonshine::Manifest::Rails < Moonshine::Manifest
 class Moonshine::Manifest::Rails < Moonshine::Manifest
+  gem('rails')
 
   role :rails do
-
     file "/srv/rails",
       :ensure => "directory",
       :owner => moonshine_user,
       :group => moonshine_user
-
-    package "rubygems", :ensure => "installed"
-    package "rake", :ensure => "installed"
-
-    package "rails", :ensure => "installed", :provider => "gem"
-
   end
 
   role :moonshine do

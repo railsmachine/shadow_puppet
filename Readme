@@ -11,7 +11,7 @@ Testing Targets:
 
 For now, *imagine* that you're doing a `apt-get install moonshine`, and instead, do the following:
 
-  # sudo apt-get install puppet git-core
+  # sudo apt-get install rubygems puppet git-core
   # sudo scp oper@gw01.gnax.railsmachine.net:moonshine-0.0.1.gem .
   # sudo gem install moonshine-0.0.1.gem  --no-rdoc --no-ri
 
