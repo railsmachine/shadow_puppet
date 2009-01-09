@@ -37,15 +37,20 @@ module Moonshine
     def test_clone
       as_user(options[:user]) do
         while true
-          puts("Press ENTER to test cloning #{@options[:uri]}")
-          gets
-          temp_path = "/tmp/#{Time.new.to_f.to_s.gsub(/\./,'')}.moonshine_clone_test"
-          system("git clone #{@options[:uri]} #{temp_path}")
-          system("ls #{temp_path}")
-          FileUtils.remove_entry_secure(temp_path)
-          puts("Was the clone successful? [Yn]")
-          success = gets
-          break if success.chomp.upcase != 'N'
+          begin
+            puts("Press ENTER to test cloning #{@options[:uri]}")
+            gets
+            temp_path = "/tmp/#{Time.new.to_f.to_s.gsub(/\./,'')}.moonshine_clone_test"
+            system("git clone #{@options[:uri]} #{temp_path}")
+            system("ls #{temp_path}")
+            FileUtils.remove_entry_secure(temp_path)
+          rescue Exception => e
+            puts "ERROR: #{e.class}"
+          ensure
+            puts("Was the clone successful? [Yn]")
+            success = gets
+            break if success.chomp.upcase != 'N'
+          end
         end
       end
     end
