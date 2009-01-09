@@ -26,7 +26,7 @@ module Moonshine
       update_manifest = Moonshine::Manifest.new
       update_manifest.role "#{name}-moonshine-update" do
         exec "#{name}-moonshine-clone-repo",
-          :cwd          => "/var/lib/moonshine/applications/"
+          :cwd          => "/var/lib/moonshine/applications/",
           :command      => "/usr/bin/git clone #{options[:uri]} && /usr/bin/git checkout -b #{options[:branch]}",
           :creates      => path,
           :user         => options[:user],
