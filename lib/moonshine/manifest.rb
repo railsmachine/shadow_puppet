@@ -51,7 +51,7 @@ class Puppet::DSL::Aspect
   end
 
   def facts
-    Facter.clear
+    Facter.flush
     Facter.to_hash
   end
 
@@ -131,7 +131,7 @@ module Moonshine
     end
 
     def facts
-      Facter.clear
+      Facter.flush
       Facter.to_hash
     end
 
