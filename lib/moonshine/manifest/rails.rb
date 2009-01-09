@@ -219,7 +219,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
       apache2-prefork-dev
       apache2-utils
       apache2.2-common
-      libapache2-mod-passenger
       libapr1
       libaprutil1
       libpq5

@@ -73,7 +73,8 @@ module MoonshineRuby
       exec "install-ruby",
         :refreshonly  => true,
         :subscribe    => exec("install-passenger"),
-        :command      => "/bin/true"
+        :command      => "/bin/true",
+        :before       => service("apache2")
 
     end
 
