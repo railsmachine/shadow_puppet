@@ -115,10 +115,11 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
       #clone
 
       exec "#{application}-clone-repo",
-        :command      => "/usr/bin/git clone #{repo_path} #{app_root} && /usr/bin/git checkout -b release",
+        :command      => "/usr/bin/git clone #{repo_path} #{app_root} && && cd #{app_root} && /usr/bin/git checkout -b release",
         :creates      => app_root,
         :refreshonly  => true,
         :user         => moonshine_user,
+        :group        => 'moonshine',
         :subscribe    => exec("#{application}-clone"),
         :before       => exec("#{application}-finalize-update")
 
@@ -129,6 +130,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :command      => "/usr/bin/git checkout #{config[:branch]} && /usr/bin/git pull origin #{config[:branch]}",
         :refreshonly  => true,
         :user         => moonshine_user,
+        :group        => 'moonshine',
         :subscribe    => exec("#{application}-update"),
         :before       => exec("#{application}-finalize-update")
 
@@ -149,6 +151,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :command      => "/usr/bin/rake db:migrate",
         :refreshonly  => true,
         :user         => moonshine_user,
+        :group        => 'moonshine',
         :subscribe    => exec("#{application}-finalize-update"),
         :before       => exec("#{application}-restart")
 
@@ -157,6 +160,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :command      => "/usr/bin/git checkout -b `date -u +%Y%m%d%H%M%N`",
         :refreshonly  => true,
         :user         => moonshine_user,
+        :group        => 'moonshine',
         :subscribe    => exec("#{application}-finalize-update"),
         :before       => exec("#{application}-migrate")
 
@@ -176,6 +180,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
           :command      => "/usr/bin/touch #{app_root}/tmp/restart.txt",
           :refreshonly  => true,
           :user         => moonshine_user,
+          :group        => 'moonshine',
           :subscribe    => exec("#{application}-restart"),
           :before       => exec("#{application}-finish")
 
