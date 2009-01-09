@@ -31,7 +31,7 @@ module MoonshineGem
       exec "update-rubygems",
         :command      => "/usr/bin/update_rubygems",
         :refreshonly  => true,
-        :onlyif       => "/usr/bin/test -f /usr/bin/update_rubygems,"
+        :onlyif       => "/usr/bin/test -f /usr/bin/update_rubygems",
         :subscribe    => package("rubygems-update"),
         :before       => package('moonshine')
 
