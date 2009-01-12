@@ -102,9 +102,9 @@ No Moonshine Manifests found in #{manifest_path}. To generate one for your app:
 
 On your development machine:
 
-  sudo gem install moonshine
+  sudo gem install moonshine_generator
   cd RAILS_ROOT
-  ./script/generate server main
+  ./script/generate moonshine main
   vi config/moonshine/main_moonshine_server.rb
   #edit
   #commit these changes to your repository and merge into the release branch.

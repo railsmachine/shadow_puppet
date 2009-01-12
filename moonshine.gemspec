@@ -13,8 +13,6 @@ Gem::Specification.new do |s|
     "init.rb",
     "rails/init.rb",
     "Readme",
-    "generators/server/server_generator.rb",
-    "generators/server/templates/server.rb",
     "bin/moonshine",
     "lib/facts/moonshine.rb",
     "lib/moonshine.rb",
