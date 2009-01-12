@@ -118,18 +118,13 @@ module MoonshineRuby
             :subscribe    => package("rubygems-update"),
             :before       => exec('install-ruby')
 
-          package "moonshine",
-            :ensure   => "installed",
-            :provider => "gem"
-
           exec "install-ruby",
             :command      => "/bin/true",
             :refreshonly  => true,
             :subscribe    => [
               exec("update-rubygems-var-lib"),
               exec("update-rubygems")
-            ],
-            :require      => package("moonshine")
+            ]
 
       end
 
