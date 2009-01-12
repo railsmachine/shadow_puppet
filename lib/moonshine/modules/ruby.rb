@@ -107,16 +107,20 @@ module MoonshineRuby
           exec "update-rubygems",
             :command      => "/usr/bin/update_rubygems",
             :refreshonly  => true,
-            :onlyif       => "/usr/bin/test -f /usr/bin/update_rubygems",
+            :unless       => "/usr/bin/test -f /var/lib/gems/1.8/bin/update_rubygems",
             :subscribe    => package("rubygems-update"),
             :before       => exec('install-ruby')
 
           exec "update-rubygems-var-lib",
             :command      => "/var/lib/gems/1.8/bin/update_rubygems",
             :refreshonly  => true,
-            :onlyif       => "/usr/bin/test -f /var/lib/gems/1.8/bin/update_rubygems",
+            :unless       => "/usr/bin/test -f /usr/bin/update_rubygems",
             :subscribe    => package("rubygems-update"),
             :before       => exec('install-ruby')
+
+          package "moonshine",
+            :ensure   => "installed",
+            :provider => "gem"
 
           exec "install-ruby",
             :command      => "/bin/true",
@@ -124,7 +128,8 @@ module MoonshineRuby
             :subscribe    => [
               exec("update-rubygems-var-lib"),
               exec("update-rubygems")
-            ]
+            ],
+            :require      => package("moonshine")
 
       end
 
