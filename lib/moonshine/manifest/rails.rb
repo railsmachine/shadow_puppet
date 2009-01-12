@@ -10,7 +10,7 @@
 #    server = UrServer.new("name_of_application")
 #    server.runclass Moonshine::Manifest::Rails < Moonshine::Manifest
 class Moonshine::Manifest::Rails < Moonshine::Manifest
-  ruby(:enterprise, 'http://rubyforge.org/frs/download.php/48623/ruby-enterprise-1.8.6-20081215.tar.gz')
+  ruby(:debian)
   gem('rails')
 
   role :moonshine do
