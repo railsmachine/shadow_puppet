@@ -184,11 +184,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
   end
 
-  role :debug do
-    file "/tmp/facts.yaml", :content => YAML.dump(Facter.to_hash)
-    exec "whoami", :command => "/usr/bin/whoami > /tmp/whoami.txt"
-  end
-
   role :utils do
 
     %w(

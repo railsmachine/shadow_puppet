@@ -85,9 +85,6 @@ module MoonshineRuby
 
       role "ruby" do
 
-        file "/var/lib/moonshine/packages",
-          :ensure => "directory"
-
           package "rubygems", :ensure => "installed"
           package "rake", :ensure => "installed"
           package "apache2-mpm-worker", :ensure => "installed"
