@@ -119,8 +119,9 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :subscribe    => exec("#{application}-clone"),
         :before       => exec("#{application}-create-#{config[:branch]}-branch")
 
+      #TODO: may be able to remove this
       exec "#{application}-create-#{config[:branch]}-branch",
-        :command      => "/usr/bin/git checkout -b #{config[:branch]}",
+        :command      => "/usr/bin/git checkout -b #{config[:branch]} || /bin/true",
         :cwd          => app_root,
         :refreshonly  => true,
         :user         => moonshine_user,
