@@ -99,7 +99,7 @@ module MoonshineRuby
           :refreshonly  => true,
           :onlyif       => "/usr/bin/test -f /usr/bin/update_rubygems",
           :subscribe    => package("rubygems-update"),
-          :before       => exec('fix-rubygems')
+          :before       => exec('install-ruby')
 
         exec "update-rubygems-var-lib",
           :command      => "/var/lib/gems/1.8/bin/update_rubygems",
