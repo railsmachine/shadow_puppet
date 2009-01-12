@@ -97,7 +97,20 @@ module Moonshine
     end
 
     def raise_manifest_load_error
-      raise LoadError, "Moonshine Manifests expected at #{manifest_path}, none found. \n\nPlease install the moonshine plugin into your app, and run ./script/generate server [ServerName]"
+      raise LoadError, <<-OMGDOC
+No Moonshine Manifests found in #{manifest_path}. To generate one for your app:
+
+On your development machine:
+
+  sudo gem install moonshine
+  cd RAILS_ROOT
+  ./script/generate server main
+  vi config/moonshine/main_moonshine_server.rb
+  #edit
+  #commit these changes to your repository and merge into the release branch.
+
+Once you've added the generate manifest to your release branch, please re-run moonshine.
+OMGDOC
     end
 
     def manifest_path
