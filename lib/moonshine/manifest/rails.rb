@@ -111,12 +111,21 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
       #clone
 
       exec "#{application}-clone-repo",
-        :command      => "/usr/bin/git clone #{repo_path} #{app_root} && cd #{app_root} && /usr/bin/git checkout -b release",
+        :command      => "/usr/bin/git clone #{repo_path} #{app_root}",
         :creates      => app_root,
         :refreshonly  => true,
         :user         => moonshine_user,
         :group        => 'moonshine',
         :subscribe    => exec("#{application}-clone"),
+        :before       => exec("#{application}-create-#{config[:branch]}-branch")
+
+      exec "#{application}-create-#{config[:branch]}-branch",
+        :command      => "/usr/bin/git checkout -b #{config[:branch]}",
+        :cwd          => app_root,
+        :refreshonly  => true,
+        :user         => moonshine_user,
+        :group        => 'moonshine',
+        :subscribe    => exec("#{application}-clone-repo"),
         :before       => exec("#{application}-finalize-update")
 
       #update
@@ -151,7 +160,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :subscribe    => exec("#{application}-finalize-update"),
         :before       => exec("#{application}-restart")
 
-      exec "#{application}-create-release-branch",
+      exec "#{application}-create-timestamped-branch",
         :cwd          => app_root,
         :command      => "/usr/bin/git checkout -b `date -u +%Y%m%d%H%M%N`",
         :refreshonly  => true,
