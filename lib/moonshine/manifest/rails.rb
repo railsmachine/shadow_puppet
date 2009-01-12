@@ -215,8 +215,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
 
   service "apache2",
     %w(
-      apache2-mpm-prefork
-      apache2-prefork-dev
       apache2-utils
       apache2.2-common
       libapr1

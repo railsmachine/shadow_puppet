@@ -16,6 +16,8 @@ module MoonshineRuby
 
       package "wget", :ensure => "installed"
 
+      package "apache2-prefork-dev", :ensure => "installed"
+
       exec "download-enterprise",
         :cwd      => "/var/lib/moonshine/packages",
         :command  => "/usr/bin/wget #{uri}",
@@ -88,7 +90,10 @@ module MoonshineRuby
 
         package "rubygems", :ensure => "installed"
         package "rake", :ensure => "installed"
-        package "libapache2-mod-passenger", :ensure => "installed"
+        package "apache2-mpm-worker", :ensure => "installed"
+        package "libapache2-mod-passenger",
+          :ensure  => "installed",
+          :require => package("apache2-mpm-worker")
 
         package "rubygems-update",
           :ensure   => "installed",
