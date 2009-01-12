@@ -88,11 +88,16 @@ module MoonshineRuby
 
         package "rubygems", :ensure => "installed"
         package "rake", :ensure => "installed"
+        package "libapache2-mod-passenger", :ensure => "installed"
 
         package "rubygems-update",
           :ensure   => "installed",
           :provider => "gem",
-          :require  => package("rubygems")
+          :require  => [
+            package("rubygems"),
+            package("rake"),
+            package("libapache2-mod-passenger")
+          ]
 
         exec "update-rubygems",
           :command      => "/usr/bin/update_rubygems",
