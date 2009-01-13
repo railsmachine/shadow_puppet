@@ -36,7 +36,7 @@ class Puppet::DSL::Aspect
   end
 
   def application
-    Mooneshine::Application.current
+    Moonshine::Application.current
   end
 
   def application_config
