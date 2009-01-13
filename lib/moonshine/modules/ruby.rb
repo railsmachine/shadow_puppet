@@ -85,9 +85,14 @@ module MoonshineRuby
 
       role "ruby" do
 
-          package "rubygems", :ensure => "installed"
+          package "ruby-dev", :ensure => "installed"
           package "rake", :ensure => "installed"
           package "apache2-mpm-worker", :ensure => "installed"
+
+          package "rubygems",
+            :ensure => "installed",
+            :require => package("ruby-dev")
+
           package "libapache2-mod-passenger",
             :ensure  => "installed",
             :require => package("apache2-mpm-worker")
