@@ -13,6 +13,19 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
   ruby(:debian)
   gem('rails')
 
+  packages %w(
+     man-db
+     curl
+     wget
+     vim
+     whois
+     make
+     build-essential
+     zlib1g-dev
+     libssl-dev
+     sendmail
+   )
+
   service "mysql",
     %w(
       mysql-server
@@ -207,23 +220,6 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
         :subscribe    => exec("#{application}-restart"),
         :before       => exec("#{application}-finish")
 
-
-  end
-
-  role :utils do
-
-    %w(
-      man-db
-      curl
-      wget
-      vim
-      whois
-      make
-      build-essential
-      zlib1g-dev
-      libssl-dev
-      sendmail
-    ).each { |p| package p, :ensure => "installed" }
 
   end
 

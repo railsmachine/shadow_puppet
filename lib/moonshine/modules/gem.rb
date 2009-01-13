@@ -16,6 +16,7 @@ module MoonshineGem
       end
     end
   end
+  alias_method :gems, :gem
 
   def define_rubygems_role
     role :rubygems do
