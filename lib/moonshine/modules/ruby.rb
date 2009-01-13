@@ -87,6 +87,7 @@ module MoonshineRuby
 
           package "ruby-dev", :ensure => "installed"
           package "rake", :ensure => "installed"
+          package "irb", :ensure => "installed"
           package "apache2-mpm-worker", :ensure => "installed"
 
           package "rubygems",
