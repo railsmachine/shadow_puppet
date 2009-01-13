@@ -12,12 +12,13 @@ module MoonshinePackage
         package_params.merge({
           :before => package(package_array[index+1])
         })
+      end
       role "package-#{name}" do
         package name.to_s, package_params
       end
     end
   end
-  alias_method :pacakges, :package
+  alias_method :packages, :package
 
 end
 Moonshine::Manifest.send(:extend, MoonshinePackage)
