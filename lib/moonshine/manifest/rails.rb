@@ -17,7 +17,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
     %w(
       mysql-server
       libmysql-ruby
-      libmysqlclient-dev
+      libmysqlclient15-dev
     )
 
   service "apache2",
@@ -213,7 +213,7 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
   role :utils do
 
     %w(
-      man
+      man-db
       curl
       wget
       vim
