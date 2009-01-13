@@ -39,7 +39,7 @@ class Puppet::DSL::Aspect
     Moonshine::Application.current
   end
 
-  def application_config
+  def config
     facts["moonshine"].each do |app_name, config|
       return config if app_name.to_sym == application.to_sym
     end
