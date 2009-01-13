@@ -39,5 +39,6 @@ Gem::Specification.new do |s|
   s.add_dependency(%q<puppet>, [">= 0.24.6"])
   s.add_dependency(%q<facter>, [">= 1.5.2"])
   s.add_dependency(%q<highline>, [">= 1.5.0"])
+  s.add_dependency(%q<builder>, [">= 2.1.2"])
   s.add_dependency(%q<activesupport>, [">= 2.2.2"])
 end
