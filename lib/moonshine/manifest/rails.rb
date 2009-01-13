@@ -13,6 +13,24 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
   ruby(:debian)
   gem('rails')
 
+  service "mysql",
+    %w(
+      mysql-server
+      libmysql-ruby
+      libmysqlclient-dev
+    )
+
+  service "apache2",
+    %w(
+      apache2-utils
+      apache2.2-common
+      libapr1
+      libaprutil1
+      libpq5
+      openssl-blacklist
+      ssl-cert
+    )
+
   role :moonshine do
 
     file "/srv/rails",
@@ -210,23 +228,5 @@ class Moonshine::Manifest::Rails < Moonshine::Manifest
     ).each { |p| package p, :ensure => "installed" }
 
   end
-
-  service "mysql",
-    %w(
-      mysql-server
-      libmysql-ruby
-      libmysqlclient-dev
-    )
-
-  service "apache2",
-    %w(
-      apache2-utils
-      apache2.2-common
-      libapr1
-      libaprutil1
-      libpq5
-      openssl-blacklist
-      ssl-cert
-    )
 
 end
