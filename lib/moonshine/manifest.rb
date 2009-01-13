@@ -35,6 +35,17 @@ class Puppet::DSL::Aspect
     Facter.to_hash
   end
 
+  def application
+    Mooneshine::Application.current
+  end
+
+  def application_config
+    facts["moonshine"].each do |app_name, config|
+      return config if app_name.to_sym == application.to_sym
+    end
+    return nil
+  end
+
   #Create an instance method for every type that either creates or references
   #a resource
   Puppet::Type.loadall

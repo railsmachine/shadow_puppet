@@ -1,11 +1,12 @@
 gem "activesupport"
-require 'active_support/inflector'
+require 'active_support'
 require 'fileutils'
 
 module Moonshine
 
   class Application
 
+    cattr_accessor :current
     attr_reader :name, :options, :config_file
 
     DEFAULT_OPTIONS = {
@@ -18,6 +19,7 @@ module Moonshine
     def initialize(app_config_file)
       @config_file = app_config_file
       @name = File.basename(app_config_file, ".conf").gsub(/\s*/,'')
+      self.current = @name
       raise ArgumentError if @name == ""
       @update_manifest = MoonshineUpdateManifest.new
       @options = DEFAULT_OPTIONS.merge(YAML.load_file(app_config_file))
