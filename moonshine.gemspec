@@ -10,8 +10,6 @@ Gem::Specification.new do |s|
   s.default_executable = %q{moonshine}
   s.executables = ["moonshine"]
   s.files = [
-    "init.rb",
-    "rails/init.rb",
     "Readme",
     "bin/moonshine",
     "lib/facts/moonshine.rb",
