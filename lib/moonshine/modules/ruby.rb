@@ -96,7 +96,8 @@ module MoonshineRuby
 
           package "libapache2-mod-passenger",
             :ensure  => "installed",
-            :require => package("apache2-mpm-worker")
+            :require => package("apache2-mpm-worker"),
+            :notify  => service('apache2')
 
           package "rubygems-update",
             :ensure   => "installed",
