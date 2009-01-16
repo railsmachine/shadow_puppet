@@ -10,6 +10,7 @@
 #    server = UrServer.new("name_of_application")
 #    server.runclass Moonshine::Manifest::Rails < Moonshine::Manifest
 class Moonshine::Manifest::Rails < Moonshine::Manifest
+  user(moonshine_user)
   ruby(:debian)
   gem('rails')
 
