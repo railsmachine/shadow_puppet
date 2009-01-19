@@ -87,7 +87,7 @@ module Moonshine
       unless obj = @objects[type][name]
         obj = Puppet::Parser::Resource.new(
           :title => name,
-          :type => self.class.to_s,
+          :type => type.name,
           :source => self,
           :scope => scope
         )

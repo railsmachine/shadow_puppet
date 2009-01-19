@@ -24,25 +24,47 @@ describe "A manifest" do
       @manifest = RequiresMetViaMethods.new
     end
 
-    it "knows what it's supposed to" do
+    it "knows what it's supposed to do" do
       @manifest.class.recipes.should == [:foo, :bar]
     end
 
-    it "calls specified methods on #evaluate" do
-      @manifest.should_receive(:foo)
-      @manifest.should_receive(:bar)
-      @manifest.evaluate
+    describe 'when evaluated' do
+
+      it "calls specified methods" do
+        @manifest.should_receive(:foo)
+        @manifest.should_receive(:bar)
+        @manifest.evaluate
+      end
+
+      it "creates new resources" do
+        @manifest.should_receive(:newresource).with(Puppet::Type::Exec, 'foo', :command => '/usr/bin/true').exactly(1).times
+        @manifest.should_receive(:newresource).with(Puppet::Type::Exec, 'bar', :command => '/usr/bin/true').exactly(1).times
+        @manifest.evaluate
+      end
+
+      it "creates new objects" do
+        @manifest.evaluate
+        @manifest.objects.should_not == {}
+      end
     end
 
-    it "creates new resources on #evaluate" do
-      @manifest.should_receive(:newresource).with(Puppet::Type::Exec, 'foo', :command => '/bin/true').exactly(1).times
-      @manifest.should_receive(:newresource).with(Puppet::Type::Exec, 'bar', :command => '/bin/true').exactly(1).times
-      @manifest.evaluate
-    end
+    describe "when run" do
 
-    it "calls creates new resources when evaluated" do
-      @manifest.evaluate
-      @manifest.objects.should_not == {}
+      it "calls evaluate and apply" do
+        @manifest.should_receive(:evaluate)
+        @manifest.should_receive(:apply)
+        @manifest.run
+      end
+
+      it "returns true" do
+        @manifest.run.should == true
+      end
+
+      it "cannot be run again" do
+        @manifest.run.should == true
+        @manifest.run.should == false
+      end
+
     end
 
   end

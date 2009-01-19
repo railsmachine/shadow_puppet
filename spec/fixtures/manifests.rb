@@ -18,11 +18,11 @@ end
 #this does nothing
 class NoOpManifest < Moonshine::Manifest
   def foo
-    exec('foo', :command => '/bin/true')
+    exec('foo', :command => '/usr/bin/true')
   end
 
   def bar
-    exec('bar', :command => '/bin/true')
+    exec('bar', :command => '/usr/bin/true')
   end
 end
 
@@ -31,11 +31,11 @@ class RequiresMetViaMethods < Moonshine::Manifest
   recipe :foo, :bar
 
   def foo
-    exec('foo', :command => '/bin/true')
+    exec('foo', :command => '/usr/bin/true')
   end
 
   def bar
-    exec('bar', :command => '/bin/true')
+    exec('bar', :command => '/usr/bin/true')
   end
 end
 
@@ -43,13 +43,13 @@ end
 class ProvidedViaModules < Moonshine::Manifest
   module FooRecipe
     def foo
-      exec('foo', :command => '/bin/true')
+      exec('foo', :command => '/usr/bin/true')
     end
   end
 
   module BarRecipe
     def bar
-      exec('bar', :command => '/bin/true')
+      exec('bar', :command => '/usr/bin/true')
     end
   end
   include FooRecipe
@@ -67,7 +67,7 @@ end
 # 
 #   module RightFoo
 #     def foo
-#       exec('right', :command => '/bin/true')
+#       exec('right', :command => '/usr/bin/true')
 #     end
 #   end
 #   include RightFoo
