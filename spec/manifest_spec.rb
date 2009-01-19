@@ -33,18 +33,18 @@ describe "A manifest" do
       it "calls specified methods" do
         @manifest.should_receive(:foo)
         @manifest.should_receive(:bar)
-        @manifest.evaluate
+        @manifest.send(:evaluate)
       end
 
       it "creates new resources" do
         @manifest.should_receive(:newresource).with(Puppet::Type::Exec, 'foo', :command => '/usr/bin/true').exactly(1).times
         @manifest.should_receive(:newresource).with(Puppet::Type::Exec, 'bar', :command => '/usr/bin/true').exactly(1).times
-        @manifest.evaluate
+        @manifest.send(:evaluate)
       end
 
       it "creates new objects" do
-        @manifest.evaluate
-        @manifest.objects.should_not == {}
+        @manifest.send(:evaluate)
+        @manifest.objects[Puppet::Type::Exec].keys.sort.should == ['bar', 'foo']
       end
     end
 

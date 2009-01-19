@@ -7,8 +7,8 @@ require 'active_support'
 module Moonshine
   class Manifest
 
-    attr_reader :application, :run
-    attr_accessor :objects
+    attr_reader :application, :puppet_resources
+    attr_accessor :objects, :bucket
     class_inheritable_accessor :recipes
     self.recipes = []
 
@@ -23,13 +23,19 @@ module Moonshine
       Puppet::Util::Log.level = :info
       @application = application
       @run = false
+
+      #need to combine the two below things, no need to keep both
+
       #typed collection of objects
       @objects = Hash.new do |hash, key|
         hash[key] = {}
       end
-      @resources = []
+      #flat array of objects
+      @puppet_resources = []
     end
 
+    #class level method that declares that a method creating resources will be
+    #called when an instance of this class is run
     def self.recipe(*args)
       return nil if args.nil? || args == []
       args.each do |a|
@@ -37,14 +43,19 @@ module Moonshine
       end
     end
 
+    #helper to easily create a reference to an existing resource
     def reference(type, title)
       Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s, :scope => scope)
     end
 
+    #the currently executing application.
+    #TODO: refactor
     def application
       Moonshine::Application.current
     end
 
+    #the currently executing application's config
+    #TODO: refactor
     def config
       facts["moonshine"].each do |app_name, config|
         return config if app_name.to_sym == application.to_sym
@@ -65,6 +76,59 @@ module Moonshine
       end
     end
 
+    #convenince method for accessing facts
+    def facts
+      Facter.flush
+      Facter.to_hash
+    end
+
+    #has this manifest instance been run yet?
+    def run?
+      @run
+    end
+
+    #evaulate and apply this manifest
+    def run
+      return false if self.run?
+      evaluate
+      apply
+    rescue Exception => e
+      raise e
+    else
+      true
+    ensure
+      @run = true
+    end
+
+    private
+
+    #evaluate the methods defined by the call to self.recipe
+    def evaluate
+      self.class.recipes.each do |r|
+        self.send(r.to_sym)
+      end
+    end
+
+    #apply the evaluated manifest, that is, execute it
+    def apply
+      @bucket ||= export()
+      catalog = @bucket.to_catalog
+      catalog.apply
+    end
+
+    #export this manifest as a transportable bucket
+    def export
+      transportable_objects = @puppet_resources.dup.reject { |a| a.nil? }.flatten.collect do |obj|
+        obj.to_trans
+      end
+      b = Puppet::TransBucket.new(transportable_objects)
+      b.name = "moonshine:#{object_id}"
+      b.type = "class"
+
+      return b
+    end
+
+    #:nodoc:
     def scope
       unless defined?(@scope)
         # Set the code to something innocuous; we just need the
@@ -83,6 +147,7 @@ module Moonshine
       @scope
     end
 
+    #creates a new resource
     def newresource(type, name, params = {})
       unless obj = @objects[type][name]
         obj = Puppet::Parser::Resource.new(
@@ -92,7 +157,7 @@ module Moonshine
           :scope => scope
         )
         @objects[type][name] = obj
-        @resources << obj
+        @puppet_resources << obj
       end
 
       params.each do |param_name, param_value|
@@ -105,62 +170,6 @@ module Moonshine
       end
 
       obj
-    end
-
-    def facts
-      Facter.flush
-      Facter.to_hash
-    end
-
-    def application_config
-      facts["moonshine"].each do |app_name, config|
-        return config if app_name.to_sym == application.to_sym
-      end
-      return nil
-    end
-
-    def run?
-      @run
-    end
-
-    def run
-      return false if self.run?
-      evaluate
-      apply
-    rescue Exception => e
-      raise e
-    else
-      true
-    ensure
-      @run = true
-    end
-
-    def evaluate
-      self.class.recipes.each do |r|
-        self.send(r.to_sym)
-      end
-    end
-
-    def apply
-      bucket = export()
-      catalog = bucket.to_catalog
-      catalog.apply
-    end
-
-    def export
-      transportable_objects = @resources.dup.reject { |a| a.nil? }.flatten.collect do |obj|
-        obj.to_trans
-      end
-      bucket = Puppet::TransBucket.new(transportable_objects)
-      bucket.name = "moonshine:#{object_id}"
-      bucket.type = "class"
-
-      return bucket
-    end
-
-    #needed
-    def name
-      self.class.to_s
     end
 
   end
