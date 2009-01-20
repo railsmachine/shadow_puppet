@@ -6,11 +6,11 @@ end
 #   end
 # end
 # 
-# #built-in modules
-# class ServiceManifest < Moonshine::Manifest
-#   service("foo", %w(curl wget))
-# end
-# 
+#built-in modules
+class ServiceManifest < Moonshine::Manifest
+  service("foo", %w(curl wget))
+end
+
 class UserManifest < Moonshine::Manifest
   user("foo")
 end

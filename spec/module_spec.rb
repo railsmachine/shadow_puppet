@@ -15,13 +15,19 @@ describe "User Module" do
   end
 
 end
-# 
-# describe "Service Module" do
-#   before(:each) do
-#     @manifest = ServiceManifest.new
-#   end
-#   #TODO better testing to find actual objects in aspects
-#   it "should create a 'foo-service' aspect" do
-#     lambda { Puppet::DSL::Aspect["foo-service"] }.should_not raise_error
-#   end
-# end
+
+describe "Service Module" do
+  before(:each) do
+    @manifest = ServiceManifest.new
+    @manifest.send(:evaluate)
+  end
+
+  it "should create a 'foo' service" do
+    @manifest.objects[Puppet::Type::Service].keys.sort.should == ['foo']
+  end
+
+  it "should create dependent services" do
+    @manifest.objects[Puppet::Type::Package].keys.sort.should == ['curl', 'wget']
+  end
+
+end
