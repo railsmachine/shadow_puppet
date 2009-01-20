@@ -73,7 +73,7 @@ describe "A manifest" do
     end
 
     it "knows what it's supposed to do" do
-      @manifest.class.recipes.should == [:foo, :bar]
+      @manifest.class.recipes.should == [[:foo, {}], [:bar, {}]]
     end
 
     describe 'when evaluated' do
