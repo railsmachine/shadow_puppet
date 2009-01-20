@@ -18,6 +18,18 @@ describe "A manifest" do
 
   end
 
+  describe "when recipes aren't fullfilled" do
+
+    before(:each) do
+      @manifest = RequirementsNotMet.new
+    end
+
+    it "returns false when run" do
+      @manifest.run.should be_false
+    end
+
+  end
+
   describe "in general" do
 
     before(:each) do
@@ -57,12 +69,12 @@ describe "A manifest" do
       end
 
       it "returns true" do
-        @manifest.run.should == true
+        @manifest.run.should be_true
       end
 
       it "cannot be run again" do
-        @manifest.run.should == true
-        @manifest.run.should == false
+        @manifest.run.should be_true
+        @manifest.run.should be_false
       end
 
     end

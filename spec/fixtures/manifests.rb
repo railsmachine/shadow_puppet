@@ -57,24 +57,6 @@ class ProvidedViaModules < Moonshine::Manifest
   recipe :foo, :bar
 end
 
-#requirements can also be handled by functions in external modules
-# class OverloadedModules < Moonshine::Manifest
-#   module WrongFoo
-#     def foo
-#       exec('wrong', :command => '/bin/false')
-#     end 
-#   end
-# 
-#   module RightFoo
-#     def foo
-#       exec('right', :command => '/usr/bin/true')
-#     end
-#   end
-#   include RightFoo
-#   include WrongFoo
-#   recipe :bar => RightFoo
-# end
-
 # since self.respond_to?(:foo) == false, this raises an error when run
 class RequirementsNotMet < Moonshine::Manifest
   recipe :foo, :bar

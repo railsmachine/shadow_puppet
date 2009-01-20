@@ -2,7 +2,9 @@ require 'puppet'
 require 'puppet/dsl'
 require 'erb'
 gem "activesupport"
-require 'active_support'
+require 'active_support/core_ext/class/attribute_accessors'
+require 'active_support/core_ext/array'
+require 'active_support/inflector'
 
 module Moonshine
   class Manifest
@@ -87,9 +89,18 @@ module Moonshine
       @run
     end
 
+    #returns true if <tt>self.respond_to?</tt> all methods named by calls recipe
+    def runnable?
+      self.class.recipes.each do |r|
+        return false unless self.respond_to?(r.to_sym)
+      end
+      true
+    end
+
     #evaulate and apply this manifest
     def run
       return false if self.run?
+      return false unless self.runnable?
       evaluate
       apply
     rescue Exception => e
