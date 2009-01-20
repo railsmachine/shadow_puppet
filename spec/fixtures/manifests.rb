@@ -1,19 +1,5 @@
 class BlankManifest < Moonshine::Manifest
 end
-# class ClassLevelRole < Moonshine::Manifest
-#   role :debug do
-#     exec "whoami", :command => "/usr/bin/whoami > /tmp/whoami.txt"
-#   end
-# end
-# 
-#built-in modules
-class ServiceManifest < Moonshine::Manifest
-  service("foo", %w(curl wget))
-end
-
-class UserManifest < Moonshine::Manifest
-  user("foo")
-end
 
 #this does nothing
 class NoOpManifest < Moonshine::Manifest
@@ -75,4 +61,18 @@ class RequirementsNotMet < Moonshine::Manifest
   def bar
     #this is okay
   end
+end
+
+
+#built-in modules
+class ServiceManifest < Moonshine::Manifest
+  service("foo", %w(curl wget))
+end
+
+class UserManifest < Moonshine::Manifest
+  user("foo")
+end
+
+class PackageManifest < Moonshine::Manifest
+  packages ['foo', 'bar']
 end

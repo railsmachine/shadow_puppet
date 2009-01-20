@@ -29,5 +29,15 @@ describe "Service Module" do
   it "should create dependent services" do
     @manifest.objects[Puppet::Type::Package].keys.sort.should == ['curl', 'wget']
   end
+end
 
+describe "Package Module" do
+  before(:each) do
+    @manifest = PackageManifest.new
+    @manifest.send(:evaluate)
+  end
+
+  it "should create a appropriate packages" do
+    @manifest.objects[Puppet::Type::Package].keys.sort.should == ['bar', 'foo']
+  end
 end

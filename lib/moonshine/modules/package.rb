@@ -1,24 +1,31 @@
 module MoonshinePackage
   def package(array_or_name, params = {})
-    package_array = array_or_name.to_a
-    params = {
-      :ensure => 'installed'
-    }.merge(params)
+    recipe :moonshine_packages, { :packages => array_or_name, :params => params }
+    send(:include, InstanceMethods)
+  end
+  alias_method :packages, :package
 
-    package_array.each_with_index do |name,index|
-      #provide order
-      package_params = params
-      if package_array[index+1]
-        package_params.merge({
-          :before => package(package_array[index+1])
-        })
-      end
-      role "package-#{name}" do
+  module InstanceMethods
+    def moonshine_packages(options = {})
+      array_or_name = options[:packages]
+      params = options[:params]
+      package_array = array_or_name.to_a
+      params = {
+        :ensure => 'installed'
+      }.merge(params)
+
+      package_array.each_with_index do |name,index|
+        #provide order
+        package_params = params
+        if package_array[index+1]
+          package_params.merge({
+            :before => package(package_array[index+1])
+          })
+        end
         package name.to_s, package_params
       end
     end
   end
-  alias_method :packages, :package
 
 end
 Moonshine::Manifest.send(:extend, MoonshinePackage)
