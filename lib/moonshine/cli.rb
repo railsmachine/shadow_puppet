@@ -106,7 +106,7 @@ HERE
 
     def setup_user(user, console)
       m = UserConfigurationManifest.new
-      m.user(user)
+      m.moonshine_user(:name => user)
       m.run
       begin
         password = File.read("/root/#{user}_password.txt")

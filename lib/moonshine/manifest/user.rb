@@ -1,3 +1,3 @@
 class UserConfigurationManifest < Moonshine::Manifest
-  include MoonshineUser
+  include MoonshineUser::InstanceMethods
 end

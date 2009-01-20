@@ -18,6 +18,42 @@ describe "A manifest" do
 
   end
 
+  describe "without specified recipes" do
+
+    before(:each) do
+      @manifest = NoOpManifest.new
+    end
+
+    it "is runnable by default" do
+      @manifest.should be_runnable
+    end
+
+    describe "when calling instance methods" do
+
+      before(:each) do
+        @manifest.foo
+      end
+
+      it "creates resources" do
+        @manifest.objects[Puppet::Type::Exec].keys.sort.should == ['foo']
+      end
+
+      describe "and then running" do
+
+        before(:each) do
+          @manifest = @manifest.run
+        end
+
+        it "returns true" do
+          @manifest.should be_true
+        end
+
+      end
+
+    end
+
+  end
+
   describe "when recipes aren't fullfilled" do
 
     before(:each) do

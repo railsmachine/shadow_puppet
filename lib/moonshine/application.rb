@@ -23,13 +23,13 @@ module Moonshine
       @name = File.basename(app_config_file, ".conf").gsub(/\s*/,'')
       self.current = @name
       raise ArgumentError if @name == ""
-      @update_manifest = MoonshineUpdateManifest.new
       @options = DEFAULT_OPTIONS.merge(YAML.load_file(app_config_file))
     end
 
     def update
-      @update_manifest.update_application(@name, options)
-      @update_manifest.run
+      update_manifest = MoonshineUpdateManifest.new
+      update_manifest.update_application(options.merge({:name => @name}))
+      update_manifest.run
     end
 
     def test_clone

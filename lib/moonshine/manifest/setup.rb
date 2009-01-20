@@ -1,5 +1,7 @@
 class MoonshineSetupManifest < Moonshine::Manifest
-  role "moonshine_setup" do
+  recipe :moonshine_setup
+
+  def moonshine_setup
     group "moonshine",
       :ensure     => "present",
       :allowdupe  => false

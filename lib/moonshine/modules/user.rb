@@ -6,7 +6,7 @@ module MoonshineUser
     name = name.gsub(/\s*/,'')
     return if name == ''
     self.moonshine_user = name
-    self.recipe :moonshine_user_resource, :name => name
+    self.recipe :moonshine_user, :name => name
     send(:include, InstanceMethods)
   end
 
@@ -15,7 +15,7 @@ module MoonshineUser
       self.class.moonshine_user
     end
 
-    def moonshine_user_resource(options = {})
+    def moonshine_user(options = {})
       name = options[:name]
       home = "/home/#{name}"
       %w(
