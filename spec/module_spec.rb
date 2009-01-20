@@ -52,3 +52,14 @@ describe "Gem Module" do
     @manifest.objects[Puppet::Type::Package].keys.sort.should == ['bar', 'foo', 'moonshine']
   end
 end
+
+describe "Ruby Module" do
+  before(:each) do
+    @manifest = RubyManifest.new
+    @manifest.send(:evaluate)
+  end
+
+  it "should create a appropriate packages" do
+    @manifest.objects[Puppet::Type::Exec].keys.should include('install-ruby')
+  end
+end

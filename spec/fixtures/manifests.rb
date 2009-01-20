@@ -80,3 +80,7 @@ end
 class GemManifest < Moonshine::Manifest
   gems ['foo', 'bar']
 end
+
+class RubyManifest < Moonshine::Manifest
+  ruby
+end

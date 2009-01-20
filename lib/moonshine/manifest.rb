@@ -198,9 +198,9 @@ end
 Dir.glob(File.join(File.dirname(__FILE__), '..', 'facts', '*.rb')).each do |fact|
   require fact
 end
-# Dir.glob(File.join(File.dirname(__FILE__), 'modules', '*.rb')).each do |mod|
-#   require mod
-# end
+Dir.glob(File.join(File.dirname(__FILE__), 'modules', '*.rb')).each do |mod|
+  require mod
+end
 # Dir.glob(File.join(File.dirname(__FILE__), 'manifest', '*.rb')).each do |manifest|
 #   require manifest
 # end
