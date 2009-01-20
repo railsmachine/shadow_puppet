@@ -11,9 +11,9 @@ end
 #   service("foo", %w(curl wget))
 # end
 # 
-# class UserManifest < Moonshine::Manifest
-#   user("foo")
-# end
+class UserManifest < Moonshine::Manifest
+  user("foo")
+end
 
 #this does nothing
 class NoOpManifest < Moonshine::Manifest
