@@ -1,26 +1,28 @@
 module MoonshineGem
-  mattr_accessor :gems_role_defined
-
   def gem(array_or_name, params = {})
-    params = {
-      :ensure => 'installed'
-    }.merge(params)
-    define_rubygems_role unless self.gems_role_defined
+    recipe :moonshine_gems, { :packages => array_or_name, :params => params }
+    send(:include, InstanceMethods)
+  end
+  alias_method :gems, :gem
 
-    array_or_name.to_a.each do |name|
-      role "gem-#{name}" do
+  module InstanceMethods
+    def moonshine_gems(options = {})
+      array_or_name = options[:packages]
+      params = options[:params]
+      params = {
+        :ensure => 'installed'
+      }.merge(params)
+      moonshine_rubygems
+
+      array_or_name.to_a.each do |name|
         package name.to_s,
           :ensure   => params[:ensure],
           :provider => "gem",
           :require  => package("moonshine")
       end
     end
-  end
-  alias_method :gems, :gem
 
-  def define_rubygems_role
-    role :rubygems do
-
+    def moonshine_rubygems
       package "moonshine",
         :ensure   => "installed",
         :provider => "gem",
@@ -28,8 +30,6 @@ module MoonshineGem
           exec("install-ruby")
         ]
     end
-    self.gems_role_defined = true
   end
-
 end
 Moonshine::Manifest.send(:extend, MoonshineGem)

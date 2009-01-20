@@ -41,3 +41,14 @@ describe "Package Module" do
     @manifest.objects[Puppet::Type::Package].keys.sort.should == ['bar', 'foo']
   end
 end
+
+describe "Gem Module" do
+  before(:each) do
+    @manifest = GemManifest.new
+    @manifest.send(:evaluate)
+  end
+
+  it "should create a appropriate packages" do
+    @manifest.objects[Puppet::Type::Package].keys.sort.should == ['bar', 'foo', 'moonshine']
+  end
+end

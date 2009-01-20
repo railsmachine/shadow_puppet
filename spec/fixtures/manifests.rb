@@ -76,3 +76,7 @@ end
 class PackageManifest < Moonshine::Manifest
   packages ['foo', 'bar']
 end
+
+class GemManifest < Moonshine::Manifest
+  gems ['foo', 'bar']
+end
