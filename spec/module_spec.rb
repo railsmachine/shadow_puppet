@@ -3,10 +3,10 @@ require File.dirname(__FILE__) + '/spec_helper.rb'
 describe "User Module" do
   before(:each) do
     @manifest = UserManifest.new
+    @manifest.send(:evaluate)
   end
 
-  it "should create a 'foo-user' aspect" do
-    @manifest.send(:evaluate)
+  it "should create a 'foo' user" do
     @manifest.objects[Puppet::Type::User].keys.sort.should == ['foo']
   end
 
