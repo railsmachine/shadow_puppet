@@ -8,7 +8,7 @@ module MoonshinePackage
   module InstanceMethods
     def moonshine_packages(options = {})
       array_or_name = options[:packages]
-      params = options[:params]
+      params = options[:params] || {}
       package_array = array_or_name.to_a
       params = {
         :ensure => 'installed'

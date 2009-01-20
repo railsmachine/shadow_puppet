@@ -32,6 +32,7 @@ describe "Service Module" do
 end
 
 describe "Package Module" do
+
   before(:each) do
     @manifest = PackageManifest.new
     @manifest.send(:evaluate)
@@ -40,6 +41,7 @@ describe "Package Module" do
   it "should create a appropriate packages" do
     @manifest.objects[Puppet::Type::Package].keys.sort.should == ['bar', 'foo']
   end
+
 end
 
 describe "Gem Module" do
