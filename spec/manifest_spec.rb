@@ -58,6 +58,20 @@ describe "A manifest" do
         @manifest.send(:evaluate)
         @manifest.objects[Puppet::Type::Exec].keys.sort.should == ['bar', 'foo']
       end
+
+      describe "with arguments passed to recpie" do
+
+        before(:each) do
+          @manifest = PassingArguments.new
+        end
+
+        it "passes them to the methods" do
+          @manifest.send(:evaluate)
+          @manifest.objects[Puppet::Type::Exec].keys.sort.should == ['bar']
+        end
+
+      end
+
     end
 
     describe "when run" do

@@ -13,6 +13,8 @@ module Moonshine
     attr_accessor :objects, :bucket
     class_inheritable_accessor :recipes
     self.recipes = []
+    class_inheritable_accessor :recipe_args
+    self.recipe_args = {}
 
     def initialize(application = nil)
       unless Process.uid == 0
@@ -40,8 +42,10 @@ module Moonshine
     #called when an instance of this class is run
     def self.recipe(*args)
       return nil if args.nil? || args == []
+      options = args.extract_options!
       args.each do |a|
         recipes << a.to_sym
+        recipe_args[a.to_sym] = options
       end
     end
 
@@ -92,7 +96,7 @@ module Moonshine
     #returns true if <tt>self.respond_to?</tt> all methods named by calls recipe
     def runnable?
       self.class.recipes.each do |r|
-        return false unless self.respond_to?(r.to_sym)
+        return false unless self.respond_to?(r)
       end
       true
     end
@@ -116,7 +120,12 @@ module Moonshine
     #evaluate the methods defined by the call to self.recipe
     def evaluate
       self.class.recipes.each do |r|
-        self.send(r.to_sym)
+        case arity = self.method(r).arity
+        when 1, -1
+          self.send(r, recipe_args[r])
+        else
+          self.send(r)
+        end
       end
     end
 

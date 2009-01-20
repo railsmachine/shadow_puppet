@@ -57,6 +57,14 @@ class ProvidedViaModules < Moonshine::Manifest
   recipe :foo, :bar
 end
 
+#requirements can also be handled by functions in external modules
+class PassingArguments < Moonshine::Manifest
+  def foo(options = {})
+    exec(options[:name], :command => '/usr/bin/true')
+  end
+  recipe :foo, :name => 'bar'
+end
+
 # since self.respond_to?(:foo) == false, this raises an error when run
 class RequirementsNotMet < Moonshine::Manifest
   recipe :foo, :bar
