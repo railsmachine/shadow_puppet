@@ -11,7 +11,7 @@ describe "User Module" do
   end
 
   it "should store created user in a way accessible to other aspects" do
-    @manifest.moonshine_user.should == "foo"
+    @manifest.current_moonshine_user.should == "foo"
   end
 
 end

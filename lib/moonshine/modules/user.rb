@@ -1,18 +1,18 @@
 module MoonshineUser
-  mattr_accessor :moonshine_user
+  mattr_accessor :current_moonshine_user
 
   def user(name = "")
     return if name.nil?
     name = name.gsub(/\s*/,'')
     return if name == ''
-    self.moonshine_user = name
+    self.current_moonshine_user = name
     self.recipe :moonshine_user, :name => name
     send(:include, InstanceMethods)
   end
 
   module InstanceMethods
-    def moonshine_user
-      self.class.moonshine_user
+    def current_moonshine_user
+      self.class.current_moonshine_user
     end
 
     def moonshine_user(options = {})
