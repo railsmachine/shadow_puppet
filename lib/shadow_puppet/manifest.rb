@@ -132,7 +132,7 @@ module ShadowFacter
         obj.to_trans
       end
       b = Puppet::TransBucket.new(transportable_objects)
-      b.name = "shadow_facter:#{object_id}"
+      b.name = "shadow_puppet:#{object_id}"
       b.type = "class"
 
       return b

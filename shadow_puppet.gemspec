@@ -1,18 +1,16 @@
 Gem::Specification.new do |s|
-  s.name = %q{shadow_facter}
+  s.name = %q{shadow_puppet}
   s.version = "0.0.1"
   s.specification_version = 2 if s.respond_to? :specification_version=
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jesse Newland"]
   s.date = %q{2008-11-14}
-  s.description = %q{shadow_facter}
+  s.description = %q{shadow_puppet}
   s.email = ["jesse@railsmachine.com"]
-  s.default_executable = %q{shadow_facter}
-  s.executables = ["shadow_facter"]
   s.files = [
     "Readme",
-    "lib/shadow_facter.rb",
-    "lib/shadow_facter/manifest.rb",
+    "lib/shadow_puppet.rb",
+    "lib/shadow_puppet/manifest.rb",
   ]
   s.has_rdoc = false
   s.homepage = %q{http://railsmachine.com}
