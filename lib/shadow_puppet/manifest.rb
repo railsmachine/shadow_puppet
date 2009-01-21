@@ -129,8 +129,7 @@ module ShadowFacter
       return b
     end
 
-    #:nodoc:
-    def scope
+    def scope #:nodoc:
       unless defined?(@scope)
         # Set the code to something innocuous; we just need the
         # scopes, not the interpreter.  Hackish, but true.
