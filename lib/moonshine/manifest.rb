@@ -1,5 +1,4 @@
 require 'puppet'
-require 'puppet/dsl'
 require 'erb'
 gem "activesupport"
 require 'active_support/core_ext/class/attribute_accessors'
@@ -49,12 +48,6 @@ module Moonshine
     #helper to easily create a reference to an existing resource
     def reference(type, title)
       Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s, :scope => scope)
-    end
-
-    #the currently executing application.
-    #TODO: refactor
-    def application
-      Moonshine::Application.current
     end
 
     #the currently executing application's config

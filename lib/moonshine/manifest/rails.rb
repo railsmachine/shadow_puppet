@@ -11,7 +11,7 @@
 #    server = UrServer.new("name_of_application")
 #    server.run
 class Moonshine::Manifest::Rails < Moonshine::Manifest
-  recpie :moonshine
+  recipe :moonshine
 
   user('rails')
   ruby(:debian)
