@@ -11,22 +11,8 @@ Gem::Specification.new do |s|
   s.executables = ["shadow_facter"]
   s.files = [
     "Readme",
-    "bin/shadow_facter",
-    "lib/facts/shadow_facter.rb",
     "lib/shadow_facter.rb",
-    "lib/shadow_facter/cli.rb",
     "lib/shadow_facter/manifest.rb",
-    "lib/shadow_facter/manifest/rails.rb",
-    "lib/shadow_facter/manifest/user.rb",
-    "lib/shadow_facter/manifest/setup.rb",
-    "lib/shadow_facter/manifest/update.rb",
-    "lib/shadow_facter/modules/user.rb",
-    "lib/shadow_facter/modules/gem.rb",
-    "lib/shadow_facter/modules/package.rb",
-    "lib/shadow_facter/modules/ruby.rb",
-    "lib/shadow_facter/modules/service.rb",
-    "lib/shadow_facter/application.rb",
-    "lib/templates/vhost.conf.erb"
   ]
   s.has_rdoc = false
   s.homepage = %q{http://railsmachine.com}
