@@ -1,8 +1,8 @@
-class BlankManifest < Moonshine::Manifest
+class BlankManifest < ShadowFacter::Manifest
 end
 
 #this does nothing
-class NoOpManifest < Moonshine::Manifest
+class NoOpManifest < ShadowFacter::Manifest
   def foo
     exec('foo', :command => '/usr/bin/true')
   end
@@ -13,7 +13,7 @@ class NoOpManifest < Moonshine::Manifest
 end
 
 #demonstrate the default method of satifying requirements: instance methods
-class RequiresMetViaMethods < Moonshine::Manifest
+class RequiresMetViaMethods < ShadowFacter::Manifest
   recipe :foo, :bar
 
   def foo
@@ -26,7 +26,7 @@ class RequiresMetViaMethods < Moonshine::Manifest
 end
 
 #requirements can also be handled by functions in external modules
-class ProvidedViaModules < Moonshine::Manifest
+class ProvidedViaModules < ShadowFacter::Manifest
   module FooRecipe
     def foo
       exec('foo', :command => '/usr/bin/true')
@@ -44,7 +44,7 @@ class ProvidedViaModules < Moonshine::Manifest
 end
 
 #requirements can also be handled by functions in external modules
-class PassingArguments < Moonshine::Manifest
+class PassingArguments < ShadowFacter::Manifest
   def foo(options = {})
     exec(options[:name], :command => '/usr/bin/true')
   end
@@ -52,7 +52,7 @@ class PassingArguments < Moonshine::Manifest
 end
 
 # since self.respond_to?(:foo) == false, this raises an error when run
-class RequirementsNotMet < Moonshine::Manifest
+class RequirementsNotMet < ShadowFacter::Manifest
   recipe :foo, :bar
 
   # def foo
@@ -61,26 +61,4 @@ class RequirementsNotMet < Moonshine::Manifest
   def bar
     #this is okay
   end
-end
-
-
-#built-in modules
-class ServiceManifest < Moonshine::Manifest
-  service("foo", %w(curl wget))
-end
-
-class UserManifest < Moonshine::Manifest
-  user("foo")
-end
-
-class PackageManifest < Moonshine::Manifest
-  packages ['foo', 'bar']
-end
-
-class GemManifest < Moonshine::Manifest
-  gems ['foo', 'bar']
-end
-
-class RubyManifest < Moonshine::Manifest
-  ruby
 end

@@ -1,4 +1,4 @@
-= Testing Moonshine
+= Testing ShadowFacter
 
 Testing Targets:
 
@@ -9,17 +9,17 @@ Testing Targets:
 
 == Installation
 
-For now, *imagine* that you're doing a `apt-get install moonshine`, and instead, do the following:
+For now, *imagine* that you're doing a `apt-get install shadow_facter`, and instead, do the following:
 
   # sudo apt-get install rubygems puppet git-core
-  # sudo scp oper@gw01.gnax.railsmachine.net:moonshine*.gem .
-  # sudo gem install moonshine-0.0.1.gem --no-rdoc --no-ri
+  # sudo scp oper@gw01.gnax.railsmachine.net:shadow_facter*.gem .
+  # sudo gem install shadow_facter-0.0.1.gem --no-rdoc --no-ri
 
-== Running Moonshine
+== Running ShadowFacter
 
 This is a gem binary. Ubuntu is stupid about gems and sudo (SECURE_PATH issues), so you'll have to specify the whole (weird) path:
 
-  # sudo /var/lib/gems/1.8/bin/moonshine
+  # sudo /var/lib/gems/1.8/bin/shadow_facter
 
 Follow the provided instructions. git@git.railsmachine.com:test_rails_app is a good test rails app if you need one.
 

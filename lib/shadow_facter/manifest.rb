@@ -5,7 +5,7 @@ require 'active_support/core_ext/class/attribute_accessors'
 require 'active_support/core_ext/array'
 require 'active_support/inflector'
 
-module Moonshine
+module ShadowFacter
   class Manifest
 
     attr_reader :application, :puppet_resources
@@ -132,7 +132,7 @@ module Moonshine
         obj.to_trans
       end
       b = Puppet::TransBucket.new(transportable_objects)
-      b.name = "moonshine:#{object_id}"
+      b.name = "shadow_facter:#{object_id}"
       b.type = "class"
 
       return b
@@ -188,9 +188,3 @@ end
 Dir.glob(File.join(File.dirname(__FILE__), '..', 'facts', '*.rb')).each do |fact|
   require fact
 end
-Dir.glob(File.join(File.dirname(__FILE__), 'modules', '*.rb')).each do |mod|
-  require mod
-end
-# Dir.glob(File.join(File.dirname(__FILE__), 'manifest', '*.rb')).each do |manifest|
-#   require manifest
-# end
