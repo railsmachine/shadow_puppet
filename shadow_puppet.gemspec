@@ -8,7 +8,8 @@ Gem::Specification.new do |s|
   s.description = %q{shadow_puppet}
   s.email = ["jesse@railsmachine.com"]
   s.files = [
-    "Readme",
+    "Readme.rdoc",
+    "LICENSE",
     "lib/shadow_puppet.rb",
     "lib/shadow_puppet/manifest.rb",
   ]
