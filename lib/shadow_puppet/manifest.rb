@@ -50,15 +50,6 @@ module ShadowFacter
       Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s, :scope => scope)
     end
 
-    #the currently executing application's config
-    #TODO: refactor
-    def config
-      facts["moonshine"].each do |app_name, config|
-        return config if app_name.to_sym == application.to_sym
-      end
-      return nil
-    end
-
     #Create an instance method for every type that either creates or references
     #a resource
     Puppet::Type.loadall
