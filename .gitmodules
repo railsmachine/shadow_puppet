@@ -1,3 +1,3 @@
 [submodule "doc"]
 	path = doc
-	url = git@github.com:railsmachine/shadow_puppet.git
+	url = git://github.com/railsmachine/shadow_puppet.git
