@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.default_executable = 'shadow_puppet'
   s.executables = ["shadow_puppet"]
   s.files = [
-    "Readme.rdoc",
+    "README.rdoc",
     "LICENSE",
     "bin/shadow_puppet",
     "lib/shadow_puppet.rb",
