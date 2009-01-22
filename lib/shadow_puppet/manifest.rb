@@ -50,7 +50,6 @@ module ShadowPuppet
   # methods behave identally to the Puppet Resources methods. See here[http://reductivelabs.com/trac/puppet/wiki/TypeReference]
   # for documentation on these methods.
   #
-  #
   # To view a list of all defined methods on your system, run:
   #
   #    ruby -rubygems -e 'require "shadow_puppet";puts ShadowPuppet::Manifest.puppet_type_methods'
