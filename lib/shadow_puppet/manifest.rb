@@ -5,7 +5,7 @@ require 'active_support/core_ext/class/attribute_accessors'
 require 'active_support/core_ext/array'
 require 'active_support/inflector'
 
-module ShadowFacter
+module ShadowPuppet
   class Manifest
 
     attr_reader :application, :puppet_resources

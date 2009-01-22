@@ -1,8 +1,8 @@
-class BlankManifest < ShadowFacter::Manifest
+class BlankManifest < ShadowPuppet::Manifest
 end
 
 #this does nothing
-class NoOpManifest < ShadowFacter::Manifest
+class NoOpManifest < ShadowPuppet::Manifest
   def foo
     exec('foo', :command => '/usr/bin/true')
   end
@@ -13,7 +13,7 @@ class NoOpManifest < ShadowFacter::Manifest
 end
 
 #demonstrate the default method of satifying requirements: instance methods
-class RequiresMetViaMethods < ShadowFacter::Manifest
+class RequiresMetViaMethods < ShadowPuppet::Manifest
   recipe :foo, :bar
 
   def foo
@@ -26,7 +26,7 @@ class RequiresMetViaMethods < ShadowFacter::Manifest
 end
 
 #requirements can also be handled by functions in external modules
-class ProvidedViaModules < ShadowFacter::Manifest
+class ProvidedViaModules < ShadowPuppet::Manifest
   module FooRecipe
     def foo
       exec('foo', :command => '/usr/bin/true')
@@ -44,7 +44,7 @@ class ProvidedViaModules < ShadowFacter::Manifest
 end
 
 #requirements can also be handled by functions in external modules
-class PassingArguments < ShadowFacter::Manifest
+class PassingArguments < ShadowPuppet::Manifest
   def foo(options = {})
     exec(options[:name], :command => '/usr/bin/true')
   end
@@ -52,7 +52,7 @@ class PassingArguments < ShadowFacter::Manifest
 end
 
 # since self.respond_to?(:foo) == false, this raises an error when run
-class RequirementsNotMet < ShadowFacter::Manifest
+class RequirementsNotMet < ShadowPuppet::Manifest
   recipe :foo, :bar
 
   # def foo

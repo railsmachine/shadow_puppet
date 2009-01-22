@@ -9,7 +9,7 @@ end
 desc 'Generate RDoc documentation for the will_paginate plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('README.rdoc', 'LICENSE')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+  rdoc.rdoc_files.include('lib/shadow_puppet/*.rb')
 
   rdoc.main = "README.rdoc" # page to start on
   rdoc.title = "ShadowPuppet documentation"
