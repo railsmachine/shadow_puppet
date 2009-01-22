@@ -99,11 +99,11 @@ module ShadowPuppet
       end
     end
 
-    # Declares that the named method or methods will called whenever execute
-    # is called on an instance of this class. If the last argument is a Hash,
-    # this hash is passed as an argument to all provided methods. Subclasses
-    # of the Manifest class properly inherit the parent classes' calls to
-    # recipe.
+    # Declares that the named method or methods will be called whenever
+    # execute is called on an instance of this class. If the last argument is
+    # a Hash, this hash is passed as an argument to all provided methods.
+    # Subclasses of the Manifest class properly inherit the parent classes'
+    # calls to recipe.
     def self.recipe(*methods)
       return nil if methods.nil? || methods == []
       options = methods.extract_options!
