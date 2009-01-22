@@ -20,7 +20,7 @@
 #The shadow_puppet binary parses the given ruby code, which is
 #expected to contain a class named Foo that inherits from
 #ShadowPuppet::Manifest. An instance of this class is created, and the
-#<tt>run</tt> method is called. All output is printed to the console.
+#<tt>execute</tt> method is called. All output is printed to the console.
 
 begin
 
@@ -59,7 +59,7 @@ begin
       The shadow_puppet binary parses the given ruby code, which is
       expected to contain a class named Foo that inherits from
       ShadowPuppet::Manifest. An instance of this class is created, and the
-      #run method is called. All output is printed to the console.
+      execute method is called. All output is printed to the console.
   EOF
 
   end

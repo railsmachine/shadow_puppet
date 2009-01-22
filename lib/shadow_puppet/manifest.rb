@@ -9,20 +9,71 @@ require 'active_support/core_ext/hash/indifferent_access'
 module ShadowPuppet
   # A Manifest is an executable collection of Puppet Resources[http://reductivelabs.com/trac/puppet/wiki/TypeReference].
   #
-  # == Example
+  # ===Example
   #
-  #  class Foo < ShadowPuppet::Manifest
-  #    recipe :foo
+  #   class ManifestExample < ShadowFacter::Manifest
+  #     recipe :sample
+  #     recipe :lamp, :ruby               # queue calls to self.lamp and
+  #                                       # self.ruby when executing
   #
-  #    def foo
-  #      exec :foo, :command => '/bin/echo "foo" > /tmp/foo.txt'
-  #      package :foo, :ensure => :installed
-  #      file '/tmp/example.txt', :ensure => :present, :contents => Facter.to_hash_inspect
+  #     recipe :mysql, {                  # queue a call to self.mysql
+  #       :root_password => 'OMGSEKRET'   # passing the provided hash
+  #     }                                 # as an option
+  #
+  #     def sample
+  #       exec :foo, :command => '/bin/echo "foo" > /tmp/foo.txt'
+  #       package :foo, :ensure => :installed
+  #       file '/tmp/example.txt', :ensure => :present, :contents => Facter.to_hash_inspect
+  #     end
+  #
+  #     def lamp
+  #       #install a basic LAMP stack
+  #     end
+  #
+  #     def ruby
+  #       #install a ruby interpreter and tools
+  #     end
+  #
+  #     def mysql(options)
+  #        #install a mysql server and set the root password to options[:root_password]
+  #     end
+  #
+  #   end
+  #
+  # To execute the above manifest, instantiate it and call execute on it:
+  #
+  #   m = ManifestExample.new
+  #   m.execute
+  #
+  # As shown in the +sample+ method in ManifestExample above, instance
+  # methods are created for each Puppet::Type available on your system. These
+  # methods behave identally to the Puppet Resources methods. See here[http://reductivelabs.com/trac/puppet/wiki/TypeReference]
+  # for documentation on these methods.
+  #
+  #
+  # To view a list of all defined methods on your system, run:
+  #
+  #    ruby -rubygems -e 'require "shadow_puppet";puts ShadowPuppet::Manifest.puppet_type_methods'
+  #
+  # The use of methods as a container for resources facilitates recipie re-use
+  # through the use of Ruby Modules. For example:
+  #
+  #   module ApachePuppet
+  #     # Required options:
+  #     #   domain
+  #     #   path
+  #     def php_vhost(options)
+  #       #...
+  #     end
   #    end
-  #  end
   #
-  # As you can see in the above example, resources are created inside instance
-  # methods defined on the class.
+  #   class MyWebMainfest < ShadowPuppet::Manifest
+  #     include ApachePuppet
+  #     recipe :php_vhost, {
+  #       :domain => 'foo.com',
+  #       :path => '/var/www/apps/foo'
+  #     }
+  #   end
   class Manifest
 
     class_inheritable_accessor :recipes
@@ -50,37 +101,20 @@ module ShadowPuppet
 
     # Declares that the named method or methods will called whenever execute
     # is called on an instance of this class. If the last argument is a Hash,
-    # this hash is passed as an argument to all provided methods.
-    #
-    # ===Examples
-    #
-    #   class RecipeExample < ShadowFacter::Manifest
-    #     recipe :lamp, :ruby               # queue calls to self.lamp and
-    #                                       # self.ruby when executing
-    #
-    #     recipe :mysql, {                  # queue a call to self.mysql
-    #       :root_password => 'OMGSEKRET'   # passing the provided hash
-    #     }                                 # as an option
-    #
-    #     def lamp
-    #       #install a basic LAMP stack
-    #     end
-    #
-    #     def ruby
-    #       #install a ruby interpreter and tools
-    #     end
-    #
-    #     def mysql(options)
-    #        #install a mysql server and set the root password to options[:root_password]
-    #     end
-    #
-    #   end
+    # this hash is passed as an argument to all provided methods. Subclasses
+    # of the Manifest class properly inherit the parent classes' calls to
+    # recipe.
     def self.recipe(*methods)
       return nil if methods.nil? || methods == []
       options = methods.extract_options!
       methods.each do |meth|
         recipes << [meth.to_sym, options]
       end
+    end
+
+    #An array of all methods defined for creation of Puppet Resources
+    def self.puppet_type_methods
+      Puppet::Type.eachtype { |t| t.name }.keys.map { |n| n.to_s }.sort.inspect
     end
 
     # A HashWithIndifferentAccess[http://api.rubyonrails.com/classes/HashWithIndifferentAccess.html]
@@ -116,7 +150,7 @@ module ShadowPuppet
     end
 
     # Execute this manifest, applying all resources defined. By default, this
-    # will only execute a manifest that is executable?. The ++force++ argument,
+    # will only execute a manifest that is executable?. The +force+ argument,
     # if true, removes this check.
     def execute(force=false)
       return false unless executable? || force
