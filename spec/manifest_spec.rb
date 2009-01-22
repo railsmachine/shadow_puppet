@@ -12,8 +12,8 @@ describe "A manifest" do
       @manifest.class.recipes.should == []
     end
 
-    it "returns true when run" do
-      @manifest.run.should be_true
+    it "returns true when executed" do
+      @manifest.execute.should be_true
     end
 
   end
@@ -24,8 +24,8 @@ describe "A manifest" do
       @manifest = NoOpManifest.new
     end
 
-    it "is runnable by default" do
-      @manifest.should be_runnable
+    it "is executable by default" do
+      @manifest.should be_executable
     end
 
     describe "when calling instance methods" do
@@ -38,10 +38,10 @@ describe "A manifest" do
         @manifest.puppet_resources[Puppet::Type::Exec].keys.sort.should == ['foo']
       end
 
-      describe "and then running" do
+      describe "and then executing" do
 
         before(:each) do
-          @manifest = @manifest.run
+          @manifest = @manifest.execute
         end
 
         it "returns true" do
@@ -60,8 +60,8 @@ describe "A manifest" do
       @manifest = RequirementsNotMet.new
     end
 
-    it "returns false when run" do
-      @manifest.run.should be_false
+    it "returns false when executed" do
+      @manifest.execute.should be_false
     end
 
   end
@@ -114,21 +114,21 @@ describe "A manifest" do
 
     end
 
-    describe "when run" do
+    describe "when executed" do
 
       it "calls evaluate and apply" do
         @manifest.should_receive(:evaluate)
         @manifest.should_receive(:apply)
-        @manifest.run
+        @manifest.execute
       end
 
       it "returns true" do
-        @manifest.run.should be_true
+        @manifest.execute.should be_true
       end
 
-      it "cannot be run again" do
-        @manifest.run.should be_true
-        @manifest.run.should be_false
+      it "cannot be executed again" do
+        @manifest.execute.should be_true
+        @manifest.execute.should be_false
       end
 
     end

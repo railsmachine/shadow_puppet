@@ -8,7 +8,7 @@ require 'active_support/core_ext/hash/indifferent_access'
 
 module ShadowPuppet
   # A Manifest is an executable collection of Puppet Resources[http://reductivelabs.com/trac/puppet/wiki/TypeReference].
-  # 
+  #
   # == Example
   #
   #  class Foo < ShadowPuppet::Manifest
@@ -42,14 +42,14 @@ module ShadowPuppet
       Puppet::Util::Log.level = :info
 
       @options = HashWithIndifferentAccess.new(options)
-      @run = false
+      @executed = false
       @puppet_resources = Hash.new do |hash, key|
         hash[key] = {}
       end
     end
 
     #class level method that declares that a method creating resources will be
-    #called when an instance of this class is run
+    #called when an instance of this class is executed
     def self.recipe(*args)
       return nil if args.nil? || args == []
       options = args.extract_options!
@@ -79,20 +79,20 @@ module ShadowPuppet
     end
 
     # Returns true if this Manifest <tt>respond_to?</tt> all methods named by
-    # calls to recipe, and if this manifest has not been run before.
-    def runnable?
+    # calls to recipe, and if this manifest has not been executed before.
+    def executable?
       self.class.recipes.each do |meth,args|
         return false unless respond_to?(meth)
       end
-      return false if run?
+      return false if executed?
       true
     end
 
     # Execute this manifest, applying all resources defined. By default, this
-    # will only execute a manifest that is runnable?. The ++force++ argument,
+    # will only execute a manifest that is executable?. The ++force++ argument,
     # if true, removes this check
-    def run(force=false)
-      return false unless runnable? || force
+    def execute(force=false)
+      return false unless executable? || force
       evaluate
       apply
     rescue Exception => e
@@ -100,14 +100,14 @@ module ShadowPuppet
     else
       true
     ensure
-      @run = true
+      @executed = true
     end
 
     protected
 
-    #Has this manifest instance been run yet?
-    def run?
-      @run
+    #Has this manifest instance been executed yet?
+    def executed?
+      @executed
     end
 
     #all resources currently defined, as an Array
