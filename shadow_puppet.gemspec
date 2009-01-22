@@ -4,9 +4,10 @@ Gem::Specification.new do |s|
   s.summary = 'A Ruby Puppet DSL'
   s.authors = ["Jesse Newland"]
   s.email = ["jesse@railsmachine.com"]
-  s.homepage = 'http://railsmachine.com'
+  s.homepage = 'http://railsmachine.github.com/shadow_puppet'
+  s.rubyforge_project = 'moonshine'
   s.version = "0.0.1"
-  s.date = '2008-11-14'
+  s.date = '2009-01-22'
 
   s.default_executable = 'shadow_puppet'
   s.executables = ["shadow_puppet"]
@@ -18,7 +19,10 @@ Gem::Specification.new do |s|
     "lib/shadow_puppet/manifest.rb",
   ]
   s.require_paths = ["lib"]
-  s.has_rdoc = false
+  s.has_rdoc = true
+  s.rdoc_options = ['--main', 'README.rdoc']
+  s.rdoc_options << '--inline-source' << '--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/'
+  s.extra_rdoc_files = ['README.rdoc', 'bin/shadow_puppet']
 
   s.add_dependency('puppet', [">= 0.24.6"])
   s.add_dependency('facter', [">= 1.5.2"])
