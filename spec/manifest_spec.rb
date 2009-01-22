@@ -35,7 +35,7 @@ describe "A manifest" do
       end
 
       it "creates resources" do
-        @manifest.objects[Puppet::Type::Exec].keys.sort.should == ['foo']
+        @manifest.puppet_resources[Puppet::Type::Exec].keys.sort.should == ['foo']
       end
 
       describe "and then running" do
@@ -85,14 +85,18 @@ describe "A manifest" do
       end
 
       it "creates new resources" do
-        @manifest.should_receive(:newresource).with(Puppet::Type::Exec, 'foo', :command => '/usr/bin/true').exactly(1).times
-        @manifest.should_receive(:newresource).with(Puppet::Type::Exec, 'bar', :command => '/usr/bin/true').exactly(1).times
+        @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'foo', :command => '/usr/bin/true').exactly(1).times
+        @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'bar', :command => '/usr/bin/true').exactly(1).times
         @manifest.send(:evaluate)
       end
 
-      it "creates new objects" do
+      it "creates new resources" do
         @manifest.send(:evaluate)
-        @manifest.objects[Puppet::Type::Exec].keys.sort.should == ['bar', 'foo']
+        @manifest.puppet_resources[Puppet::Type::Exec].keys.sort.should == ['bar', 'foo']
+      end
+
+      it "can acess a flat array of resources" do
+        @manifest.send(:flat_resources).should == []
       end
 
       describe "with arguments passed to recpie" do
@@ -103,7 +107,7 @@ describe "A manifest" do
 
         it "passes them to the methods" do
           @manifest.send(:evaluate)
-          @manifest.objects[Puppet::Type::Exec].keys.sort.should == ['bar']
+          @manifest.puppet_resources[Puppet::Type::Exec].keys.sort.should == ['bar']
         end
 
       end

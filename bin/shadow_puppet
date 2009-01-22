@@ -1,13 +1,30 @@
 #!/usr/bin/env ruby
-require 'rubygems'
-require 'optparse'
-require 'shadow_puppet'
-gem "activesupport"
-require 'active_support/inflector'
-require 'fileutils'
+#== Sample manifest:
+#
+#  $ cat examples/foo.rb
+#  class Foo < ShadowPuppet::Manifest
+#    recipe :foo
+#
+#    def foo
+#      exec :foo, :command => '/bin/echo "foo" > /tmp/foo.txt'
+#      file '/tmp/example.txt', :ensure => :present, :content => Facter.to_hash.inspect
+#    end
+#  end
+#
+#== Executing this manifest:
+#
+#  $ shadow_puppet examples/foo.rb
+#  notice: /shadow_puppet:19861340/Exec[foo]/returns: executed successfully
+#  $
+#
+#The shadow_puppet binary parses the given ruby code, which is
+#expected to contain a class named Foo that inherits from
+#ShadowPuppet::Manifest. An instance of this class is created, and the
+#<tt>run</tt> method is called. All output is printed to the console.
 
 begin
 
+  require 'optparse'
   opts = OptionParser.new do |opts|
     opts.banner = <<-EOF
     NAME
@@ -21,13 +38,6 @@ begin
       A Ruby DSL for puppet
 
     EXAMPLES
-      shadow_puppet path/to/your/manifest/named/foo.rb
-
-      The shadow_puppet binary parses the given ruby code, which is
-      expected to contain a class named Foo that inherits from
-      ShadowPuppet::Manifest. An instance of this class is created, and the
-      #run method is called. All output is printed to the console.
-
       Sample manifest:
 
         #foo.rb
@@ -36,6 +46,7 @@ begin
 
           def foo
             exec :foo, :command => '/bin/echo "foo" > /tmp/foo.txt'
+            file '/tmp/example.txt', :ensure => :present, :content => Facter.to_hash.inspect
           end
         end
 
@@ -44,11 +55,22 @@ begin
         $ shadow_puppet foo.rb
         notice: /shadow_puppet:19861340/Exec[foo]/returns: executed successfully
         $
+
+      The shadow_puppet binary parses the given ruby code, which is
+      expected to contain a class named Foo that inherits from
+      ShadowPuppet::Manifest. An instance of this class is created, and the
+      #run method is called. All output is printed to the console.
   EOF
 
   end
 
   opts.parse!
+
+  require 'rubygems'
+  require 'shadow_puppet'
+  gem "activesupport"
+  require 'active_support/inflector'
+  require 'fileutils'
 
   filename = ARGV[0]
   raise ArgumentError unless filename
@@ -68,5 +90,6 @@ rescue Exception => e
     puts e.class
     puts e.message
     puts e.backtrace.join("\n")
+    exit(1)
   end
 end

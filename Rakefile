@@ -1,4 +1,3 @@
-
 begin
   require 'rubygems'
   require 'hanna/rdoctask'
@@ -8,10 +7,11 @@ end
 
 desc 'Generate RDoc documentation for the will_paginate plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.rdoc_files.include('README.rdoc', 'LICENSE')
   rdoc.rdoc_files.include('lib/shadow_puppet/*.rb')
+  rdoc.rdoc_files.include('bin/shadow_puppet')
+  rdoc.rdoc_files.include('Readme.rdoc')
 
-  rdoc.main = "README.rdoc" # page to start on
+  rdoc.main = "Readme.rdoc" # page to start on
   rdoc.title = "ShadowPuppet documentation"
   
   rdoc.rdoc_dir = 'doc' # rdoc output folder
@@ -38,4 +38,3 @@ end
 task :cleanup do
   system "rm *.gem"
 end
-

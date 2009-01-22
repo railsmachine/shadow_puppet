@@ -4,16 +4,34 @@ gem "activesupport"
 require 'active_support/core_ext/class/attribute_accessors'
 require 'active_support/core_ext/array'
 require 'active_support/inflector'
+require 'active_support/core_ext/hash/indifferent_access'
 
 module ShadowPuppet
+  # A Manifest is an executable collection of Puppet Resources[http://reductivelabs.com/trac/puppet/wiki/TypeReference].
+  # 
+  # == Example
+  #
+  #  class Foo < ShadowPuppet::Manifest
+  #    recipe :foo
+  #
+  #    def foo
+  #      exec :foo, :command => '/bin/echo "foo" > /tmp/foo.txt'
+  #      package :foo, :ensure => :installed
+  #      file '/tmp/example.txt', :ensure => :present, :contents => Facter.to_hash_inspect
+  #    end
+  #  end
+  #
+  # As you can see in the above example, resources are created inside instance
+  # methods defined on the class.
   class Manifest
 
-    attr_reader :application, :puppet_resources
-    attr_accessor :objects, :bucket
     class_inheritable_accessor :recipes
     self.recipes = []
+    attr_reader :puppet_resources
 
-    def initialize(application = nil)
+    # Initialize a new instance of this manifest. This can take a hash of
+    # options that are avaliable later via the options method.
+    def initialize(options = {})
       unless Process.uid == 0
           Puppet[:confdir] = File.expand_path("~/.puppet")
           Puppet[:vardir] = File.expand_path("~/.puppet/var")
@@ -22,17 +40,12 @@ module ShadowPuppet
       Puppet[:group] = Process.gid
       Puppet::Util::Log.newdestination(:console)
       Puppet::Util::Log.level = :info
-      @application = application
+
+      @options = HashWithIndifferentAccess.new(options)
       @run = false
-
-      #need to combine the two below things, no need to keep both
-
-      #typed collection of objects
-      @objects = Hash.new do |hash, key|
+      @puppet_resources = Hash.new do |hash, key|
         hash[key] = {}
       end
-      #flat array of objects
-      @puppet_resources = []
     end
 
     #class level method that declares that a method creating resources will be
@@ -45,9 +58,11 @@ module ShadowPuppet
       end
     end
 
-    #helper to easily create a reference to an existing resource
-    def reference(type, title)
-      Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s, :scope => scope)
+    # A HashWithIndifferentAccess[http://api.rubyonrails.com/classes/HashWithIndifferentAccess.html]
+    # containing the options passed into the initialize method. Useful to pass
+    # things not already in Facter.
+    def options
+      @options
     end
 
     #Create an instance method for every type that either creates or references
@@ -58,34 +73,26 @@ module ShadowPuppet
         if args && args.flatten.size == 1
           reference(type.name, args.first)
         else
-          newresource(type, args.first, args.last)
+          new_resource(type, args.first, args.last)
         end
       end
     end
 
-    #convenince method for accessing facts
-    def facts
-      Facter.flush
-      Facter.to_hash
-    end
-
-    #has this manifest instance been run yet?
-    def run?
-      @run
-    end
-
-    #returns true if <tt>self.respond_to?</tt> all methods named by calls recipe
+    # Returns true if this Manifest <tt>respond_to?</tt> all methods named by
+    # calls to recipe, and if this manifest has not been run before.
     def runnable?
       self.class.recipes.each do |meth,args|
-        return false unless self.respond_to?(meth)
+        return false unless respond_to?(meth)
       end
+      return false if run?
       true
     end
 
-    #evaulate and apply this manifest
-    def run
-      return false if self.run?
-      return false unless self.runnable?
+    # Execute this manifest, applying all resources defined. By default, this
+    # will only execute a manifest that is runnable?. The ++force++ argument,
+    # if true, removes this check
+    def run(force=false)
+      return false unless runnable? || force
       evaluate
       apply
     rescue Exception => e
@@ -96,30 +103,27 @@ module ShadowPuppet
       @run = true
     end
 
-    private
+    protected
 
-    #evaluate the methods defined by the call to self.recipe
-    def evaluate
-      self.class.recipes.each do |meth, args|
-        case arity = self.method(meth).arity
-        when 1, -1
-          self.send(meth, args)
-        else
-          self.send(meth)
+    #Has this manifest instance been run yet?
+    def run?
+      @run
+    end
+
+    #all resources currently defined, as an Array
+    def flat_resources
+      a = []
+      @puppet_resources.each_value do |by_type|
+        by_type.each_value do |by_name|
+          a << by_name
         end
       end
+      a
     end
 
-    #apply the evaluated manifest, that is, execute it
-    def apply
-      @bucket ||= export()
-      catalog = @bucket.to_catalog
-      catalog.apply
-    end
-
-    #export this manifest as a transportable bucket
+    #Convert the contained Puppet Resources into a TransBucket
     def export
-      transportable_objects = @puppet_resources.dup.reject { |a| a.nil? }.flatten.collect do |obj|
+      transportable_objects = flat_resources.dup.reject { |a| a.nil? }.flatten.collect do |obj|
         obj.to_trans
       end
       b = Puppet::TransBucket.new(transportable_objects)
@@ -127,6 +131,28 @@ module ShadowPuppet
       b.type = "class"
 
       return b
+    end
+
+    private
+
+    #Evaluate the methods calls queued in self.recipes
+    def evaluate
+      self.class.recipes.each do |meth, args|
+        case arity = method(meth).arity
+        when 1, -1
+          send(meth, args)
+        else
+          send(meth)
+        end
+      end
+    end
+
+    # Create a catalog of all contained Puppet Resources and apply that
+    # catalog to the currently running system
+    def apply(bucket = nil)
+      bucket ||= export()
+      catalog = bucket.to_catalog
+      catalog.apply
     end
 
     def scope #:nodoc:
@@ -147,17 +173,21 @@ module ShadowPuppet
       @scope
     end
 
-    #creates a new resource
-    def newresource(type, name, params = {})
-      unless obj = @objects[type][name]
+    #Create a reference to another Puppet Resource
+    def reference(type, title)
+      Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s, :scope => scope)
+    end
+
+    #Creates a new Puppet Resource
+    def new_resource(type, name, params = {})
+      unless obj = @puppet_resources[type][name]
         obj = Puppet::Parser::Resource.new(
           :title => name,
           :type => type.name,
           :source => self,
           :scope => scope
         )
-        @objects[type][name] = obj
-        @puppet_resources << obj
+        @puppet_resources[type][name] = obj
       end
 
       params.each do |param_name, param_value|
