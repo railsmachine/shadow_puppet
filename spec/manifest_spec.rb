@@ -81,17 +81,17 @@ describe "A manifest" do
       it "calls specified methods" do
         @manifest.should_receive(:foo)
         @manifest.should_receive(:bar)
-        @manifest.send(:evaluate)
+        @manifest.send(:evaluate_recipes)
       end
 
       it "creates new resources" do
         @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'foo', :command => '/usr/bin/true').exactly(1).times
         @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'bar', :command => '/usr/bin/true').exactly(1).times
-        @manifest.send(:evaluate)
+        @manifest.send(:evaluate_recipes)
       end
 
       it "creates new resources" do
-        @manifest.send(:evaluate)
+        @manifest.send(:evaluate_recipes)
         @manifest.puppet_resources[Puppet::Type::Exec].keys.sort.should == ['bar', 'foo']
       end
 
@@ -106,7 +106,7 @@ describe "A manifest" do
         end
 
         it "passes them to the methods" do
-          @manifest.send(:evaluate)
+          @manifest.send(:evaluate_recipes)
           @manifest.puppet_resources[Puppet::Type::Exec].keys.sort.should == ['bar']
         end
 
@@ -116,8 +116,8 @@ describe "A manifest" do
 
     describe "when executed" do
 
-      it "calls evaluate and apply" do
-        @manifest.should_receive(:evaluate)
+      it "calls evaluate_recipes and apply" do
+        @manifest.should_receive(:evaluate_recipes)
         @manifest.should_receive(:apply)
         @manifest.execute
       end

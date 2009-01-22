@@ -48,13 +48,38 @@ module ShadowPuppet
       end
     end
 
-    #class level method that declares that a method creating resources will be
-    #called when an instance of this class is executed
-    def self.recipe(*args)
-      return nil if args.nil? || args == []
-      options = args.extract_options!
-      args.each do |a|
-        recipes << [a.to_sym, options]
+    # Declares that the named method or methods will called whenever execute
+    # is called on an instance of this class. If the last argument is a Hash,
+    # this hash is passed as an argument to all provided methods.
+    #
+    # ===Examples
+    #
+    #   class RecipeExample < ShadowFacter::Manifest
+    #     recipe :lamp, :ruby               # queue calls to self.lamp and
+    #                                       # self.ruby when executing
+    #
+    #     recipe :mysql, {                  # queue a call to self.mysql
+    #       :root_password => 'OMGSEKRET'   # passing the provided hash
+    #     }                                 # as an option
+    #
+    #     def lamp
+    #       #install a basic LAMP stack
+    #     end
+    #
+    #     def ruby
+    #       #install a ruby interpreter and tools
+    #     end
+    #
+    #     def mysql(options)
+    #        #install a mysql server and set the root password to options[:root_password]
+    #     end
+    #
+    #   end
+    def self.recipe(*methods)
+      return nil if methods.nil? || methods == []
+      options = methods.extract_options!
+      methods.each do |meth|
+        recipes << [meth.to_sym, options]
       end
     end
 
@@ -69,6 +94,8 @@ module ShadowPuppet
     #a resource
     Puppet::Type.loadall
     Puppet::Type.eachtype do |type|
+      #undefine the method rdoc placeholders
+      undef_method(type.name) rescue nil
       define_method(type.name) do |*args|
         if args && args.flatten.size == 1
           reference(type.name, args.first)
@@ -79,7 +106,7 @@ module ShadowPuppet
     end
 
     # Returns true if this Manifest <tt>respond_to?</tt> all methods named by
-    # calls to recipe, and if this manifest has not been executed before.
+    # calls to recipe, and if this Manifest has not been executed before.
     def executable?
       self.class.recipes.each do |meth,args|
         return false unless respond_to?(meth)
@@ -90,10 +117,10 @@ module ShadowPuppet
 
     # Execute this manifest, applying all resources defined. By default, this
     # will only execute a manifest that is executable?. The ++force++ argument,
-    # if true, removes this check
+    # if true, removes this check.
     def execute(force=false)
       return false unless executable? || force
-      evaluate
+      evaluate_recipes
       apply
     rescue Exception => e
       raise e
@@ -105,12 +132,12 @@ module ShadowPuppet
 
     protected
 
-    #Has this manifest instance been executed yet?
+    #Has this manifest instance been executed?
     def executed?
       @executed
     end
 
-    #all resources currently defined, as an Array
+    #An Array of all currently defined resources.
     def flat_resources
       a = []
       @puppet_resources.each_value do |by_type|
@@ -121,7 +148,7 @@ module ShadowPuppet
       a
     end
 
-    #Convert the contained Puppet Resources into a TransBucket
+    #A Puppet::TransBucket of all defined resoureces.
     def export
       transportable_objects = flat_resources.dup.reject { |a| a.nil? }.flatten.collect do |obj|
         obj.to_trans
@@ -136,7 +163,7 @@ module ShadowPuppet
     private
 
     #Evaluate the methods calls queued in self.recipes
-    def evaluate
+    def evaluate_recipes
       self.class.recipes.each do |meth, args|
         case arity = method(meth).arity
         when 1, -1
@@ -173,12 +200,12 @@ module ShadowPuppet
       @scope
     end
 
-    #Create a reference to another Puppet Resource
+    #Create a reference to another Puppet Resource.
     def reference(type, title)
       Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s, :scope => scope)
     end
 
-    #Creates a new Puppet Resource
+    #Creates a new Puppet Resource.
     def new_resource(type, name, params = {})
       unless obj = @puppet_resources[type][name]
         obj = Puppet::Parser::Resource.new(
