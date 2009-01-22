@@ -54,8 +54,9 @@ module ShadowPuppet
   #
   #    ruby -rubygems -e 'require "shadow_puppet";puts ShadowPuppet::Manifest.puppet_type_methods'
   #
-  # The use of methods as a container for resources facilitates recipie re-use
-  # through the use of Ruby Modules. For example:
+  # The use of methods (+sample+, +lamp+, +ruby+, and +mysql+ above) as a
+  # container for resources facilitates recipie re-use through the use of Ruby
+  # Modules. For example:
   #
   #   module ApachePuppet
   #     # Required options:
