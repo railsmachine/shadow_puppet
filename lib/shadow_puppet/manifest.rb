@@ -11,7 +11,7 @@ module ShadowPuppet
   #
   # ===Example
   #
-  #   class ManifestExample < ShadowFacter::Manifest
+  #   class ManifestExample < ShadowPuppet::Manifest
   #     recipe :sample
   #     recipe :lamp, :ruby               # queue calls to self.lamp and
   #                                       # self.ruby when executing
