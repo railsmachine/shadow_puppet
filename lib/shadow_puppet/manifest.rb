@@ -22,8 +22,13 @@ module ShadowPuppet
   #
   #     def sample
   #       exec :foo, :command => '/bin/echo "foo" > /tmp/foo.txt'
+  #
   #       package :foo, :ensure => :installed
-  #       file '/tmp/example.txt', :ensure => :present, :contents => Facter.to_hash_inspect
+  #
+  #       file '/tmp/example.txt',
+  #         :ensure   => :present,
+  #         :contents => Facter.to_hash_inspect,
+  #         :require  => package(:foo)
   #     end
   #
   #     def lamp
