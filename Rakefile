@@ -38,3 +38,26 @@ end
 task :cleanup do
   system "rm *.gem"
 end
+
+task :pull do
+  system "git pull origin master"
+  system "git pull github master"
+end
+
+task :_push do
+  system "git push origin master"
+  system "git push github master"
+end
+
+task :push => [:redoc, :pull, :spec, :_push]
+
+task :redoc do
+  system "cd doc && git pull origin gh-pages && git pull github gh-pages"
+  system "mv doc tmpdoc"
+  Rake::Task['rdoc'].invoke
+  system "cp -r doc/* tmpdoc/"
+  system "rm -rf doc"
+  system "mv tmpdoc doc"
+  system "cd doc && git commit -am 'regenerate rdocs' && git push origin gh-pages && git push github gh-pages"
+  system "git commit doc -m 'update docs submodule'"
+end
