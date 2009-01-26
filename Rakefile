@@ -52,12 +52,22 @@ end
 task :push => [:redoc, :pull, :spec, :_push]
 
 task :redoc do
-  system "cd doc && git pull origin gh-pages && git pull github gh-pages"
-  system "mv doc tmpdoc"
-  Rake::Task['rdoc'].invoke
-  system "cp -r doc/* tmpdoc/"
+  #clean
+  system "git checkout gh-pages && git pull origin gh-pages && git pull github gh-pages"
   system "rm -rf doc"
-  system "mv tmpdoc doc"
-  system "cd doc && git commit -am 'regenerate rdocs' && git push origin gh-pages && git push github gh-pages"
-  system "git commit doc -m 'update docs submodule'"
+  system "git checkout master"
+  system "rm -rf doc"
+
+  #doc
+  Rake::Task['rdoc'].invoke
+
+  #switch branch
+  system "git checkout gh-pages"
+
+  #move it all to the root
+  system "cp -r doc/* . && rm -rf doc"
+
+  #commit and push
+  system "git commit -am 'regenerate rdocs' && git push origin gh-pages && git push github gh-pages"
+  system "git checkout master"
 end
