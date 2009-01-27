@@ -7,5 +7,5 @@ ShadowPuppet provides a DSL for creating collections ("manifests") of Puppet
 Resources in Ruby. For documentation on writing these manifests, please see
 ShadowPuppet::Manifest.
 
-A binary[link:files/bin/shadow_puppet.html] is provided to parse and execute a
+A binary[http://railsmachine.github.com/shadow_puppet/files/bin/shadow_puppet.html] is provided to parse and execute a
 ShadowPuppet::Manifest.
