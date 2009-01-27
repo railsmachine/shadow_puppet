@@ -5,7 +5,6 @@ rescue
   require 'rake/rdoctask'
 end
 
-desc 'Generate RDoc documentation for the will_paginate plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/shadow_puppet/*.rb')
   rdoc.rdoc_files.include('bin/shadow_puppet')
