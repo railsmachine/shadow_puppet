@@ -5,6 +5,7 @@ require 'active_support/core_ext/class/attribute_accessors'
 require 'active_support/core_ext/array'
 require 'active_support/inflector'
 require 'active_support/core_ext/hash/indifferent_access'
+require 'active_support/core_ext/hash/inheritable_attributes'
 
 module ShadowPuppet
   # A Manifest is an executable collection of Puppet Resources[http://reductivelabs.com/trac/puppet/wiki/TypeReference].
