@@ -89,8 +89,8 @@ describe "A manifest" do
       end
 
       it "creates new resources" do
-        @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'foo', :command => '/usr/bin/true').exactly(1).times
-        @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'bar', :command => '/usr/bin/true').exactly(1).times
+        @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'foo', :command => 'true').exactly(1).times
+        @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'bar', :command => 'true').exactly(1).times
         @manifest.send(:evaluate_recipes)
       end
 

@@ -4,11 +4,11 @@ end
 #this does nothing
 class NoOpManifest < ShadowPuppet::Manifest
   def foo
-    exec('foo', :command => '/usr/bin/true')
+    exec('foo', :command => 'true')
   end
 
   def bar
-    exec('bar', :command => '/usr/bin/true')
+    exec('bar', :command => 'true')
   end
 end
 
@@ -17,11 +17,11 @@ class RequiresMetViaMethods < ShadowPuppet::Manifest
   recipe :foo, :bar
 
   def foo
-    exec('foo', :command => '/usr/bin/true')
+    exec('foo', :command => 'true')
   end
 
   def bar
-    exec('bar', :command => '/usr/bin/true')
+    exec('bar', :command => 'true')
   end
 end
 
@@ -29,13 +29,13 @@ end
 class ProvidedViaModules < ShadowPuppet::Manifest
   module FooRecipe
     def foo
-      exec('foo', :command => '/usr/bin/true')
+      exec('foo', :command => 'true')
     end
   end
 
   module BarRecipe
     def bar
-      exec('bar', :command => '/usr/bin/true')
+      exec('bar', :command => 'true')
     end
   end
   include FooRecipe
@@ -46,7 +46,7 @@ end
 #requirements can also be handled by functions in external modules
 class PassingArguments < ShadowPuppet::Manifest
   def foo(options = {})
-    exec(options[:name], :command => '/usr/bin/true')
+    exec(options[:name], :command => 'true')
   end
   recipe :foo, :name => 'bar'
 end
