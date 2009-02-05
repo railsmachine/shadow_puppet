@@ -9,7 +9,7 @@ class Foo < ShadowPuppet::Manifest
   end
 
   def demo(options = {})
-    exec 'sample', :command => "/bin/echo '#{options[:text]}' > /tmp/sample.txt"
+    exec 'sample', :command => "echo '#{options[:text]}' > /tmp/sample.txt"
     file '/tmp/sample2.txt', :ensure => :present, :content => Facter.to_hash.inspect
   end
 end

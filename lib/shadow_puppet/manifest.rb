@@ -23,7 +23,7 @@ module ShadowPuppet
   #     }                                 # as an option
   #
   #     def sample
-  #       exec :foo, :command => '/bin/echo "foo" > /tmp/foo.txt'
+  #       exec :foo, :command => 'echo "foo" > /tmp/foo.txt'
   #
   #       package :foo, :ensure => :installed
   #

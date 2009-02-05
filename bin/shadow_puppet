@@ -13,7 +13,7 @@
 #   end
 #
 #   def demo(options = {})
-#     exec 'sample', :command => "/bin/echo '#{options[:text]}' > /tmp/sample.txt"
+#     exec 'sample', :command => "echo '#{options[:text]}' > /tmp/sample.txt"
 #     file '/tmp/sample2.txt', :ensure => :present, :content => Facter.to_hash.inspect
 #   end
 # end
@@ -52,7 +52,7 @@ begin
           recipe :foo
 
           def foo
-            exec :foo, :command => '/bin/echo "foo" > /tmp/foo.txt'
+            exec :foo, :command => 'echo "foo" > /tmp/foo.txt'
             file '/tmp/example.txt', :ensure => :present, :content => Facter.to_hash.inspect
           end
         end
