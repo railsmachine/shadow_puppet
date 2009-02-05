@@ -38,6 +38,10 @@ describe "A manifest" do
         @manifest.puppet_resources[Puppet::Type::Exec].keys.sort.should == ['foo']
       end
 
+      it "applies our customizations to resources" do
+        @manifest.puppet_resources[Puppet::Type::Exec]["foo"].params[:path].value.should == ENV["PATH"]
+      end
+
       describe "and then executing" do
 
         before(:each) do

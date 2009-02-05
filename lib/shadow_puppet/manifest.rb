@@ -85,7 +85,7 @@ module ShadowPuppet
 
     class_inheritable_accessor :recipes
     self.recipes = []
-    attr_reader :puppet_resources
+    attr_reader :puppet_resources, :name
 
     # Initialize a new instance of this manifest. This can take a hash of
     # options that are avaliable later via the options method.
@@ -99,6 +99,7 @@ module ShadowPuppet
       Puppet::Util::Log.newdestination(:console)
       Puppet::Util::Log.level = :info
 
+      @name = self.class
       @options = HashWithIndifferentAccess.new(options)
       @executed = false
       @puppet_resources = Hash.new do |hash, key|
@@ -256,6 +257,16 @@ module ShadowPuppet
           :scope => scope
         )
         @puppet_resources[type][name] = obj
+      end
+
+      case type.name
+      when :exec
+        param = Puppet::Parser::Resource::Param.new(
+          :name => :path,
+          :value => ENV["PATH"],
+          :source => self
+        )
+        obj.send(:set_parameter, param)
       end
 
       params.each do |param_name, param_value|
