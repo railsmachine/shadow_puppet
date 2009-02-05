@@ -32,14 +32,14 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Thu Feb 05 15:04:04 -0500 2009</span>
+          <span class='datetime'>Thu Feb 05 16:14:23 -0500 2009</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
             <h2>Sample manifest:</h2>
-            <pre> $ cat examples/foo.rb&#x000A; class Foo &lt; ShadowPuppet::Manifest&#x000A;  recipe :demo, :text =&gt; 'foo'&#x000A;  recipe :some_gems&#x000A;&#x000A;  def some_gems&#x000A;    package 'rails', :ensure =&gt; :updated, :provider =&gt; :gem&#x000A;    package 'railsmachine', :ensure =&gt; '1.0.5', :provider =&gt; :gem, :require =&gt; package('capistrano')&#x000A;    package 'capistrano', :ensure =&gt; :updated, :provider =&gt; :gem&#x000A;  end&#x000A;&#x000A;  def demo(options = {})&#x000A;    exec 'sample', :command =&gt; &quot;/bin/echo '#{options[:text]}' &gt; /tmp/sample.txt&quot;&#x000A;    file '/tmp/sample2.txt', :ensure =&gt; :present, :content =&gt; Facter.to_hash.inspect&#x000A;  end&#x000A;end</pre>
+            <pre> $ cat examples/foo.rb&#x000A; class Foo &lt; ShadowPuppet::Manifest&#x000A;  recipe :demo, :text =&gt; 'foo'&#x000A;  recipe :some_gems&#x000A;&#x000A;  def some_gems&#x000A;    package 'rails', :ensure =&gt; :updated, :provider =&gt; :gem&#x000A;    package 'railsmachine', :ensure =&gt; '1.0.5', :provider =&gt; :gem, :require =&gt; package('capistrano')&#x000A;    package 'capistrano', :ensure =&gt; :updated, :provider =&gt; :gem&#x000A;  end&#x000A;&#x000A;  def demo(options = {})&#x000A;    exec 'sample', :command =&gt; &quot;echo '#{options[:text]}' &gt; /tmp/sample.txt&quot;&#x000A;    file '/tmp/sample2.txt', :ensure =&gt; :present, :content =&gt; Facter.to_hash.inspect&#x000A;  end&#x000A;end</pre>
             <h2>Executing this manifest:</h2>
             <pre>$ shadow_puppet examples/foo.rb&#x000A;notice: /shadow_puppet:19861340/Exec[foo]/returns: executed successfully&#x000A;$</pre>
             <p>
