@@ -80,6 +80,10 @@ describe "A manifest" do
       @manifest.class.recipes.should == [[:foo, {}], [:bar, {}]]
     end
 
+    it "has a name" do
+      @manifest.name.should == "#{@manifest.class}##{@manifest.object_id}"
+    end
+
     describe 'when evaluated' do
 
       it "calls specified methods" do

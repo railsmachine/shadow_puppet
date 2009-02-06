@@ -85,7 +85,7 @@ module ShadowPuppet
 
     class_inheritable_accessor :recipes
     self.recipes = []
-    attr_reader :puppet_resources, :name
+    attr_reader :puppet_resources
 
     # Initialize a new instance of this manifest. This can take a hash of
     # options that are avaliable later via the options method.
@@ -99,7 +99,6 @@ module ShadowPuppet
       Puppet::Util::Log.newdestination(:console)
       Puppet::Util::Log.level = :info
 
-      @name = self.class
       @options = HashWithIndifferentAccess.new(options)
       @executed = false
       @puppet_resources = Hash.new do |hash, key|
@@ -130,6 +129,10 @@ module ShadowPuppet
     # things not already in Facter.
     def options
       @options
+    end
+
+    def name
+      @name ||= "#{self.class}##{self.object_id}"
     end
 
     #Create an instance method for every type that either creates or references
@@ -196,7 +199,7 @@ module ShadowPuppet
         obj.to_trans
       end
       b = Puppet::TransBucket.new(transportable_objects)
-      b.name = "shadow_puppet:#{object_id}"
+      b.name = name
       b.type = "class"
 
       return b
