@@ -29,13 +29,13 @@ end
 class ProvidedViaModules < ShadowPuppet::Manifest
   module FooRecipe
     def foo
-      exec('foo', :command => 'true')
+      file('/tmp/moonshine_foo', :ensure => 'present', :content => 'foo')
     end
   end
 
   module BarRecipe
     def bar
-      exec('bar', :command => 'true')
+      file('/tmp/moonshine_bar', :ensure => 'absent')
     end
   end
   include FooRecipe
@@ -46,9 +46,9 @@ end
 #requirements can also be handled by functions in external modules
 class PassingArguments < ShadowPuppet::Manifest
   def foo(options = {})
-    exec(options[:name], :command => 'true')
+    file(options[:name], :ensure => 'present', :content => 'foo')
   end
-  recipe :foo, :name => 'bar'
+  recipe :foo, :name => '/tmp/moonshine_foo'
 end
 
 # since self.respond_to?(:foo) == false, this raises an error when run

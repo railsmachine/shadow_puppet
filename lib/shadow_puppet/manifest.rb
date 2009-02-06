@@ -225,6 +225,7 @@ module ShadowPuppet
       bucket ||= export()
       catalog = bucket.to_catalog
       catalog.apply
+      catalog.clear
     end
 
     def scope #:nodoc:

@@ -107,19 +107,6 @@ describe "A manifest" do
         @manifest.send(:flat_resources).should == []
       end
 
-      describe "with arguments passed to recpie" do
-
-        before(:each) do
-          @manifest = PassingArguments.new
-        end
-
-        it "passes them to the methods" do
-          @manifest.send(:evaluate_recipes)
-          @manifest.puppet_resources[Puppet::Type::Exec].keys.sort.should == ['bar']
-        end
-
-      end
-
     end
 
     describe "when executed" do
@@ -137,6 +124,20 @@ describe "A manifest" do
       it "cannot be executed again" do
         @manifest.execute.should be_true
         @manifest.execute.should be_false
+      end
+
+    end
+
+    describe "after execution" do
+
+      before(:each) do
+        @manifest = ProvidedViaModules.new
+        @manifest.execute
+      end
+
+      it "allows creation of other similar resources" do
+        m = PassingArguments.new
+        m.execute.should be_true
       end
 
     end
