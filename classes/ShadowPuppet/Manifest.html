@@ -82,15 +82,16 @@
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000005">executable?</a></li>
-              <li><a href="#M000006">execute</a></li>
+              <li><a href="#M000006">executable?</a></li>
+              <li><a href="#M000007">execute</a></li>
+              <li><a href="#M000005">name</a></li>
               <li><a href="#M000004">options</a></li>
             </ol>
             <h3>protected instance</h3>
             <ol>
-              <li><a href="#M000007">executed?</a></li>
-              <li><a href="#M000009">export</a></li>
-              <li><a href="#M000008">flat_resources</a></li>
+              <li><a href="#M000008">executed?</a></li>
+              <li><a href="#M000010">export</a></li>
+              <li><a href="#M000009">flat_resources</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -98,11 +99,6 @@
               <h2 class='section-bar'>Attributes</h2>
               <div class='name-list'>
                 <table>
-                  <tr class='top-aligned-row context-row'>
-                    <td class='context-item-name'>name</td>
-                    <td class='context-item-value'>[R]</td>
-                    <td class='context-item-desc'></td>
-                  </tr>
                   <tr class='top-aligned-row context-row'>
                     <td class='context-item-name'>puppet_resources</td>
                     <td class='context-item-value'>[R]</td>
@@ -129,7 +125,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000001-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000001-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 92</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">options</span> = {})&#x000A;      <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Process</span>.<span class="ruby-identifier">uid</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;          <span class="ruby-constant">Puppet</span>[<span class="ruby-identifier">:confdir</span>] = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-value str">&quot;~/.puppet&quot;</span>)&#x000A;          <span class="ruby-constant">Puppet</span>[<span class="ruby-identifier">:vardir</span>] = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-value str">&quot;~/.puppet/var&quot;</span>)&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-constant">Puppet</span>[<span class="ruby-identifier">:user</span>] = <span class="ruby-constant">Process</span>.<span class="ruby-identifier">uid</span>&#x000A;      <span class="ruby-constant">Puppet</span>[<span class="ruby-identifier">:group</span>] = <span class="ruby-constant">Process</span>.<span class="ruby-identifier">gid</span>&#x000A;      <span class="ruby-constant">Puppet</span><span class="ruby-operator">::</span><span class="ruby-constant">Util</span><span class="ruby-operator">::</span><span class="ruby-constant">Log</span>.<span class="ruby-identifier">newdestination</span>(<span class="ruby-identifier">:console</span>)&#x000A;      <span class="ruby-constant">Puppet</span><span class="ruby-operator">::</span><span class="ruby-constant">Util</span><span class="ruby-operator">::</span><span class="ruby-constant">Log</span>.<span class="ruby-identifier">level</span> = <span class="ruby-identifier">:info</span>&#x000A;&#x000A;      <span class="ruby-ivar">@name</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>&#x000A;      <span class="ruby-ivar">@options</span> = <span class="ruby-constant">HashWithIndifferentAccess</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-ivar">@executed</span> = <span class="ruby-keyword kw">false</span>&#x000A;      <span class="ruby-ivar">@puppet_resources</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hash</span>, <span class="ruby-identifier">key</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">key</span>] = {}&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000001-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 92</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">options</span> = {})&#x000A;      <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Process</span>.<span class="ruby-identifier">uid</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;          <span class="ruby-constant">Puppet</span>[<span class="ruby-identifier">:confdir</span>] = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-value str">&quot;~/.puppet&quot;</span>)&#x000A;          <span class="ruby-constant">Puppet</span>[<span class="ruby-identifier">:vardir</span>] = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-value str">&quot;~/.puppet/var&quot;</span>)&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-constant">Puppet</span>[<span class="ruby-identifier">:user</span>] = <span class="ruby-constant">Process</span>.<span class="ruby-identifier">uid</span>&#x000A;      <span class="ruby-constant">Puppet</span>[<span class="ruby-identifier">:group</span>] = <span class="ruby-constant">Process</span>.<span class="ruby-identifier">gid</span>&#x000A;      <span class="ruby-constant">Puppet</span><span class="ruby-operator">::</span><span class="ruby-constant">Util</span><span class="ruby-operator">::</span><span class="ruby-constant">Log</span>.<span class="ruby-identifier">newdestination</span>(<span class="ruby-identifier">:console</span>)&#x000A;      <span class="ruby-constant">Puppet</span><span class="ruby-operator">::</span><span class="ruby-constant">Util</span><span class="ruby-operator">::</span><span class="ruby-constant">Log</span>.<span class="ruby-identifier">level</span> = <span class="ruby-identifier">:info</span>&#x000A;&#x000A;      <span class="ruby-ivar">@options</span> = <span class="ruby-constant">HashWithIndifferentAccess</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-ivar">@executed</span> = <span class="ruby-keyword kw">false</span>&#x000A;      <span class="ruby-ivar">@puppet_resources</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hash</span>, <span class="ruby-identifier">key</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">key</span>] = {}&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000003'>
@@ -147,7 +143,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 124</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">puppet_type_methods</span>&#x000A;      <span class="ruby-constant">Puppet</span><span class="ruby-operator">::</span><span class="ruby-constant">Type</span>.<span class="ruby-identifier">eachtype</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span> }.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">to_s</span> }.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">inspect</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 123</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">puppet_type_methods</span>&#x000A;      <span class="ruby-constant">Puppet</span><span class="ruby-operator">::</span><span class="ruby-constant">Type</span>.<span class="ruby-identifier">eachtype</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span> }.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">to_s</span> }.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">inspect</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000002'>
@@ -169,12 +165,12 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000002-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000002-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 115</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">recipe</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">methods</span>)&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">methods</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">methods</span> <span class="ruby-operator">==</span> []&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-identifier">methods</span>.<span class="ruby-identifier">extract_options!</span>&#x000A;      <span class="ruby-identifier">methods</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">meth</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-identifier">recipes</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">meth</span>.<span class="ruby-identifier">to_sym</span>, <span class="ruby-identifier">options</span>]&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000002-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 114</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">recipe</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">methods</span>)&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">methods</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">methods</span> <span class="ruby-operator">==</span> []&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-identifier">methods</span>.<span class="ruby-identifier">extract_options!</span>&#x000A;      <span class="ruby-identifier">methods</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">meth</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-identifier">recipes</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">meth</span>.<span class="ruby-identifier">to_sym</span>, <span class="ruby-identifier">options</span>]&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000005'>
-                <a name='M000005'>      </a>
+              <div class='public-instance method' id='method-M000006'>
+                <a name='M000006'>      </a>
                 <div class='synopsis'>
                   <span class='name'>executable?</span>
                   <span class='arguments'>()</span>
@@ -187,14 +183,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000006-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000005-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 152</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">executable?</span>&#x000A;      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">recipes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">meth</span>,<span class="ruby-identifier">args</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">meth</span>)&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">executed?</span>&#x000A;      <span class="ruby-keyword kw">true</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000006-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 155</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">executable?</span>&#x000A;      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">recipes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">meth</span>,<span class="ruby-identifier">args</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">meth</span>)&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">executed?</span>&#x000A;      <span class="ruby-keyword kw">true</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000006'>
-                <a name='M000006'>      </a>
+              <div class='public-instance method' id='method-M000007'>
+                <a name='M000007'>      </a>
                 <div class='synopsis'>
                   <span class='name'>execute</span>
                   <span class='arguments'>(force=false)</span>
@@ -207,10 +203,23 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000006-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000006-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 163</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute</span>(<span class="ruby-identifier">force</span>=<span class="ruby-keyword kw">false</span>)&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">executable?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">force</span>&#x000A;      <span class="ruby-identifier">evaluate_recipes</span>&#x000A;      <span class="ruby-identifier">apply</span>&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>&#x000A;      <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span>&#x000A;    <span class="ruby-keyword kw">else</span>&#x000A;      <span class="ruby-keyword kw">true</span>&#x000A;    <span class="ruby-keyword kw">ensure</span>&#x000A;      <span class="ruby-ivar">@executed</span> = <span class="ruby-keyword kw">true</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 166</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute</span>(<span class="ruby-identifier">force</span>=<span class="ruby-keyword kw">false</span>)&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">executable?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">force</span>&#x000A;      <span class="ruby-identifier">evaluate_recipes</span>&#x000A;      <span class="ruby-identifier">apply</span>&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>&#x000A;      <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span>&#x000A;    <span class="ruby-keyword kw">else</span>&#x000A;      <span class="ruby-keyword kw">true</span>&#x000A;    <span class="ruby-keyword kw">ensure</span>&#x000A;      <span class="ruby-ivar">@executed</span> = <span class="ruby-keyword kw">true</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000005'>
+                <a name='M000005'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>name</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000005-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 134</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">name</span>&#x000A;      <span class="ruby-ivar">@name</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;#{self.class}##{self.object_id}&quot;</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000004'>
@@ -231,12 +240,12 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000004-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000004-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 131</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">options</span>&#x000A;      <span class="ruby-ivar">@options</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000004-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 130</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">options</span>&#x000A;      <span class="ruby-ivar">@options</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Protected instance methods</h2>
-              <div class='protected-instance method' id='method-M000007'>
-                <a name='M000007'>      </a>
+              <div class='protected-instance method' id='method-M000008'>
+                <a name='M000008'>      </a>
                 <div class='synopsis'>
                   <span class='name'>executed?</span>
                   <span class='arguments'>()</span>
@@ -247,14 +256,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000008-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 178</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">executed?</span>&#x000A;      <span class="ruby-ivar">@executed</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000008-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 181</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">executed?</span>&#x000A;      <span class="ruby-ivar">@executed</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='protected-instance method' id='method-M000009'>
-                <a name='M000009'>      </a>
+              <div class='protected-instance method' id='method-M000010'>
+                <a name='M000010'>      </a>
                 <div class='synopsis'>
                   <span class='name'>export</span>
                   <span class='arguments'>()</span>
@@ -265,14 +274,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000009-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000010-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000009-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 194</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">export</span>&#x000A;      <span class="ruby-identifier">transportable_objects</span> = <span class="ruby-identifier">flat_resources</span>.<span class="ruby-identifier">dup</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">nil?</span> }.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">obj</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">to_trans</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-identifier">b</span> = <span class="ruby-constant">Puppet</span><span class="ruby-operator">::</span><span class="ruby-constant">TransBucket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transportable_objects</span>)&#x000A;      <span class="ruby-identifier">b</span>.<span class="ruby-identifier">name</span> = <span class="ruby-node">&quot;shadow_puppet:#{object_id}&quot;</span>&#x000A;      <span class="ruby-identifier">b</span>.<span class="ruby-identifier">type</span> = <span class="ruby-value str">&quot;class&quot;</span>&#x000A;&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">b</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000010-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 197</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">export</span>&#x000A;      <span class="ruby-identifier">transportable_objects</span> = <span class="ruby-identifier">flat_resources</span>.<span class="ruby-identifier">dup</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">nil?</span> }.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">obj</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">to_trans</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-identifier">b</span> = <span class="ruby-constant">Puppet</span><span class="ruby-operator">::</span><span class="ruby-constant">TransBucket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transportable_objects</span>)&#x000A;      <span class="ruby-identifier">b</span>.<span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>&#x000A;      <span class="ruby-identifier">b</span>.<span class="ruby-identifier">type</span> = <span class="ruby-value str">&quot;class&quot;</span>&#x000A;&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">b</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='protected-instance method' id='method-M000008'>
-                <a name='M000008'>      </a>
+              <div class='protected-instance method' id='method-M000009'>
+                <a name='M000009'>      </a>
                 <div class='synopsis'>
                   <span class='name'>flat_resources</span>
                   <span class='arguments'>()</span>
@@ -283,10 +292,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000008-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000009-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000008-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 183</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">flat_resources</span>&#x000A;      <span class="ruby-identifier">a</span> = []&#x000A;      <span class="ruby-ivar">@puppet_resources</span>.<span class="ruby-identifier">each_value</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">by_type</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-identifier">by_type</span>.<span class="ruby-identifier">each_value</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">by_name</span><span class="ruby-operator">|</span>&#x000A;          <span class="ruby-identifier">a</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">by_name</span>&#x000A;        <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-identifier">a</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000009-source'><span class="ruby-comment cmt"># File lib/shadow_puppet/manifest.rb, line 186</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">flat_resources</span>&#x000A;      <span class="ruby-identifier">a</span> = []&#x000A;      <span class="ruby-ivar">@puppet_resources</span>.<span class="ruby-identifier">each_value</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">by_type</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-identifier">by_type</span>.<span class="ruby-identifier">each_value</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">by_name</span><span class="ruby-operator">|</span>&#x000A;          <span class="ruby-identifier">a</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">by_name</span>&#x000A;        <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-identifier">a</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
