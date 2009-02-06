@@ -1,7 +1,7 @@
 begin
   require 'rubygems'
   require 'hanna/rdoctask'
-rescue
+rescue LoadError
   require 'rake/rdoctask'
 end
 
