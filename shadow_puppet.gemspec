@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.email = ["jesse@railsmachine.com"]
   s.homepage = 'http://railsmachine.github.com/shadow_puppet'
   s.rubyforge_project = 'moonshine'
-  s.version = "0.1.3"
+  s.version = "0.1.4"
   s.date = '2009-02-05'
 
   s.default_executable = 'shadow_puppet'
@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ['README.rdoc', 'bin/shadow_puppet']
 
   s.add_dependency('puppet', [">= 0.24.6"])
-  s.add_dependency('facter', ["= 1.5.2"])
+  s.add_dependency('facter', [">= 1.5.4"])
   s.add_dependency('highline', [">= 1.5.0"])
   s.add_dependency('builder', [">= 2.1.2"])
   s.add_dependency('activesupport', [">= 2.2.2"])
