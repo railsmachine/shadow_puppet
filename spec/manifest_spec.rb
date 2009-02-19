@@ -80,6 +80,14 @@ describe "A manifest" do
       @manifest.class.recipes.should == [[:foo, {}], [:bar, {}]]
     end
 
+    it "has a configuration hash on the class" do
+      @manifest.class.configuration[:foo].should == :bar
+    end
+
+    it "can access the same configuration hash on the instance" do
+      @manifest.configuration[:foo].should == :bar
+    end
+
     it "has a name" do
       @manifest.name.should == "#{@manifest.class}##{@manifest.object_id}"
     end
@@ -140,6 +148,33 @@ describe "A manifest" do
         m.execute.should be_true
       end
 
+    end
+
+  end
+
+  describe "that subclasses an existing manifest" do
+
+    before(:each) do
+      @manifest = RequiresMetViaMethodsSubclass.new
+    end
+
+    it "inherits recipes from the parent class" do
+      @manifest.class.recipes.map(&:first).should include(:foo, :bar)
+    end
+
+    it "appends recipes created in the subclass" do
+      @manifest.class.recipes.map(&:first).should include(:baz)
+    end
+
+    it "merges it's configuration with that of the parent" do
+      @manifest.class.configuration[:foo].should == :bar
+      @manifest.class.configuration[:baz].should == :bar
+    end
+
+    it "is able to add configuration parameters on the instance" do
+      @manifest.configuration = { :boo => :bar }
+      @manifest.configuration[:boo].should == :bar
+      @manifest.class.configuration[:boo].should == :bar
     end
 
   end

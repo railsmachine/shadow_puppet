@@ -5,6 +5,7 @@ require 'active_support/core_ext/class/attribute_accessors'
 require 'active_support/core_ext/array'
 require 'active_support/inflector'
 require 'active_support/core_ext/hash/indifferent_access'
+require 'active_support/core_ext/hash/deep_merge'
 require 'active_support/core_ext/class/inheritable_attributes'
 require 'active_support/core_ext/duplicable'
 
@@ -84,12 +85,13 @@ module ShadowPuppet
   class Manifest
 
     class_inheritable_accessor :recipes
-    self.recipes = []
+    write_inheritable_attribute(:recipes, [])
     attr_reader :puppet_resources
 
-    # Initialize a new instance of this manifest. This can take a hash of
-    # options that are avaliable later via the options method.
-    def initialize(options = {})
+    # Initialize a new instance of this manifest. This can take a
+    # config hash, which is immediately passed on to the configure
+    # method
+    def initialize(config = {})
       unless Process.uid == 0
           Puppet[:confdir] = File.expand_path("~/.puppet")
           Puppet[:vardir] = File.expand_path("~/.puppet/var")
@@ -99,7 +101,7 @@ module ShadowPuppet
       Puppet::Util::Log.newdestination(:console)
       Puppet::Util::Log.level = :info
 
-      @options = HashWithIndifferentAccess.new(options)
+      configure(config)
       @executed = false
       @puppet_resources = Hash.new do |hash, key|
         hash[key] = {}
@@ -119,16 +121,59 @@ module ShadowPuppet
       end
     end
 
+    # A HashWithIndifferentAccess describing any configuration that has been
+    # performed on the class. Modify this hash by calling configure:
+    #
+    #   class SampleManifest < ShadowPuppet::Manifest
+    #     configure(:name => 'test')
+    #   end
+    #
+    #   >> SampleManifest.configuration
+    #   => {"name" => 'test'}
+    #
+    # Subclasses of the Manifest class properly inherit the parent classes'
+    # configuration.
+    def self.configuration
+      read_inheritable_attribute(:configuration) || write_inheritable_attribute(:configuration, HashWithIndifferentAccess.new)
+    end
+
+    # Access to the configuration of the creating class.
+    def configuration
+      self.class.configuration
+    end
+
+    # Define configuration on this manifest. This is useful for storing things
+    # such as hostnames, password, or usernames that may change between
+    # different implementations of a shared manifest. Access this hash by
+    # calling configuration:
+    #
+    #   class SampleManifest < ShadowPuppet::Manifest
+    #     configure(:name => 'test')
+    #   end
+    #
+    #   >> SampleManifest.configuration
+    #   => {"name" => 'test'}
+    #
+    # Subsequent calls to configure perform a <tt>deep_merge</tt> of the
+    # provided <tt>hash</tt> into the pre-existing configuration
+    def self.configure(hash)
+      write_inheritable_attribute(:configuration, configuration.deep_merge(hash))
+    end
+    class << self
+      alias_method :configuration=, :configure
+    end
+
+    # Define configuration on this manifest's creating class. This is useful
+    # for storing things such as hostnames, password, or usernames that may
+    # change between different implementations of a shared manifest.
+    def configure(hash)
+      self.class.configure(hash)
+    end
+    alias_method :configuration=, :configure
+
     #An array of all methods defined for creation of Puppet Resources
     def self.puppet_type_methods
       Puppet::Type.eachtype { |t| t.name }.keys.map { |n| n.to_s }.sort.inspect
-    end
-
-    # A HashWithIndifferentAccess[http://api.rubyonrails.com/classes/HashWithIndifferentAccess.html]
-    # containing the options passed into the initialize method. Useful to pass
-    # things not already in Facter.
-    def options
-      @options
     end
 
     def name

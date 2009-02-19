@@ -16,12 +16,24 @@ end
 class RequiresMetViaMethods < ShadowPuppet::Manifest
   recipe :foo, :bar
 
+  configure({ :foo => :bar })
+
   def foo
     exec('foo', :command => 'true')
   end
 
   def bar
     exec('bar', :command => 'true')
+  end
+end
+
+class RequiresMetViaMethodsSubclass < RequiresMetViaMethods
+  recipe :baz
+
+  configure({ :baz => :bar })
+
+  def baz
+    exec('baz', :command => 'true')
   end
 end
 
