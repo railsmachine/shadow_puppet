@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.email = ["jesse@railsmachine.com"]
   s.homepage = 'http://railsmachine.github.com/shadow_puppet'
   s.rubyforge_project = 'moonshine'
-  s.version = "0.1.4"
-  s.date = '2009-02-05'
+  s.version = "0.1.5"
+  s.date = '2009-02-19'
 
   s.default_executable = 'shadow_puppet'
   s.executables = ["shadow_puppet"]
