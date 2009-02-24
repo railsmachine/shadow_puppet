@@ -102,7 +102,6 @@ module ShadowPuppet
       Puppet[:user] = Process.uid
       Puppet[:group] = Process.gid
       Puppet::Util::Log.newdestination(:console)
-      Puppet::Util::Log.level = :info
 
       configure(config)
       @executed = false

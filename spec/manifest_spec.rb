@@ -160,10 +160,12 @@ describe "A manifest" do
 
     it "inherits recipes from the parent class" do
       @manifest.class.recipes.map(&:first).should include(:foo, :bar)
+      @manifest.class.recipes.first.first.should == :foo
     end
 
     it "appends recipes created in the subclass" do
       @manifest.class.recipes.map(&:first).should include(:baz)
+      @manifest.class.recipes.last.first.should == :baz
     end
 
     it "merges it's configuration with that of the parent" do
