@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.email = ["jesse@railsmachine.com"]
   s.homepage = 'http://railsmachine.github.com/shadow_puppet'
   s.rubyforge_project = 'moonshine'
-  s.version = "0.1.7"
-  s.date = '2009-02-24'
+  s.version = "0.1.8"
+  s.date = '2009-02-25'
 
   s.default_executable = 'shadow_puppet'
   s.executables = ["shadow_puppet"]
@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.add_dependency('facter', [">= 1.5.4"])
   s.add_dependency('highline', [">= 1.5.0"])
   s.add_dependency('builder', [">= 2.1.2"])
-  s.add_dependency('activesupport', [">= 2.2.2"])
+  s.add_dependency('activesupport', [">= 2.0.0"])
 
   s.rubygems_version = '1.2.0'
   s.specification_version = 2 if s.respond_to? :specification_version=
