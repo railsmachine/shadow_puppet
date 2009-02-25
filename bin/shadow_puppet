@@ -75,8 +75,11 @@ begin
 
   require 'rubygems'
   require 'shadow_puppet'
-  gem "activesupport"
   require 'active_support/inflector'
+  require 'active_support/core_ext/string/inflections'
+  unless String.included_modules.include?(ActiveSupport::CoreExtensions::String::Inflections)
+    String.send :include, ActiveSupport::CoreExtensions::String::Inflections
+  end
   require 'fileutils'
 
   filename = ARGV[0]
