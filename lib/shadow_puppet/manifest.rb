@@ -7,6 +7,9 @@ require 'active_support/inflector'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/class/inheritable_attributes'
 require 'active_support/core_ext/duplicable'
+class Hash #:nodoc:
+  include ActiveSupport::CoreExtensions::Hash::IndifferentAccess
+end
 
 module ShadowPuppet
   # A Manifest is an executable collection of Puppet Resources[http://reductivelabs.com/trac/puppet/wiki/TypeReference].
