@@ -122,8 +122,8 @@ href="http://reductivelabs.com/trac/puppet/wiki/TypeReference">Resources</a>.
   end
 </pre>
 <p>
-To <a href="Manifest.html#M000011">execute</a> the above manifest,
-instantiate it and call <a href="Manifest.html#M000011">execute</a> on it:
+To <a href="Manifest.html#M000012">execute</a> the above manifest,
+instantiate it and call <a href="Manifest.html#M000012">execute</a> on it:
 </p>
 <pre>
   m = ManifestExample.new
@@ -175,20 +175,21 @@ re-use through the use of Ruby Modules. For example:
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000004">configuration</a>&nbsp;&nbsp;
       <a href="#M000003">configuration</a>&nbsp;&nbsp;
+      <a href="#M000004">configuration</a>&nbsp;&nbsp;
       <a href="#M000007">configuration=</a>&nbsp;&nbsp;
       <a href="#M000006">configure</a>&nbsp;&nbsp;
       <a href="#M000005">configure</a>&nbsp;&nbsp;
-      <a href="#M000010">executable?</a>&nbsp;&nbsp;
-      <a href="#M000011">execute</a>&nbsp;&nbsp;
-      <a href="#M000012">executed?</a>&nbsp;&nbsp;
-      <a href="#M000014">export</a>&nbsp;&nbsp;
-      <a href="#M000013">flat_resources</a>&nbsp;&nbsp;
+      <a href="#M000011">executable?</a>&nbsp;&nbsp;
+      <a href="#M000012">execute</a>&nbsp;&nbsp;
+      <a href="#M000013">executed?</a>&nbsp;&nbsp;
+      <a href="#M000015">export</a>&nbsp;&nbsp;
+      <a href="#M000014">flat_resources</a>&nbsp;&nbsp;
       <a href="#M000009">name</a>&nbsp;&nbsp;
       <a href="#M000001">new</a>&nbsp;&nbsp;
       <a href="#M000008">puppet_type_methods</a>&nbsp;&nbsp;
       <a href="#M000002">recipe</a>&nbsp;&nbsp;
+      <a href="#M000010">register_puppet_types</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -352,11 +353,29 @@ An array of all methods defined for creation of Puppet Resources
         <div class="method-description">
           <p>
 Declares that the named method or methods will be called whenever <a
-href="Manifest.html#M000011">execute</a> is called on an instance of this
+href="Manifest.html#M000012">execute</a> is called on an instance of this
 class. If the last argument is a Hash, this hash is passed as an argument
 to all provided methods. Subclasses of the <a
 href="Manifest.html">Manifest</a> class properly inherit the parent
 classes&#8217; calls to <a href="Manifest.html#M000002">recipe</a>.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000010" class="method-detail">
+        <a name="M000010"></a>
+
+        <div class="method-heading">
+          <a href="Manifest.src/M000010.html" target="Code" class="method-signature"
+            onclick="popupCode('Manifest.src/M000010.html');return false;">
+          <span class="method-name">register_puppet_types</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Create an instance method for every type that either creates or references
+a resource
 </p>
         </div>
       </div>
@@ -415,12 +434,12 @@ implementations of a shared manifest.
         </div>
       </div>
 
-      <div id="method-M000010" class="method-detail">
-        <a name="M000010"></a>
+      <div id="method-M000011" class="method-detail">
+        <a name="M000011"></a>
 
         <div class="method-heading">
-          <a href="Manifest.src/M000010.html" target="Code" class="method-signature"
-            onclick="popupCode('Manifest.src/M000010.html');return false;">
+          <a href="Manifest.src/M000011.html" target="Code" class="method-signature"
+            onclick="popupCode('Manifest.src/M000011.html');return false;">
           <span class="method-name">executable?</span><span class="method-args">()</span>
           </a>
         </div>
@@ -435,12 +454,12 @@ href="Manifest.html">Manifest</a> has not been executed before.
         </div>
       </div>
 
-      <div id="method-M000011" class="method-detail">
-        <a name="M000011"></a>
+      <div id="method-M000012" class="method-detail">
+        <a name="M000012"></a>
 
         <div class="method-heading">
-          <a href="Manifest.src/M000011.html" target="Code" class="method-signature"
-            onclick="popupCode('Manifest.src/M000011.html');return false;">
+          <a href="Manifest.src/M000012.html" target="Code" class="method-signature"
+            onclick="popupCode('Manifest.src/M000012.html');return false;">
           <span class="method-name">execute</span><span class="method-args">(force=false)</span>
           </a>
         </div>
@@ -448,8 +467,8 @@ href="Manifest.html">Manifest</a> has not been executed before.
         <div class="method-description">
           <p>
 Execute this manifest, applying all resources defined. By default, this
-will only <a href="Manifest.html#M000011">execute</a> a manifest that is <a
-href="Manifest.html#M000010">executable?</a>. The <tt>force</tt> argument,
+will only <a href="Manifest.html#M000012">execute</a> a manifest that is <a
+href="Manifest.html#M000011">executable?</a>. The <tt>force</tt> argument,
 if true, removes this check.
 </p>
         </div>
@@ -471,12 +490,12 @@ if true, removes this check.
 
       <h3 class="section-bar">Protected Instance methods</h3>
 
-      <div id="method-M000012" class="method-detail">
-        <a name="M000012"></a>
+      <div id="method-M000013" class="method-detail">
+        <a name="M000013"></a>
 
         <div class="method-heading">
-          <a href="Manifest.src/M000012.html" target="Code" class="method-signature"
-            onclick="popupCode('Manifest.src/M000012.html');return false;">
+          <a href="Manifest.src/M000013.html" target="Code" class="method-signature"
+            onclick="popupCode('Manifest.src/M000013.html');return false;">
           <span class="method-name">executed?</span><span class="method-args">()</span>
           </a>
         </div>
@@ -484,17 +503,17 @@ if true, removes this check.
         <div class="method-description">
           <p>
 Has this manifest instance been <a
-href="Manifest.html#M000012">executed?</a>
+href="Manifest.html#M000013">executed?</a>
 </p>
         </div>
       </div>
 
-      <div id="method-M000014" class="method-detail">
-        <a name="M000014"></a>
+      <div id="method-M000015" class="method-detail">
+        <a name="M000015"></a>
 
         <div class="method-heading">
-          <a href="Manifest.src/M000014.html" target="Code" class="method-signature"
-            onclick="popupCode('Manifest.src/M000014.html');return false;">
+          <a href="Manifest.src/M000015.html" target="Code" class="method-signature"
+            onclick="popupCode('Manifest.src/M000015.html');return false;">
           <span class="method-name">export</span><span class="method-args">()</span>
           </a>
         </div>
@@ -506,12 +525,12 @@ A Puppet::TransBucket of all defined resoureces.
         </div>
       </div>
 
-      <div id="method-M000013" class="method-detail">
-        <a name="M000013"></a>
+      <div id="method-M000014" class="method-detail">
+        <a name="M000014"></a>
 
         <div class="method-heading">
-          <a href="Manifest.src/M000013.html" target="Code" class="method-signature"
-            onclick="popupCode('Manifest.src/M000013.html');return false;">
+          <a href="Manifest.src/M000014.html" target="Code" class="method-signature"
+            onclick="popupCode('Manifest.src/M000014.html');return false;">
           <span class="method-name">flat_resources</span><span class="method-args">()</span>
           </a>
         </div>
