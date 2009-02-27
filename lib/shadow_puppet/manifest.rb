@@ -183,18 +183,21 @@ module ShadowPuppet
 
     #Create an instance method for every type that either creates or references
     #a resource
-    Puppet::Type.loadall
-    Puppet::Type.eachtype do |type|
-      #undefine the method rdoc placeholders
-      undef_method(type.name) rescue nil
-      define_method(type.name) do |*args|
-        if args && args.flatten.size == 1
-          reference(type.name, args.first)
-        else
-          new_resource(type, args.first, args.last)
+    def self.register_puppet_types
+      Puppet::Type.loadall
+      Puppet::Type.eachtype do |type|
+        #undefine the method rdoc placeholders
+        undef_method(type.name) rescue nil
+        define_method(type.name) do |*args|
+          if args && args.flatten.size == 1
+            reference(type.name, args.first)
+          else
+            new_resource(type, args.first, args.last)
+          end
         end
       end
     end
+    register_puppet_types
 
     # Returns true if this Manifest <tt>respond_to?</tt> all methods named by
     # calls to recipe, and if this Manifest has not been executed before.
