@@ -112,12 +112,17 @@ module ShadowPuppet
     # Declares that the named method or methods will be called whenever
     # execute is called on an instance of this class. If the last argument is
     # a Hash, this hash is passed as an argument to all provided methods.
+    # If no options hash is provided, each method is passed the contents of
+    # <tt>configuration[method]</tt>.
+    #
     # Subclasses of the Manifest class properly inherit the parent classes'
     # calls to recipe.
     def self.recipe(*methods)
       return nil if methods.nil? || methods == []
       options = methods.extract_options!
       methods.each do |meth|
+        options = self.configuration[meth.to_sym] if options == {}
+        options ||= {}
         recipes << [meth.to_sym, options]
       end
     end

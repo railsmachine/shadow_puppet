@@ -100,6 +100,12 @@ describe "A manifest" do
         @manifest.send(:evaluate_recipes)
       end
 
+      it "passes the configuration hash key named by each method if no options given" do
+        @manifest = ConfigurationWithConvention.new
+        @manifest.should_receive(:foo).with('bar').exactly(1).times
+        @manifest.send(:evaluate_recipes)
+      end
+
       it "creates new resources" do
         @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'foo', :command => 'true').exactly(1).times
         @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'bar', :command => 'true').exactly(1).times

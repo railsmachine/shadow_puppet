@@ -74,3 +74,11 @@ class RequirementsNotMet < ShadowPuppet::Manifest
     #this is okay
   end
 end
+
+class ConfigurationWithConvention  < ShadowPuppet::Manifest
+  configure :foo => 'bar'
+  def foo(string)
+    file('/tmp/moonshine_foo', :ensure => 'present', :content => string)
+  end
+  recipe :foo
+end
