@@ -5,17 +5,20 @@ class ShadowPuppet::Manifest::Setup < ShadowPuppet::Manifest
 
   def setup_directories()
     if Process.uid == 0
-      file "/var/puppet",
+      file "/var/shadow_puppet",
+        :ensure => "directory",
+        :backup => false
+      file "/etc/shadow_puppet",
         :ensure => "directory",
         :backup => false
     else
-      file ENV["HOME"] + "/.puppet",
+      file ENV["HOME"] + "/.shadow_puppet",
         :ensure => "directory",
         :backup => false
-      file ENV["HOME"] + "/.puppet/var",
+      file ENV["HOME"] + "/.shadow_puppet/var",
         :ensure   => "directory",
         :backup   => false,
-        :require  => file(ENV["HOME"] + "/.puppet")
+        :require  => file(ENV["HOME"] + "/.shadow_puppet")
     end
   end
 end

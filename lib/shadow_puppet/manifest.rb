@@ -94,9 +94,12 @@ module ShadowPuppet
     # config hash, which is immediately passed on to the configure
     # method
     def initialize(config = {})
-      unless Process.uid == 0
-          Puppet[:confdir] = File.expand_path("~/.puppet")
-          Puppet[:vardir] = File.expand_path("~/.puppet/var")
+      if Process.uid == 0
+        Puppet[:confdir] = File.expand_path("/etc/shadow_puppet")
+        Puppet[:vardir] = File.expand_path("/var/shadow_puppet")
+      else
+        Puppet[:confdir] = File.expand_path("~/.shadow_puppet")
+        Puppet[:vardir] = File.expand_path("~/.shadow_puppet/var")
       end
       Puppet[:user] = Process.uid
       Puppet[:group] = Process.gid
