@@ -298,7 +298,7 @@ href="Manifest.html#M000003">configuration</a>:
 </pre>
 <p>
 Subsequent calls to <a href="Manifest.html#M000005">configure</a> perform a
-merge of the provided <tt>hash</tt> into the pre-existing <a
+deep_merge of the provided <tt>hash</tt> into the pre-existing <a
 href="Manifest.html#M000003">configuration</a>
 </p>
         </div>
@@ -355,9 +355,14 @@ An array of all methods defined for creation of Puppet Resources
 Declares that the named method or methods will be called whenever <a
 href="Manifest.html#M000012">execute</a> is called on an instance of this
 class. If the last argument is a Hash, this hash is passed as an argument
-to all provided methods. Subclasses of the <a
-href="Manifest.html">Manifest</a> class properly inherit the parent
-classes&#8217; calls to <a href="Manifest.html#M000002">recipe</a>.
+to all provided methods. If no options hash is provided, each method is
+passed the contents of <tt><a
+href="Manifest.html#M000003">configuration</a>[method]</tt>.
+</p>
+<p>
+Subclasses of the <a href="Manifest.html">Manifest</a> class properly
+inherit the parent classes&#8217; calls to <a
+href="Manifest.html#M000002">recipe</a>.
 </p>
         </div>
       </div>
