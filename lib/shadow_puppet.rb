@@ -1,3 +1,4 @@
+require File.join(File.dirname(__FILE__) + '/shadow_puppet', 'core_ext.rb')
 require File.join(File.dirname(__FILE__) + '/shadow_puppet', 'manifest.rb')
 
 class ShadowPuppet::Manifest::Setup < ShadowPuppet::Manifest

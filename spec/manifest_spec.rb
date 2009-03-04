@@ -179,6 +179,11 @@ describe "A manifest" do
       @manifest.class.configuration[:baz].should == :bar
     end
 
+    it "deep_merges it's configuration with that of the parent" do
+      @manifest.class.configuration[:nested_hash][:baz].should == :bar
+      @manifest.class.configuration[:nested_hash][:foo].should == :bar
+    end
+
     it "is able to add configuration parameters on the instance" do
       @manifest.configuration = { :boo => :bar }
       @manifest.configuration[:boo].should == :bar

@@ -1,15 +1,5 @@
 require 'puppet'
 require 'erb'
-gem "activesupport"
-require 'active_support/core_ext/class/attribute_accessors'
-require 'active_support/core_ext/array'
-require 'active_support/inflector'
-require 'active_support/core_ext/hash/indifferent_access'
-require 'active_support/core_ext/class/inheritable_attributes'
-require 'active_support/core_ext/duplicable'
-class Hash #:nodoc:
-  include ActiveSupport::CoreExtensions::Hash::IndifferentAccess
-end
 
 module ShadowPuppet
   # A Manifest is an executable collection of Puppet Resources[http://reductivelabs.com/trac/puppet/wiki/TypeReference].
@@ -163,10 +153,11 @@ module ShadowPuppet
     #   >> SampleManifest.configuration
     #   => {"name" => 'test'}
     #
-    # Subsequent calls to configure perform a merge of the
+    # Subsequent calls to configure perform a deep_merge of the
     # provided <tt>hash</tt> into the pre-existing configuration
     def self.configure(hash)
-      write_inheritable_attribute(:configuration, configuration.merge(hash))
+      hash ||= HashWithIndifferentAccess.new
+      write_inheritable_attribute(:configuration, hash.deep_merge(configuration))
     end
     class << self
       alias_method :configuration=, :configure

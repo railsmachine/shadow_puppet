@@ -16,7 +16,7 @@ end
 class RequiresMetViaMethods < ShadowPuppet::Manifest
   recipe :foo, :bar
 
-  configure({ :foo => :bar })
+  configure({ :foo => :bar , :nested_hash => { :foo => :bar } })
 
   def foo
     exec('foo', :command => 'true')
@@ -30,7 +30,7 @@ end
 class RequiresMetViaMethodsSubclass < RequiresMetViaMethods
   recipe :baz
 
-  configure({ :baz => :bar })
+  configure({ :baz => :bar, :nested_hash => { :baz => :bar } })
 
   def baz
     exec('baz', :command => 'true')
