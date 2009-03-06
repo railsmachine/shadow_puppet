@@ -2,4 +2,3 @@
 --format s
 --loadby mtime
 --reverse
---backtrace
