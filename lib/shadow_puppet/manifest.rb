@@ -130,7 +130,7 @@ module ShadowPuppet
     # Subclasses of the Manifest class properly inherit the parent classes'
     # configuration.
     def self.configuration
-      configatron
+      configatron.to_hash
     end
 
     # Access to the configuration of the creating class.
