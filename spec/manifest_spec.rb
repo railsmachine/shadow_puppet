@@ -80,12 +80,12 @@ describe "A manifest" do
       @manifest.class.recipes.should == [[:foo, {}], [:bar, {}]]
     end
 
-    it "has a configuration hash on the class" do
-      @manifest.class.configuration[:foo].should == :bar
+    it "loading configuration on the class" do
+      @manifest.class.configatron.foo.should == :bar
     end
 
     it "can access the same configuration hash on the instance" do
-      @manifest.configuration[:foo].should == :bar
+      @manifest.configatron.foo.should == :bar
     end
 
     it "has a name" do
@@ -102,7 +102,7 @@ describe "A manifest" do
 
       it "passes the configuration hash key named by each method if no options given" do
         @manifest = ConfigurationWithConvention.new
-        @manifest.should_receive(:foo).with('bar').exactly(1).times
+        @manifest.should_receive(:foo).with(:bar).exactly(1).times
         @manifest.send(:evaluate_recipes)
       end
 
@@ -175,19 +175,19 @@ describe "A manifest" do
     end
 
     it "merges it's configuration with that of the parent" do
-      @manifest.class.configuration[:foo].should == :bar
-      @manifest.class.configuration[:baz].should == :bar
+      @manifest.class.configatron.foo.should == :bar
+      @manifest.class.configatron.baz.should == :bar
     end
 
     it "deep_merges it's configuration with that of the parent" do
-      @manifest.class.configuration[:nested_hash][:baz].should == :bar
-      @manifest.class.configuration[:nested_hash][:foo].should == :bar
+      @manifest.class.configatron.nested_hash.nested_baz.should == :bar
+      @manifest.class.configatron.nested_hash.nested_foo.should == :bar
     end
 
     it "is able to add configuration parameters on the instance" do
-      @manifest.configuration = { :boo => :bar }
-      @manifest.configuration[:boo].should == :bar
-      @manifest.class.configuration[:boo].should == :bar
+      @manifest.configure 'boo' => :bar
+      @manifest.configatron.boo.should == :bar
+      @manifest.class.configatron.boo.should == :bar
     end
 
   end

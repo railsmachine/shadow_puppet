@@ -1,6 +1,3 @@
-require 'puppet'
-require 'erb'
-
 module ShadowPuppet
   # A Manifest is an executable collection of Puppet Resources[http://reductivelabs.com/trac/puppet/wiki/TypeReference].
   #
@@ -114,13 +111,13 @@ module ShadowPuppet
       return nil if methods.nil? || methods == []
       options = methods.extract_options!
       methods.each do |meth|
-        options = self.configuration[meth.to_sym] if options == {}
+        options = configatron.send(meth.to_sym) if options == {}
         options ||= {}
         recipes << [meth.to_sym, options]
       end
     end
 
-    # A HashWithIndifferentAccess describing any configuration that has been
+    # A hash describing any configuration that has been
     # performed on the class. Modify this hash by calling configure:
     #
     #   class SampleManifest < ShadowPuppet::Manifest
@@ -133,7 +130,7 @@ module ShadowPuppet
     # Subclasses of the Manifest class properly inherit the parent classes'
     # configuration.
     def self.configuration
-      read_inheritable_attribute(:configuration) || write_inheritable_attribute(:configuration, HashWithIndifferentAccess.new)
+      configatron
     end
 
     # Access to the configuration of the creating class.
@@ -156,11 +153,7 @@ module ShadowPuppet
     # Subsequent calls to configure perform a deep_merge of the
     # provided <tt>hash</tt> into the pre-existing configuration
     def self.configure(hash)
-      hash ||= HashWithIndifferentAccess.new
-      write_inheritable_attribute(:configuration, hash.deep_merge(configuration))
-    end
-    class << self
-      alias_method :configuration=, :configure
+      configatron.configure_from_hash(hash)
     end
 
     # Define configuration on this manifest's creating class. This is useful
