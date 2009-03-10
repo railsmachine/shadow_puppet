@@ -211,11 +211,34 @@ module ShadowPuppet
       true
     end
 
-    # Execute this manifest, applying all resources defined. By default, this
-    # will only execute a manifest that is executable?. The +force+ argument,
-    # if true, removes this check.
+    def missing_recipes
+      missing = self.class.recipes.each do |meth,args|
+        !respond_to?(meth)
+      end
+    end
+
+    # Execute this manifest, applying all resources defined. Execute returns
+    # true if successfull, and false if unsucessfull. By default, this
+    # will only execute a manifest that has not already been executed?.
+    # The +force+ argument, if true, removes this check.
     def execute(force=false)
-      return false unless executable? || force
+      return false if executed? && !force
+      evaluate_recipes
+      apply
+    rescue Exception => e
+      false
+    else
+      true
+    ensure
+      @executed = true
+    end
+
+    # Execute this manifest, applying all resources defined. Execute returns
+    # true if successfull, and raises an exception if not. By default, this
+    # will only execute a manifest that has not already been executed?.
+    # The +force+ argument, if true, removes this check.
+    def execute!(force=false)
+      return false if executed? && !force
       evaluate_recipes
       apply
     rescue Exception => e

@@ -88,8 +88,7 @@ begin
   klass = File.basename(filename, ".rb")
   require filename
   manifest = klass.classify.constantize.new
-  execute = manifest.execute
-  execute ? exit(0) : exit(1)
+  manifest.execute! && exit(0)
 rescue Errno::EACCES
   puts "Please run shadow_puppet as root"
 rescue Exception => e

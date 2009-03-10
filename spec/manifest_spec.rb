@@ -68,6 +68,12 @@ describe "A manifest" do
       @manifest.execute.should be_false
     end
 
+    it "raises an error when executed!" do
+      lambda {
+        @manifest.execute!
+      }.should raise_error(NameError)
+    end
+
   end
 
   describe "in general" do
