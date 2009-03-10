@@ -76,6 +76,8 @@ module ShadowPuppet
     class_inheritable_accessor :recipes
     write_inheritable_attribute(:recipes, [])
     attr_reader :puppet_resources
+    class_inheritable_accessor :__configatron__
+    write_inheritable_attribute(:__configatron__, Configatron::Store.new)
 
     # Initialize a new instance of this manifest. This can take a
     # config hash, which is immediately passed on to the configure
@@ -117,6 +119,14 @@ module ShadowPuppet
       end
     end
 
+    def self.configatron
+      __configatron__
+    end
+
+    def configatron
+      self.class.__configatron__
+    end
+
     # A hash describing any configuration that has been
     # performed on the class. Modify this hash by calling configure:
     #
@@ -153,7 +163,7 @@ module ShadowPuppet
     # Subsequent calls to configure perform a deep_merge of the
     # provided <tt>hash</tt> into the pre-existing configuration
     def self.configure(hash)
-      configatron.configure_from_hash(hash)
+      __configatron__.configure_from_hash(hash)
     end
 
     # Define configuration on this manifest's creating class. This is useful
