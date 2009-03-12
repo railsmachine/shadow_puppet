@@ -87,11 +87,11 @@ describe "A manifest" do
     end
 
     it "loading configuration on the class" do
-      @manifest.class.configatron.foo.should == :bar
+      @manifest.class.configuration[:foo].should == :bar
     end
 
     it "can access the same configuration hash on the instance" do
-      @manifest.configatron.foo.should == :bar
+      @manifest.configuration[:foo].should == :bar
     end
 
     it "has a name" do
@@ -181,19 +181,19 @@ describe "A manifest" do
     end
 
     it "merges it's configuration with that of the parent" do
-      @manifest.class.configatron.foo.should == :bar
-      @manifest.class.configatron.baz.should == :bar
+      @manifest.class.configuration[:foo].should == :bar
+      @manifest.class.configuration[:baz].should == :bar
     end
 
     it "deep_merges it's configuration with that of the parent" do
-      @manifest.class.configatron.nested_hash.nested_baz.should == :bar
-      @manifest.class.configatron.nested_hash.nested_foo.should == :bar
+      @manifest.class.configuration[:nested_hash][:nested_baz].should == :bar
+      @manifest.class.configuration[:nested_hash][:nested_foo].should == :bar
     end
 
     it "is able to add configuration parameters on the instance" do
       @manifest.configure 'boo' => :bar
-      @manifest.configatron.boo.should == :bar
-      @manifest.class.configatron.boo.should == :bar
+      @manifest.configuration[:boo].should == :bar
+      @manifest.class.configuration[:boo].should == :bar
     end
 
   end

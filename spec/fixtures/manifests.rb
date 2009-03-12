@@ -76,7 +76,7 @@ class RequirementsNotMet < ShadowPuppet::Manifest
 end
 
 class ConfigurationWithConvention  < ShadowPuppet::Manifest
-  configatron.foo = :bar
+  configure(:foo => :bar)
   def foo(string)
     file('/tmp/moonshine_foo', :ensure => 'present', :content => string.to_s)
   end

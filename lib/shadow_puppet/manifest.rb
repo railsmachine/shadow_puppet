@@ -76,8 +76,8 @@ module ShadowPuppet
     class_inheritable_accessor :recipes
     write_inheritable_attribute(:recipes, [])
     attr_reader :puppet_resources
-    class_inheritable_accessor :__configatron__
-    write_inheritable_attribute(:__configatron__, Configatron::Store.new)
+    class_inheritable_accessor :__config__
+    write_inheritable_attribute(:__config__, Hash.new)
 
     # Initialize a new instance of this manifest. This can take a
     # config hash, which is immediately passed on to the configure
@@ -113,18 +113,10 @@ module ShadowPuppet
       return nil if methods.nil? || methods == []
       options = methods.extract_options!
       methods.each do |meth|
-        options = configatron.send(meth.to_sym) if options == {}
+        options = configuration[meth.to_sym] if options == {}
         options ||= {}
         recipes << [meth.to_sym, options]
       end
-    end
-
-    def self.configatron
-      __configatron__
-    end
-
-    def configatron
-      self.class.__configatron__
     end
 
     # A hash describing any configuration that has been
@@ -135,15 +127,24 @@ module ShadowPuppet
     #   end
     #
     #   >> SampleManifest.configuration
-    #   => {"name" => 'test'}
+    #   => {:name => 'test'}
+    #
+    # All keys on this hash are coerced into symbols for ease of access.
     #
     # Subclasses of the Manifest class properly inherit the parent classes'
     # configuration.
     def self.configuration
-      configatron.to_hash
+      __config__.deep_symbolize_keys
     end
 
-    # Access to the configuration of the creating class.
+    # Access to the configuration of the class of this instance.
+    #
+    #   class SampleManifest < ShadowPuppet::Manifest
+    #     configure(:name => 'test')
+    #   end
+    #
+    #   @manifest = SampleManifest.new
+    #   @manifest.configuration[:name] => "test"
     def configuration
       self.class.configuration
     end
@@ -151,24 +152,32 @@ module ShadowPuppet
     # Define configuration on this manifest. This is useful for storing things
     # such as hostnames, password, or usernames that may change between
     # different implementations of a shared manifest. Access this hash by
-    # calling configuration:
+    # calling <tt>configuration</tt>:
     #
     #   class SampleManifest < ShadowPuppet::Manifest
-    #     configure(:name => 'test')
+    #     configure('name' => 'test')
     #   end
     #
     #   >> SampleManifest.configuration
-    #   => {"name" => 'test'}
+    #   => {:name => 'test'}
     #
-    # Subsequent calls to configure perform a deep_merge of the
-    # provided <tt>hash</tt> into the pre-existing configuration
+    # All keys on this hash are coerced into symbols for ease of access.
+    #
+    # Subsequent calls to configure perform a deep_merge of the provided
+    # <tt>hash</tt> into the pre-existing configuration.
     def self.configure(hash)
-      __configatron__.configure_from_hash(hash)
+      __config__.deep_merge!(hash)
     end
 
-    # Define configuration on this manifest's creating class. This is useful
-    # for storing things such as hostnames, password, or usernames that may
-    # change between different implementations of a shared manifest.
+    # Update the configuration of this manifest instance's class.
+    #
+    #   class SampleManifest < ShadowPuppet::Manifest
+    #     configure({})
+    #   end
+    #
+    #   @manifest = SampleManifest.new
+    #   @manifest.configure(:name => "test")
+    #   @manifest.configuration[:name] => "test"
     def configure(hash)
       self.class.configure(hash)
     end
