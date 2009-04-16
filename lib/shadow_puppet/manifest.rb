@@ -197,8 +197,8 @@ module ShadowPuppet
     def self.register_puppet_types
       Puppet::Type.loadall
       Puppet::Type.eachtype do |type|
-        #undefine the method rdoc placeholders
-        undef_method(type.name) rescue nil
+        #remove the method rdoc placeholders
+        remove_method(type.name) rescue nil
         define_method(type.name) do |*args|
           if args && args.flatten.size == 1
             reference(type.name, args.first)
