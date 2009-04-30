@@ -82,3 +82,14 @@ class ConfigurationWithConvention  < ShadowPuppet::Manifest
   end
   recipe :foo
 end
+
+# setting up a few different resource types to test the test helpers
+class TestHelpers < ShadowPuppet::Manifest
+
+  def foo
+    exec('foo', :command => 'true',:onlyif => 'test `hostname` == "foo"')
+    package('bar',:ensure => :installed)
+    file('baz', :content => 'bar',:mode => '644',:owner => 'rails')
+  end
+
+end
