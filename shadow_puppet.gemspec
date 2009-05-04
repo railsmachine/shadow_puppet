@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.email = ["jesse@railsmachine.com"]
   s.homepage = 'http://railsmachine.github.com/shadow_puppet'
   s.rubyforge_project = 'moonshine'
-  s.version = "0.3.0"
+  s.version = "0.3.1"
   s.date = '2009-03-12'
 
   s.default_executable = 'shadow_puppet'
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
     "lib/shadow_puppet.rb",
     "lib/shadow_puppet/manifest.rb",
     "lib/shadow_puppet/core_ext.rb",
+    "lib/shadow_puppet/test.rb"
   ]
   s.require_paths = ["lib"]
   s.has_rdoc = true
