@@ -119,6 +119,17 @@ module ShadowPuppet
       end
     end
 
+    # Access to a recipe of the class of this instance.
+    #
+    #   class SampleManifest < ShadowPuppet::Manifest
+    #     def my_recipe
+    #       recipe :other_recipe
+    #     end
+    #   end
+    def recipe(*methods)
+      self.class.recipe *methods
+    end
+
     # A HashWithIndifferentAccess describing any configuration that has been
     # performed on the class. Modify this hash by calling configure:
     #

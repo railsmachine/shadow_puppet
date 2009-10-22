@@ -209,4 +209,13 @@ describe "A manifest" do
     end
 
   end
+  describe "that has recipes called from other recipes" do
+    before(:each) do
+      @manifest = RequiresMetViaRecipeFromClassOfInstance.new
+    end
+
+    it "is able to call a recipe of the class of this instance" do
+      @manifest.execute.should be_true
+    end
+  end
 end

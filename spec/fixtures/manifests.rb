@@ -37,6 +37,18 @@ class RequiresMetViaMethodsSubclass < RequiresMetViaMethods
   end
 end
 
+# Requirements can be handled by other recipes in the class
+class RequiresMetViaRecipeFromClassOfInstance < ShadowPuppet::Manifest
+  def bar
+    # other recipe stuff
+  end
+  
+  def foo
+    recipe :bar
+  end
+  recipe :foo
+end
+
 #requirements can also be handled by functions in external modules
 class ProvidedViaModules < ShadowPuppet::Manifest
   module FooRecipe
