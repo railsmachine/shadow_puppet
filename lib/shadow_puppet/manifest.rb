@@ -370,7 +370,3 @@ module ShadowPuppet
 
   end
 end
-
-Dir.glob(File.join(File.dirname(__FILE__), '..', 'facts', '*.rb')).each do |fact|
-  require fact
-end
