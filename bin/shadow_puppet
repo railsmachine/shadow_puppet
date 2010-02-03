@@ -124,7 +124,7 @@ begin
 
   klass = File.basename(filename, ".rb")
   require filename
-  manifest = klass.classify.constantize.new
+  manifest = klass.camelize.constantize.new
 
   if options.graph
     manifest.graph_to(klass.classify, options.graph)
@@ -133,6 +133,7 @@ begin
   end
 
   exit(0)
+
 rescue Errno::EACCES
   puts "Please run shadow_puppet as root"
 rescue Exception => e
