@@ -1,10 +1,36 @@
+require 'rake'
+
+require 'jeweler'
+Jeweler::Tasks.new do |gem|
+  gem.name = "shadow_puppet"
+  gem.summary = %Q{A Ruby Puppet DSL}
+  gem.description = %Q{A Ruby Puppet DSL}
+  gem.email = "jesse@railsmachine.com"
+  gem.homepage = "http://railsmachine.github.com/shadow_puppet"
+  gem.rubyforge_project = "moonshine"
+  gem.authors = ["Jesse Newland"]
+
+  gem.version = "0.3.2"
+
+  gem.add_dependency('puppet', ["= 0.24.8"])
+  gem.add_dependency('facter', [">= 1.5.4"])
+  gem.add_dependency('highline', [">= 1.5.0"])
+  gem.add_dependency('builder', [">= 2.1.2"])
+  gem.add_dependency('activesupport', [">= 2.0.0"])
+
+  gem.rdoc_options << '--inline-source' << '--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/'
+
+  gem.add_development_dependency "rspec", ">= 0"
+
+  # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+end
+
 begin
   require 'rubygems'
   require 'hanna/rdoctask'
 rescue LoadError
   require 'rake/rdoctask'
 end
-
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/shadow_puppet/*.rb')
   rdoc.rdoc_files.include('bin/shadow_puppet')
