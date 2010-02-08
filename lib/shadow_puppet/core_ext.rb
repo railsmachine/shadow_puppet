@@ -1,8 +1,15 @@
+require 'active_support/version'
+
 require 'active_support/core_ext/class/attribute_accessors'
 require 'active_support/core_ext/array'
 require 'active_support/inflector'
 require 'active_support/core_ext/class/inheritable_attributes'
-require 'active_support/core_ext/duplicable'
+
+if ActiveSupport::VERSION::MAJOR < 3
+  require 'active_support/core_ext/duplicable'
+else
+  require 'active_support/core_ext/object/duplicable'
+end
 
 class Hash #:nodoc:
   def deep_merge(other_hash)
