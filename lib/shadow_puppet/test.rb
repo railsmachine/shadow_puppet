@@ -30,7 +30,7 @@ module ShadowPuppet
   #   manifest.files['/etc/motd'].content
   #   manifest.execs['service ssh restart'].onlyif
   #
-  # ===Example
+  # === Example
   #
   # Given this manifest:
   #

@@ -24,15 +24,15 @@ module ShadowPuppet
   #     end
   #
   #     def lamp
-  #       #install a basic LAMP stack
+  #       # install a basic LAMP stack
   #     end
   #
   #     def ruby
-  #       #install a ruby interpreter and tools
+  #       # install a ruby interpreter and tools
   #     end
   #
   #     def mysql(options)
-  #        #install a mysql server and set the root password to options[:root_password]
+  #        # install a mysql server and set the root password to options[:root_password]
   #     end
   #
   #   end
@@ -110,10 +110,10 @@ module ShadowPuppet
     # Subclasses of the Manifest class properly inherit the parent classes'
     # calls to recipe.
     def self.recipe(*methods)
-      return nil if methods.nil? || methods == []
+      return nil if methods.nil? || methods == [] # TODO can probably replace with if methods.blank?
       options = methods.extract_options!
       methods.each do |meth|
-        options = configuration[meth.to_sym] if options == {}
+        options = configuration[meth.to_sym] if options == {} # TODO can probably be replaced with options.blank?
         options ||= {}
         recipes << [meth.to_sym, options]
       end
@@ -197,7 +197,7 @@ module ShadowPuppet
     def self.register_puppet_types
       Puppet::Type.loadall
       Puppet::Type.eachtype do |type|
-        #remove the method rdoc placeholders
+        # remove the method rdoc placeholders
         remove_method(type.name) rescue nil
         define_method(type.name) do |*args|
           if args && args.flatten.size == 1
@@ -329,12 +329,12 @@ module ShadowPuppet
       @scope
     end
 
-    #Create a reference to another Puppet Resource.
+    # Create a reference to another Puppet Resource.
     def reference(type, title)
       Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s, :scope => scope)
     end
 
-    #Creates a new Puppet Resource.
+    # Creates a new Puppet Resource.
     def new_resource(type, name, params = {})
       unless obj = @puppet_resources[type][name]
         obj = Puppet::Parser::Resource.new(
