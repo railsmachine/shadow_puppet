@@ -8,49 +8,50 @@ Gem::Specification.new do |s|
   s.version = "0.3.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Jesse Newland"]
-  s.date = %q{2010-02-08}
+  s.authors = ["Jesse Newland", "Josh Nichols"]
+  s.date = %q{2010-06-22}
   s.default_executable = %q{shadow_puppet}
   s.description = %q{A Ruby Puppet DSL}
   s.email = %q{jesse@railsmachine.com}
   s.executables = ["shadow_puppet"]
   s.extra_rdoc_files = [
     "LICENSE",
-    "README.rdoc"
+     "README.rdoc"
   ]
   s.files = [
     ".gitignore",
-    ".gitmodules",
-    "LICENSE",
-    "README.rdoc",
-    "Rakefile",
-    "bin/shadow_puppet",
-    "examples/foo.rb",
-    "lib/shadow_puppet.rb",
-    "lib/shadow_puppet/core_ext.rb",
-    "lib/shadow_puppet/manifest.rb",
-    "lib/shadow_puppet/test.rb",
-    "shadow_puppet.gemspec",
-    "spec/fixtures/manifests.rb",
-    "spec/manifest_spec.rb",
-    "spec/spec.opts",
-    "spec/spec_helper.rb",
-    "spec/test_spec.rb",
-    "spec/type_spec.rb"
+     ".gitmodules",
+     "LICENSE",
+     "README.rdoc",
+     "Rakefile",
+     "bin/shadow_puppet",
+     "examples/foo.rb",
+     "ginger_scenarios.rb",
+     "lib/shadow_puppet.rb",
+     "lib/shadow_puppet/core_ext.rb",
+     "lib/shadow_puppet/manifest.rb",
+     "lib/shadow_puppet/test.rb",
+     "shadow_puppet.gemspec",
+     "spec/fixtures/manifests.rb",
+     "spec/manifest_spec.rb",
+     "spec/spec.opts",
+     "spec/spec_helper.rb",
+     "spec/test_spec.rb",
+     "spec/type_spec.rb"
   ]
   s.homepage = %q{http://railsmachine.github.com/shadow_puppet}
   s.rdoc_options = ["--charset=UTF-8", "--inline-source", "--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{moonshine}
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{A Ruby Puppet DSL}
   s.test_files = [
     "spec/fixtures/manifests.rb",
-    "spec/manifest_spec.rb",
-    "spec/spec_helper.rb",
-    "spec/test_spec.rb",
-    "spec/type_spec.rb",
-    "examples/foo.rb"
+     "spec/manifest_spec.rb",
+     "spec/spec_helper.rb",
+     "spec/test_spec.rb",
+     "spec/type_spec.rb",
+     "examples/foo.rb"
   ]
 
   if s.respond_to? :specification_version then
