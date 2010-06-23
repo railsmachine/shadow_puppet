@@ -74,6 +74,14 @@ begin
   opts.parse!
 
   require 'rubygems'
+
+  # hack around absurd number of deprecation warnings from puppet
+  # using `metaclass`
+  require 'active_support/core_ext/module/attribute_accessors'
+  require 'active_support/core_ext/kernel/reporting'
+  require 'active_support/deprecation'
+  ActiveSupport::Deprecation.silenced = true
+
   require 'shadow_puppet'
   require 'active_support/inflector'
   require 'active_support/core_ext/string/inflections'
