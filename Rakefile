@@ -8,7 +8,7 @@ Jeweler::Tasks.new do |gem|
   gem.email = "jesse@railsmachine.com"
   gem.homepage = "http://railsmachine.github.com/shadow_puppet"
   gem.rubyforge_project = "moonshine"
-  gem.authors = ["Jesse Newland"]
+  gem.authors = ["Jesse Newland", "Josh Nichols"]
 
   gem.version = "0.3.2"
 
@@ -24,6 +24,8 @@ Jeweler::Tasks.new do |gem|
 
   # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
 end
+Jeweler::GemcutterTasks.new
+
 
 begin
   require 'rubygems'
