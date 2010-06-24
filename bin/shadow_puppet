@@ -37,7 +37,7 @@ end
 begin
   require 'optparse'
 
-  ShadowPuppetOptions = Struct.new(:graph)
+  ShadowPuppetOptions = Struct.new(:graph, :noop)
   options = ShadowPuppetOptions.new
 
   opts = OptionParser.new do |opts|
@@ -90,6 +90,10 @@ begin
       options.graph = graph
     end
 
+    opts.on("-n", "--noop", "Run in a no-op or dry-run mode") do
+      options.noop = true
+    end
+
     opts.on_tail("-h", "--help", "Show this message") do
       puts opts
       exit
@@ -110,6 +114,11 @@ begin
 
   filename = ARGV[0]
   raise ArgumentError unless filename
+
+  if options.noop
+    Puppet[:noop] = true
+    Puppet[:show_diff] = true
+  end
 
   klass = File.basename(filename, ".rb")
   require filename
