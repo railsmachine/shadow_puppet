@@ -258,6 +258,27 @@ module ShadowPuppet
       @executed = true
     end
 
+    def graph_to(name, destination)
+      evaluate_recipes
+
+      bucket             = export()
+      catalog            = bucket.to_catalog
+      relationship_graph = catalog.relationship_graph
+
+      graph = relationship_graph.to_dot_graph("name" => "#{name} Relationships".gsub(/\W+/, '_'))
+      graph.options['label'] = "#{name} Relationships"
+
+      # The graph ends up having all of the edges backwards
+      graph.each_node do |node|
+        next unless node.is_a?(DOT::DOTEdge)
+        node.to, node.from = node.from, node.to
+      end
+
+      File.open(destination, "w") { |f|
+          f.puts graph.to_s
+      }
+    end
+
     protected
 
     #Has this manifest instance been executed?

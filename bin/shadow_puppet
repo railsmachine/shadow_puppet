@@ -29,49 +29,80 @@
 #ShadowPuppet::Manifest. An instance of this class is created, and the
 #<tt>execute</tt> method is called. All output is printed to the console.
 
+def unindent(string)
+  indentation = string[/\A\s*/]
+  string.strip.gsub(/^#{indentation}/, "")
+end
+
 begin
-
   require 'optparse'
+
+  ShadowPuppetOptions = Struct.new(:graph)
+  options = ShadowPuppetOptions.new
+
   opts = OptionParser.new do |opts|
-    opts.banner = <<-EOF
-    NAME
-      Shadow Puppet
+    opts.banner = "Usage: shadow_puppet [options] <manifest>"
 
-    AUTHOR
-      Jesse Newland
-      jesse@railsmachine.com
+    opts.separator ""
+    opts.separator "Specific options:"
 
-    DESCRIPTION
-      A Ruby DSL for puppet
+    opts.on("--tutorial", "A simple tutorial for usage") do
+      puts unindent(<<-EOF)
+        NAME
+          Shadow Puppet
 
-    EXAMPLES
-      Sample manifest:
+        AUTHOR
+          Jesse Newland
+          jesse@railsmachine.com
 
-        #foo.rb
-        class Foo < ShadowPuppet::Manifest
-          recipe :foo
+        DESCRIPTION
+          A Ruby DSL for puppet
 
-          def foo
-            exec :foo, :command => 'echo "foo" > /tmp/foo.txt'
-            file '/tmp/example.txt', :ensure => :present, :content => Facter.to_hash.inspect
-          end
-        end
+        EXAMPLES
+          Sample manifest:
 
-      Executing this manifest:
+            # foo.rb
+            class Foo < ShadowPuppet::Manifest
+              recipe :foo
 
-        $ shadow_puppet foo.rb
-        notice: /shadow_puppet:19861340/Exec[foo]/returns: executed successfully
-        $
+              def foo
+                exec :foo, :command => 'echo "foo" > /tmp/foo.txt'
+                file '/tmp/example.txt', :ensure => :present, :content => Facter.to_hash.inspect
+              end
+            end
 
-      The shadow_puppet binary parses the given ruby code, which is
-      expected to contain a class named Foo that inherits from
-      ShadowPuppet::Manifest. An instance of this class is created, and the
-      execute method is called. All output is printed to the console.
-  EOF
+          Executing this manifest:
 
+            $ shadow_puppet foo.rb
+            notice: /shadow_puppet:19861340/Exec[foo]/returns: executed successfully
+            $
+
+          The shadow_puppet binary parses the given ruby code, which is
+          expected to contain a class named Foo that inherits from
+          ShadowPuppet::Manifest. An instance of this class is created, and the
+          execute method is called. All output is printed to the console.
+      EOF
+
+      exit(1)
+    end
+
+    opts.on("-g", "--graph=[FILE]", "File to write graph .dot to") do |graph|
+      options.graph = graph
+    end
+
+    opts.on_tail("-h", "--help", "Show this message") do
+      puts opts
+      exit
+    end
   end
 
   opts.parse!
+
+  unless filename = ARGV[0]
+    puts "Error: Manifest filename must be provided\n\n"
+    puts opts
+    exit(1)
+  end
 
   require 'rubygems'
   require 'shadow_puppet/core_ext'
@@ -83,17 +114,22 @@ begin
   klass = File.basename(filename, ".rb")
   require filename
   manifest = klass.classify.constantize.new
-  manifest.execute! && exit(0)
+
+  if options.graph
+    manifest.graph_to(klass.classify, options.graph)
+  else
+    manifest.execute!
+  end
+
+  exit(0)
 rescue Errno::EACCES
   puts "Please run shadow_puppet as root"
 rescue Exception => e
   if e.instance_of?(SystemExit)
     raise
   else
-    puts 'Uncaught exception'
-    puts e.class
-    puts e.message
-    puts e.backtrace.join("\n")
+    puts "Uncaught exception: #{e.class}: #{e.message}"
+    puts "\t#{e.backtrace.join("\n\t")}"
     exit(1)
   end
 end
