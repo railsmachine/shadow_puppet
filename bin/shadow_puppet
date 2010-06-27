@@ -106,14 +106,16 @@ begin
     puts "Error: Manifest filename must be provided\n\n"
     puts opts
     exit(1)
+    # Take any variables set on the command line and update ENV
+    ARGV.delete_if do |arg|
+      next unless arg =~ /^(\w+)=(.*)$/
+      ENV[$1] = $2
+    end
   end
 
   require 'rubygems'
   require 'shadow_puppet/core_ext'
   require 'fileutils'
-
-  filename = ARGV[0]
-  raise ArgumentError unless filename
 
   if options.noop
     Puppet[:noop] = true
