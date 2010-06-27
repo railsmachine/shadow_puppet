@@ -119,7 +119,7 @@ module ShadowPuppet
       end
     end
 
-    # A hash describing any configuration that has been
+    # A HashWithIndifferentAccess describing any configuration that has been
     # performed on the class. Modify this hash by calling configure:
     #
     #   class SampleManifest < ShadowPuppet::Manifest
@@ -128,13 +128,11 @@ module ShadowPuppet
     #
     #   >> SampleManifest.configuration
     #   => {:name => 'test'}
-    #
-    # All keys on this hash are coerced into symbols for ease of access.
-    #
+    #    #
     # Subclasses of the Manifest class properly inherit the parent classes'
     # configuration.
     def self.configuration
-      __config__.deep_symbolize_keys
+      __config__.with_indifferent_access
     end
 
     # Access to the configuration of the class of this instance.
@@ -160,13 +158,11 @@ module ShadowPuppet
     #
     #   >> SampleManifest.configuration
     #   => {:name => 'test'}
-    #
-    # All keys on this hash are coerced into symbols for ease of access.
-    #
+    #    #
     # Subsequent calls to configure perform a deep_merge of the provided
     # <tt>hash</tt> into the pre-existing configuration.
     def self.configure(hash)
-      __config__.deep_merge!(hash)
+      __config__.replace(__config__.deep_symbolize_keys.deep_merge(hash.deep_symbolize_keys))
     end
 
     # Update the configuration of this manifest instance's class.

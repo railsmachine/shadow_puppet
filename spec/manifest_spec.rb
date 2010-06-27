@@ -94,6 +94,17 @@ describe "A manifest" do
       @manifest.configuration[:foo].should == :bar
     end
 
+    it "can access configurations configured using symbols with symbols or strings" do
+      @manifest.configuration[:foo].should == :bar
+      @manifest.configuration['foo'].should == :bar
+    end
+
+
+    it "can access configurations configured using strings with symbols or strings" do
+      @manifest.configuration['string'].should == 'value'
+      @manifest.configuration[:string].should == 'value'
+    end
+
     it "has a name" do
       @manifest.name.should == "#{@manifest.class}##{@manifest.object_id}"
     end
@@ -188,6 +199,7 @@ describe "A manifest" do
     it "deep_merges it's configuration with that of the parent" do
       @manifest.class.configuration[:nested_hash][:nested_baz].should == :bar
       @manifest.class.configuration[:nested_hash][:nested_foo].should == :bar
+      @manifest.class.configuration['nested_hash']['nested_foo'].should == :bar
     end
 
     it "is able to add configuration parameters on the instance" do
@@ -197,5 +209,4 @@ describe "A manifest" do
     end
 
   end
-
 end
