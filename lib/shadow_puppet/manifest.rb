@@ -77,7 +77,7 @@ module ShadowPuppet
     write_inheritable_attribute(:recipes, [])
     attr_reader :puppet_resources
     class_inheritable_accessor :__config__
-    write_inheritable_attribute(:__config__, Hash.new)
+    write_inheritable_attribute(:__config__, HashWithIndifferentAccess.new)
 
     # Initialize a new instance of this manifest. This can take a
     # config hash, which is immediately passed on to the configure
@@ -134,7 +134,7 @@ module ShadowPuppet
     # Subclasses of the Manifest class properly inherit the parent classes'
     # configuration.
     def self.configuration
-      __config__.deep_symbolize_keys
+      __config__
     end
 
     # Access to the configuration of the class of this instance.
@@ -166,7 +166,7 @@ module ShadowPuppet
     # Subsequent calls to configure perform a deep_merge of the provided
     # <tt>hash</tt> into the pre-existing configuration.
     def self.configure(hash)
-      __config__.deep_merge!(hash)
+      __config__.replace(__config__.deep_merge(hash).with_indifferent_access)
     end
 
     # Update the configuration of this manifest instance's class.
