@@ -16,7 +16,7 @@ end
 class RequiresMetViaMethods < ShadowPuppet::Manifest
   recipe :foo, :bar
 
-  configure({ :foo => :bar , :nested_hash => { :nested_foo => :bar } })
+  configure({ :foo => :bar , :nested_hash => { :nested_foo => :bar }, 'string' => 'value' })
 
   def foo
     exec('foo', :command => 'true')

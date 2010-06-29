@@ -11,7 +11,12 @@ else
   require 'active_support/core_ext/object/duplicable'
 end
 
+require 'active_support/core_ext/hash/indifferent_access'
+
 class Hash #:nodoc:
+  # activesupport 3 automatically includes indifferent access... yay?
+  include ActiveSupport::CoreExtensions::Hash::IndifferentAccess if ActiveSupport::VERSION::MAJOR < 3
+
   def deep_merge(other_hash)
     self.merge(other_hash) do |key, oldval, newval|
       oldval = oldval.to_hash if oldval.respond_to?(:to_hash)
@@ -32,3 +37,4 @@ class Hash #:nodoc:
     }
   end
 end
+

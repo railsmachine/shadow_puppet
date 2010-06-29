@@ -94,6 +94,17 @@ describe "A manifest" do
       @manifest.configuration[:foo].should == :bar
     end
 
+    it "can access configurations configured using symbols with symbols or strings" do
+      @manifest.configuration[:foo].should == :bar
+      @manifest.configuration['foo'].should == :bar
+    end
+
+
+    it "can access configurations configured using strings with symbols or strings" do
+      @manifest.configuration['string'].should == 'value'
+      @manifest.configuration[:string].should == 'value'
+    end
+
     it "has a name" do
       @manifest.name.should == "#{@manifest.class}##{@manifest.object_id}"
     end
