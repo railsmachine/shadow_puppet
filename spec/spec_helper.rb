@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'ruby-debug'
 require 'bundler'
 
 Bundler.module_eval do
