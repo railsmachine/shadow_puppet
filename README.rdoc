@@ -9,3 +9,10 @@ ShadowPuppet::Manifest.
 
 A binary[http://railsmachine.github.com/shadow_puppet/files/bin/shadow_puppet.html] is provided to parse and execute a
 ShadowPuppet::Manifest.
+
+== Running the Test Suite
+
+    $ gem install rspec isolate-scenarios
+    $ rake spec
+    # To test against all supported versions of ActiveSupport:
+    $ isolate-scenarios rake spec

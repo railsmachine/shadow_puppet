@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'ginger'
+require 'isolate/scenarios/now'
 gem 'rspec'
 require 'spec'
 require File.join(File.dirname(__FILE__), '..', 'lib', 'shadow_puppet.rb')
