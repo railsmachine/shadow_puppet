@@ -129,10 +129,12 @@ begin
   if options.graph
     manifest.graph_to(klass.classify, options.graph)
   else
-    manifest.execute!
+    if manifest.execute!
+      exit(0)
+    else
+      exit(1)
+    end
   end
-
-  exit(0)
 
 rescue Errno::EACCES
   puts "Please run shadow_puppet as root"
