@@ -8,9 +8,9 @@ Jeweler::Tasks.new do |gem|
   gem.email = "jesse@railsmachine.com"
   gem.homepage = "http://railsmachine.github.com/shadow_puppet"
   gem.rubyforge_project = "moonshine"
-  gem.authors = ["Jesse Newland", "Josh Nichols"]
+  gem.authors = ["Jesse Newland", "Josh Nichols", "Eric Lindvall", "Lee Jones", "dreamcat4", "Patrick Schless", "Ches Martin", "Rob Lingle", "Scott Fleckenstein"]
 
-  gem.version = "0.3.3"
+  gem.version = "0.4.0.beta1"
 
   gem.add_dependency('puppet', ["= 0.24.8"])
   gem.add_dependency('facter', [">= 1.5.4"])
@@ -21,6 +21,7 @@ Jeweler::Tasks.new do |gem|
   gem.rdoc_options << '--inline-source' << '--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/'
 
   gem.add_development_dependency "rspec", ">= 0"
+  gem.add_development_dependency "isolate-scenarios", ">= 0"
 
   # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
 end
