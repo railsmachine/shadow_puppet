@@ -3,6 +3,7 @@ baseline do
 end
 
 gem_version_scenario 'activesupport',
+  '3.0.0.rc',
   '3.0.0.beta4',
   '2.2.3',
   '2.3.5',
