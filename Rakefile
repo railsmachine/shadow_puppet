@@ -10,7 +10,7 @@ Jeweler::Tasks.new do |gem|
   gem.rubyforge_project = "moonshine"
   gem.authors = ["Jesse Newland", "Josh Nichols", "Eric Lindvall", "Lee Jones", "dreamcat4", "Patrick Schless", "Ches Martin", "Rob Lingle", "Scott Fleckenstein"]
 
-  gem.version = "0.4.0.beta1"
+  gem.version = "0.4.0.beta2"
 
   gem.add_dependency('puppet', ["= 0.24.8"])
   gem.add_dependency('facter', [">= 1.5.4"])
