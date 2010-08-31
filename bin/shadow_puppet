@@ -115,6 +115,7 @@ begin
 
   require 'rubygems'
   require 'shadow_puppet/core_ext'
+  require 'shadow_puppet'
   require 'fileutils'
 
   if options.noop
