@@ -39,7 +39,7 @@ describe "A manifest" do
       end
 
       it "applies our customizations to resources" do
-        @manifest.execs["foo"].path.should == ENV["PATH"]
+        @manifest.execs["foo"].path.should == ENV["PATH"].split(':')
       end
 
       describe "and then executing" do
@@ -131,11 +131,7 @@ describe "A manifest" do
 
       it "creates new resources" do
         @manifest.send(:evaluate_recipes)
-        @manifest.puppet_resources[Puppet::Type::Exec].keys.sort.should == ['bar', 'foo']
-      end
-
-      it "can acess a flat array of resources" do
-        @manifest.send(:flat_resources).should == []
+        @manifest.execs.keys.sort.should == ['bar', 'foo']
       end
 
     end
@@ -216,6 +212,56 @@ describe "A manifest" do
 
     it "is able to call a recipe of the class of this instance" do
       @manifest.execute.should be_true
+    end
+  end
+
+  describe "when moonshine setup" do
+
+     before(:each) do
+       @manifest = MoonshineSetupManifest.new
+     end
+
+     it "include directories recipe" do
+       @manifest.class.recipes.map(&:first).should include(:directories)
+     end
+
+     it "calls specified methods" do
+       @manifest.should_receive(:directories)
+       @manifest.send(:evaluate_recipes)
+     end
+
+     it "returns true when executed" do
+       @manifest.execute.should be_true
+     end
+
+   end
+
+  describe "when dependency test manifest" do
+    before(:each) do
+      @manifest = DependencyTestManifest.new
+    end
+
+    it "include directories recipe" do
+      @manifest.class.recipes.map(&:first).should include(:test)
+    end
+
+    it "calls specified methods" do
+      @manifest.should_receive(:test)
+      @manifest.send(:evaluate_recipes)
+    end
+
+    it "returns true when executed" do
+      @manifest.execute!.should be_true
+    end
+  end
+
+  describe "when referencing files" do
+    before(:each) do
+      @manifest = StupidTestManifest.new
+    end
+
+    it "returns true when executed " do
+      @manifest.execute!.should be_true
     end
   end
 end

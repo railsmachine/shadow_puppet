@@ -95,13 +95,71 @@ class ConfigurationWithConvention  < ShadowPuppet::Manifest
   recipe :foo
 end
 
+# Test MoonshienSetupManifest
+class MoonshineSetupManifest < ShadowPuppet::Manifest
+
+  configure(
+    :deploy_to => "#{ENV['PWD']}/.shadow_puppet_test",
+    :user => ENV['USER'],
+    :group => (`uname -a`.match(/Darwin/) ? 'everyone' : ENV['USER'])
+  )
+
+  def directories
+    deploy_to_array = configuration[:deploy_to].split('/')
+    deploy_to_array.each_with_index do |dir, index|
+      next if index == 0 || index >= (deploy_to_array.size-1)
+      file '/'+deploy_to_array[1..index].join('/'), :ensure => :directory
+    end
+
+    dirs = [
+      "#{configuration[:deploy_to]}",
+      "#{configuration[:deploy_to]}/shared",
+      "#{configuration[:deploy_to]}/shared/config",
+      "#{configuration[:deploy_to]}/releases"
+    ]
+
+    dirs.each do |dir|
+      file dir,
+      :ensure => :directory,
+      :owner => configuration[:user],
+      :group => configuration[:group] || configuration[:user],
+      :mode => '775'
+    end
+  end
+  recipe :directories
+end
+
+
 # setting up a few different resource types to test the test helpers
 class TestHelpers < ShadowPuppet::Manifest
 
   def foo
     exec('foo', :command => 'true',:onlyif => 'test `hostname` == "foo"')
     package('bar',:ensure => :installed)
-    file('baz', :content => 'bar',:mode => '644',:owner => 'rails')
+    file('/tmp/baz', :content => 'bar',:mode => '644',:owner => 'rails', :before => package('bar'))
   end
 
+end
+
+class DependencyTestManifest < ShadowPuppet::Manifest
+  def test
+    exec('foobar', :command => 'true', :before => exec('barbaz'))
+    exec('trololol', :command => 'true', :alias => "winning")
+    exec('barbaz', :command => 'true', :require => [exec('foobar'), exec('winning')])
+
+  end
+  recipe :test
+end
+
+class StupidTestManifest < ShadowPuppet::Manifest
+  def my_recipe
+    exec 'my_command',
+      :command => 'true',
+      :require => [ file('/tmp/foo'), exec('jk') ]
+    file '/tmp/foo',
+      :content => 'true'
+    exec 'jk',
+      :command => 'true'
+  end
+  recipe :my_recipe
 end

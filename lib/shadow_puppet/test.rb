@@ -1,18 +1,15 @@
 module Puppet
-  module Parser
-    class Resource
+  class Type
 
-      # clearing out some puppet methods that we probably won't need for testing
-      # that are also used in the params hash when defining the resource.
-      undef path
-      undef source
-      undef require
+    # clearing out some puppet methods that we probably won't need for testing
+    # that are also used in the params hash when defining the resource.
+    undef path
+    undef require
       
-      # This allows access to resource options as methods on the resource.
-      def method_missing name, *args
-        if params.keys.include? name.to_sym
-          params[name.to_sym].value
-        end
+    # This allows access to resource options as methods on the resource.
+    def method_missing name, *args
+      if parameters.keys.include? name.to_sym
+        parameters[name.to_sym].value
       end
     end
   end
@@ -59,7 +56,9 @@ module ShadowPuppet
         #undefine the method rdoc placeholders
         undef_method(plural_type) rescue nil
         define_method(plural_type) do |*args|
-          puppet_resources[type]
+          catalog.resources.select { |r| r.type == type.name }.inject({}) do |hash, resource|
+            hash[resource.title] = resource; hash
+          end
         end
       end
     end
