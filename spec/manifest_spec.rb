@@ -218,4 +218,25 @@ describe "A manifest" do
       @manifest.execute.should be_true
     end
   end
+
+  describe "when moonshine setup" do
+
+    before(:each) do
+      @manifest = MoonshineSetupManifest.new
+    end
+
+    it "include directories recipe" do
+      @manifest.class.recipes.map(&:first).should include(:directories)
+    end
+
+    it "calls specified methods" do
+      @manifest.should_receive(:directories)
+      @manifest.send(:evaluate_recipes)
+    end
+
+    it "returns true when executed" do
+      @manifest.execute.should be_true
+    end
+
+  end
 end

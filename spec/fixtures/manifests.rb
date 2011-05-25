@@ -95,6 +95,40 @@ class ConfigurationWithConvention  < ShadowPuppet::Manifest
   recipe :foo
 end
 
+# Test MoonshienSetupManifest
+class MoonshineSetupManifest < ShadowPuppet::Manifest
+
+  configure(
+    :deploy_to => "#{ENV['PWD']}/.shadow_puppet_test",
+    :user => ENV['USER'],
+    :group => (`uname -a`.match(/Darwin/) ? 'everyone' : ENV['USER'])
+  )
+
+  def directories
+    deploy_to_array = configuration[:deploy_to].split('/')
+    deploy_to_array.each_with_index do |dir, index|
+      next if index == 0 || index >= (deploy_to_array.size-1)
+      file '/'+deploy_to_array[1..index].join('/'), :ensure => :directory
+    end
+
+    dirs = [
+      "#{configuration[:deploy_to]}",
+      "#{configuration[:deploy_to]}/shared",
+      "#{configuration[:deploy_to]}/shared/config",
+      "#{configuration[:deploy_to]}/releases"
+    ]
+
+    dirs.each do |dir|
+      file dir,
+      :ensure => :directory,
+      :owner => configuration[:user],
+      :group => configuration[:group] || configuration[:user],
+      :mode => '775'
+    end
+  end
+  recipe :directories
+end
+
 # setting up a few different resource types to test the test helpers
 class TestHelpers < ShadowPuppet::Manifest
 
