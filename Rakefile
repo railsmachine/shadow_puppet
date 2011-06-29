@@ -21,9 +21,11 @@ Jeweler::Tasks.new do |gem|
 
   gem.rdoc_options << '--inline-source' << '--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/'
 
-  gem.add_development_dependency "rspec", "~> 1.3.0"
+  gem.add_development_dependency "rspec", "~> 2.6.0"
+  gem.add_development_dependency "rspec-core", "~> 2.6.0"
   gem.add_development_dependency "isolate", "~> 3.1.0"
   gem.add_development_dependency "isolate-scenarios", "~> 0.1.1"
+  gem.add_development_dependency "jeweler", "~> 1.6.2"
 
   # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
 end
@@ -50,7 +52,7 @@ end
 
 task :default => :spec
 task :spec do
-  system("spec --require ./spec/spec_helper.rb --options spec/spec.opts spec/*_spec.rb") || raise
+  system("rspec --require ./spec/spec_helper.rb --backtrace --color --format d spec/*_spec.rb") || raise
 end
 
 task :build => :cleanup do

@@ -1,6 +1,5 @@
-require 'isolate/scenarios/now'
-gem 'rspec'
-require 'spec'
+require 'isolate/scenarios'
+require 'isolate/now'
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
 $LOAD_PATH.unshift(File.join(File.expand_path(File.dirname(__FILE__)), '..', 'lib'))
