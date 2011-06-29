@@ -267,8 +267,7 @@ module ShadowPuppet
     def graph_to(name, destination)
       evaluate_recipes
 
-      bucket             = export()
-      relationship_graph = catalog.relationship_graph
+      relationship_graph = @catalog.relationship_graph
 
       graph = relationship_graph.to_dot_graph("name" => "#{name} Relationships".gsub(/\W+/, '_'))
       graph.options['label'] = "#{name} Relationships"
