@@ -163,3 +163,12 @@ class StupidTestManifest < ShadowPuppet::Manifest
   end
   recipe :my_recipe
 end
+
+class CwdCoercionTest < ShadowPuppet::Manifest
+  def test
+    tmp = Pathname.new('/tmp')
+    exec 'true',
+      :cwd => tmp
+  end
+  recipe :test
+end

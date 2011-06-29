@@ -323,6 +323,7 @@ module ShadowPuppet
       params.merge!({:title   => title})
       params.merge!({:catalog => catalog})
       params.merge!({:path    => ENV["PATH"]}) if type.name == :exec
+      params.merge!({:cwd     => params[:cwd].to_s}) unless params[:cwd].respond_to?(:=~)
       catalog.add_resource(Puppet::Type.type(type.name).new(params))
     end
   end

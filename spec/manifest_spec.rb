@@ -262,4 +262,14 @@ describe "A manifest" do
       @manifest.execute!.should be_true
     end
   end
+
+  describe "when passing a pathname to cwd" do
+    before(:each) do
+      @manifest = CwdCoercionTest.new
+    end
+
+    it "returns true when executed" do
+      @manifest.execute!.should be_true
+    end
+  end
 end
