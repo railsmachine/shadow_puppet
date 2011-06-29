@@ -316,11 +316,11 @@ module ShadowPuppet
       Puppet::Parser::Resource::Reference.new(type.name.to_s.capitalize, name.to_s)
     end
 
-    # Creates a new Puppet Resource.
+    # Creates a new Puppet Resource and adds it to the Catalog.
     def new_resource(type, title, params = {})
       params.merge!({:title   => title})
       params.merge!({:catalog => catalog})
-      params.merge!({:path    => ENV["PATH"]}) if type.name == :exec
+      params.merge!({:path    => ENV["PATH"]}) if type.name == :exec && params[:path].nil?
       params.merge!({:cwd     => params[:cwd].to_s}) unless params[:cwd].respond_to?(:=~)
       catalog.add_resource(Puppet::Type.type(type.name).new(params))
     end
