@@ -12,11 +12,12 @@ Jeweler::Tasks.new do |gem|
 
   gem.version = "0.5.0b2"
 
-  gem.add_dependency('puppet', [">= 2.6.8"])
-  gem.add_dependency('facter', [">= 1.5.8"])
+  gem.add_dependency('puppet', ["= 2.7.1"])
+  gem.add_dependency('facter', ["= 1.6.0"])
   gem.add_dependency('highline', [">= 1.5.0"])
   gem.add_dependency('builder', [">= 2.1.2"])
   gem.add_dependency('activesupport', [">= 2.0.0"])
+  gem.add_dependency('i18n', ["~> 0.6.0"])
 
   gem.rdoc_options << '--inline-source' << '--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/'
 
