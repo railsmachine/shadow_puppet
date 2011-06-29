@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/spec_helper.rb'
-
 describe "ShadowPuppet's test helpers" do
 
   it "should be created when register_puppet_types_for_testing is called" do

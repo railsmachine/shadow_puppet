@@ -1,10 +1,14 @@
-require 'rubygems'
 require 'isolate/scenarios/now'
 gem 'rspec'
 require 'spec'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'shadow_puppet', 'core_ext.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'shadow_puppet.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'shadow_puppet', 'test.rb')
-Dir.glob(File.join(File.dirname(__FILE__), 'fixtures', '*.rb')).each do |manifest|
+
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
+$LOAD_PATH.unshift(File.join(File.expand_path(File.dirname(__FILE__)), '..', 'lib'))
+
+require 'shadow_puppet/core_ext'
+require 'shadow_puppet'
+require 'shadow_puppet/test'
+
+Dir.glob(File.join(File.expand_path(File.dirname(__FILE__)), 'fixtures', '*.rb')).each do |manifest|
   require manifest
 end

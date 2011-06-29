@@ -48,7 +48,7 @@ end
 
 task :default => :spec
 task :spec do
-  system("spec --options spec/spec.opts spec/*_spec.rb") || raise
+  system("spec --require ./spec/spec_helper.rb --options spec/spec.opts spec/*_spec.rb") || raise
 end
 
 task :build => :cleanup do

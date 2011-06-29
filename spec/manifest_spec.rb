@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/spec_helper.rb'
-
 describe "A manifest" do
 
   describe "when blank" do
