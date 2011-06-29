@@ -96,9 +96,8 @@ module ShadowPuppet
 
       configure(config)
       @executed = false
-      catalog = Puppet::Resource::Catalog.new
-      catalog.host_config = false  # TODO WTF
-      @catalog = catalog
+      @catalog = Puppet::Resource::Catalog.new
+      @catalog.host_config = false
     end
 
     # Declares that the named method or methods will be called whenever
