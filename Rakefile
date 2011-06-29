@@ -20,8 +20,9 @@ Jeweler::Tasks.new do |gem|
 
   gem.rdoc_options << '--inline-source' << '--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/'
 
-  gem.add_development_dependency "rspec", ">= 0"
-  gem.add_development_dependency "isolate-scenarios", ">= 0"
+  gem.add_development_dependency "rspec", "~> 1.3.0"
+  gem.add_development_dependency "isolate", "~> 3.1.0"
+  gem.add_development_dependency "isolate-scenarios", "~> 0.1.1"
 
   # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
 end
