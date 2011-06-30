@@ -114,7 +114,7 @@ begin
     exit(1)
   end
 
-  require 'rubygems'
+  $LOAD_PATH.unshift(File.join(File.expand_path(File.dirname(__FILE__)), '..', 'lib'))
   require 'shadow_puppet/core_ext'
   require 'shadow_puppet'
   require 'fileutils'
@@ -123,6 +123,8 @@ begin
     Puppet[:noop] = true
     Puppet[:show_diff] = true
   end
+
+  Puppet::Util::Log.newdestination(:console)
 
   klass = File.basename(filename, ".rb")
   require filename
