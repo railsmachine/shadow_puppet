@@ -5,6 +5,12 @@ describe "ShadowPuppet's cli" do
   end
 
   it "accepts env variables on the end of the command line" do
-    @output.should =~ /notice: \/Exec\[from_env\]\/returns: works/
+    @output.should =~ /Exec\[from_env\]\/returns: works/
   end
+
+  it "outputs the name of the manifest it's executing" do
+    pending "can't yet determine how to do this"
+    @output.should =~ /CliSpecManifest/
+  end
+
 end

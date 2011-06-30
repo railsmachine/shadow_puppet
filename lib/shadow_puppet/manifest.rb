@@ -97,6 +97,7 @@ module ShadowPuppet
       @executed = false
       @catalog = Puppet::Resource::Catalog.new
       @catalog.host_config = false
+      @catalog.name = self.name
     end
 
     # Declares that the named method or methods will be called whenever
