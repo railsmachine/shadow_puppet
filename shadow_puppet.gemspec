@@ -5,15 +5,14 @@
 
 Gem::Specification.new do |s|
   s.name = %q{shadow_puppet}
-  s.version = "0.5.0b7"
+  s.version = "0.5.0b8"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Jesse Newland", "Josh Nichols", "Eric Lindvall", "Lee Jones", "Will Farrington", "dreamcat4", "Patrick Schless", "Ches Martin", "Rob Lingle", "Scott Fleckenstein"]
-  s.date = %q{2011-07-05}
-  s.default_executable = %q{shadow_puppet}
+  s.authors = [%q{Jesse Newland}, %q{Josh Nichols}, %q{Eric Lindvall}, %q{Lee Jones}, %q{Will Farrington}, %q{dreamcat4}, %q{Patrick Schless}, %q{Ches Martin}, %q{Rob Lingle}, %q{Scott Fleckenstein}]
+  s.date = %q{2011-07-06}
   s.description = %q{A Ruby Puppet DSL}
   s.email = %q{jesse@railsmachine.com}
-  s.executables = ["shadow_puppet"]
+  s.executables = [%q{shadow_puppet}]
   s.extra_rdoc_files = [
     "LICENSE",
     "README.rdoc"
@@ -30,6 +29,7 @@ Gem::Specification.new do |s|
     "lib/shadow_puppet/core_ext.rb",
     "lib/shadow_puppet/manifest.rb",
     "lib/shadow_puppet/test.rb",
+    "shadow_puppet.gemspec",
     "spec/cli_spec.rb",
     "spec/fixtures/cli_spec_manifest.rb",
     "spec/fixtures/manifests.rb",
@@ -39,21 +39,11 @@ Gem::Specification.new do |s|
     "spec/type_spec.rb"
   ]
   s.homepage = %q{http://railsmachine.github.com/shadow_puppet}
-  s.rdoc_options = ["--inline-source", "--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/"]
-  s.require_paths = ["lib"]
+  s.rdoc_options = [%q{--inline-source}, %q{--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/}]
+  s.require_paths = [%q{lib}]
   s.rubyforge_project = %q{moonshine}
-  s.rubygems_version = %q{1.6.2}
+  s.rubygems_version = %q{1.8.5}
   s.summary = %q{A Ruby Puppet DSL}
-  s.test_files = [
-    "examples/foo.rb",
-    "spec/cli_spec.rb",
-    "spec/fixtures/cli_spec_manifest.rb",
-    "spec/fixtures/manifests.rb",
-    "spec/manifest_spec.rb",
-    "spec/spec_helper.rb",
-    "spec/test_spec.rb",
-    "spec/type_spec.rb"
-  ]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
