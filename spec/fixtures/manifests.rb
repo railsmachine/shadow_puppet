@@ -172,3 +172,16 @@ class CwdCoercionTest < ShadowPuppet::Manifest
   end
   recipe :test
 end
+
+class DuplicateResourceTest < ShadowPuppet::Manifest
+  def first_resource
+    exec 'true',
+      :cwd => Pathname.new('/tmp')
+  end
+
+  def second_resource
+    exec 'true',
+      :cwd => Pathname.new('/tmp'),
+      :logoutput => true
+  end
+end

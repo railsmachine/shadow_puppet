@@ -122,8 +122,8 @@ describe "A manifest" do
       end
 
       it "creates new resources" do
-        @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'foo', :command => 'true').exactly(1).times
-        @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'bar', :command => 'true').exactly(1).times
+        @manifest.should_receive(:add_resource).with(Puppet::Type::Exec, 'foo', :command => 'true').exactly(1).times
+        @manifest.should_receive(:add_resource).with(Puppet::Type::Exec, 'bar', :command => 'true').exactly(1).times
         @manifest.send(:evaluate_recipes)
       end
 
@@ -271,5 +271,32 @@ describe "A manifest" do
     it "returns true when executed" do
       @manifest.execute!.should be_true
     end
+  end
+
+  describe "with multiple calls to the same resource" do
+    before(:each) do
+      @manifest = DuplicateResourceTest.new
+    end
+
+    it "creates the resource the first time" do
+      @manifest.first_resource
+      @manifest.execs["true"].cwd.should == '/tmp'
+      @manifest.execs["true"].logoutput.should be_nil
+    end
+
+    it "updates the resource subsequent times" do
+      @manifest.first_resource
+      @manifest.second_resource
+      @manifest.execs["true"].cwd.should == '/tmp'
+      @manifest.execs["true"].logoutput.should be_true
+    end
+
+    it "can execute successfully" do
+      @manifest.first_resource
+      @manifest.second_resource
+      @manifest.execute!
+    end
+
+
   end
 end

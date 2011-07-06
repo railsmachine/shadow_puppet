@@ -206,11 +206,7 @@ module ShadowPuppet
         # remove the method rdoc placeholders
         remove_method(type.name) rescue nil
         define_method(type.name) do |*args|
-          if args && args.flatten.size == 1
-            reference(type, args.first)
-          else
-            new_resource(type, args.first, args.last)
-          end
+          resource_or_reference(type, *args)
         end
       end
     end
@@ -311,18 +307,42 @@ module ShadowPuppet
       catalog.clear
     end
 
+    def resource_or_reference(type, *args)
+      if args
+        if args.flatten.size == 1
+          reference(type, args.first)
+        elsif resource = existing_resource(type.name, args.first)
+          new_resource(type, args.first, args.last).parameters.each do |name, param|
+            resource[name] = param.value
+          end
+          resource
+        else
+          add_resource(type, args.first, args.last)
+        end
+      end
+    end
+
+    def existing_resource(type, title)
+      catalog.resources.detect { |r| r.type == type && r.title == title }
+    end
+
     # Create a reference to another Puppet Resource.
-    def reference(type, name, params = {})
-      Puppet::Parser::Resource::Reference.new(type.name.to_s.capitalize, name.to_s)
+    def reference(type, title, params = {})
+      Puppet::Parser::Resource::Reference.new(type.name.to_s.capitalize, title.to_s)
     end
 
     # Creates a new Puppet Resource and adds it to the Catalog.
+    def add_resource(type, title, params = {})
+      catalog.add_resource(new_resource(type, title, params))
+    end
+
     def new_resource(type, title, params = {})
       params.merge!({:title   => title})
       params.merge!({:catalog => catalog})
       params.merge!({:path    => ENV["PATH"]}) if type.name == :exec && params[:path].nil?
       params.merge!({:cwd     => params[:cwd].to_s}) unless params[:cwd].respond_to?(:=~)
-      catalog.add_resource(Puppet::Type.type(type.name).new(params))
+      Puppet::Type.type(type.name).new(params)
     end
+
   end
 end
