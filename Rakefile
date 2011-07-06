@@ -52,7 +52,7 @@ end
 
 task :default => :spec
 task :spec do
-  system("rspec --require ./spec/spec_helper.rb --backtrace --color --format d spec/*_spec.rb") || raise
+  system("rspec --debugger --require ./spec/spec_helper.rb --backtrace --color --format d spec/*_spec.rb") || raise
 end
 
 task :build => :cleanup do
