@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{shadow_puppet}
-  s.version = "0.5.0b8"
+  s.version = "0.5.0b9"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Jesse Newland}, %q{Josh Nichols}, %q{Eric Lindvall}, %q{Lee Jones}, %q{Will Farrington}, %q{dreamcat4}, %q{Patrick Schless}, %q{Ches Martin}, %q{Rob Lingle}, %q{Scott Fleckenstein}]
-  s.date = %q{2011-07-06}
+  s.date = %q{2011-07-07}
   s.description = %q{A Ruby Puppet DSL}
   s.email = %q{jesse@railsmachine.com}
   s.executables = [%q{shadow_puppet}]
