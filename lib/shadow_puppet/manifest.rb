@@ -337,7 +337,7 @@ module ShadowPuppet
     end
 
     def new_resource(type, title, params = {})
-      params.merge!({:title   => title})
+      params.merge!({:title   => (title.respond_to?(:=~) ? title : title.to_s)})
       params.merge!({:catalog => catalog})
       params.merge!({:path    => ENV["PATH"]}) if type.name == :exec && params[:path].nil?
       params.merge!({:cwd     => params[:cwd].to_s}) unless params[:cwd].respond_to?(:=~)

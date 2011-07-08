@@ -169,6 +169,8 @@ class CwdCoercionTest < ShadowPuppet::Manifest
     tmp = Pathname.new('/tmp')
     exec 'true',
       :cwd => tmp
+    file tmp + '/foo',
+      :ensure => :present
   end
   recipe :test
 end
