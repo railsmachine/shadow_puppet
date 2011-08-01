@@ -313,7 +313,7 @@ module ShadowPuppet
           reference(type, args.first)
         elsif resource = existing_resource(type.name, args.first)
           new_resource(type, args.first, args.last).parameters.each do |name, param|
-            resource[name] = param.value
+            resource[name] = param.value if param.value
           end
           resource
         else
