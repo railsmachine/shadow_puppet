@@ -93,6 +93,7 @@ module ShadowPuppet
       Puppet[:user] = Process.uid
       Puppet[:group] = Process.gid
       Puppet::Util::Log.newdestination(:console)
+      Puppet[:diff_args] = "-u"
 
       configure(config)
       @executed = false
