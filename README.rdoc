@@ -12,7 +12,6 @@ ShadowPuppet::Manifest.
 
 == Running the Test Suite
 
-    $ gem install rspec isolate-scenarios
-    $ rake spec
-    # To test against all supported versions of ActiveSupport:
-    $ isolate-scenarios rake spec
+    $ gem install bundler
+    $ bundle install
+    $ bundle exec rake spec

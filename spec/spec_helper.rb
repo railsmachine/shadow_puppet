@@ -1,5 +1,5 @@
-require 'isolate/scenarios'
-require 'isolate/now'
+require 'bundler'
+Bundler.require
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
 $LOAD_PATH.unshift(File.join(File.expand_path(File.dirname(__FILE__)), '..', 'lib'))
