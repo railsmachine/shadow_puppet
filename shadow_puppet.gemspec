@@ -5,13 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = "shadow_puppet"
-  s.version = "0.5.0.rc10"
+  s.version = "0.5.0"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jesse Newland", "Josh Nichols", "Eric Lindvall", "Lee Jones", "Will Farrington", "dreamcat4", "Patrick Schless", "Ches Martin", "Rob Lingle", "Scott Fleckenstein"]
   s.date = "2011-09-12"
   s.description = "A Ruby Puppet DSL"
-  s.email = "jesse@railsmachine.com"
+  s.email = "will@railsmachine.com"
   s.executables = ["shadow_puppet"]
   s.extra_rdoc_files = [
     "LICENSE",
