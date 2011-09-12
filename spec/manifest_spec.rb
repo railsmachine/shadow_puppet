@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/spec_helper.rb'
-
 describe "A manifest" do
 
   describe "when blank" do
@@ -39,7 +37,7 @@ describe "A manifest" do
       end
 
       it "applies our customizations to resources" do
-        @manifest.execs["foo"].path.should == ENV["PATH"]
+        @manifest.execs["foo"].path.should == ENV["PATH"].split(':')
       end
 
       describe "and then executing" do
@@ -124,18 +122,14 @@ describe "A manifest" do
       end
 
       it "creates new resources" do
-        @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'foo', :command => 'true').exactly(1).times
-        @manifest.should_receive(:new_resource).with(Puppet::Type::Exec, 'bar', :command => 'true').exactly(1).times
+        @manifest.should_receive(:add_resource).with(Puppet::Type::Exec, 'foo', :command => 'true').exactly(1).times
+        @manifest.should_receive(:add_resource).with(Puppet::Type::Exec, 'bar', :command => 'true').exactly(1).times
         @manifest.send(:evaluate_recipes)
       end
 
       it "creates new resources" do
         @manifest.send(:evaluate_recipes)
-        @manifest.puppet_resources[Puppet::Type::Exec].keys.sort.should == ['bar', 'foo']
-      end
-
-      it "can acess a flat array of resources" do
-        @manifest.send(:flat_resources).should == []
+        @manifest.execs.keys.sort.should == ['bar', 'foo']
       end
 
     end
@@ -221,22 +215,86 @@ describe "A manifest" do
 
   describe "when moonshine setup" do
 
+     before(:each) do
+       @manifest = MoonshineSetupManifest.new
+     end
+
+     it "include directories recipe" do
+       @manifest.class.recipes.map(&:first).should include(:directories)
+     end
+
+     it "calls specified methods" do
+       @manifest.should_receive(:directories)
+       @manifest.send(:evaluate_recipes)
+     end
+
+     it "returns true when executed" do
+       @manifest.execute.should be_true
+     end
+
+   end
+
+  describe "when dependency test manifest" do
     before(:each) do
-      @manifest = MoonshineSetupManifest.new
+      @manifest = DependencyTestManifest.new
     end
 
     it "include directories recipe" do
-      @manifest.class.recipes.map(&:first).should include(:directories)
+      @manifest.class.recipes.map(&:first).should include(:test)
     end
 
     it "calls specified methods" do
-      @manifest.should_receive(:directories)
+      @manifest.should_receive(:test)
       @manifest.send(:evaluate_recipes)
     end
 
     it "returns true when executed" do
-      @manifest.execute.should be_true
+      @manifest.execute!.should be_true
+    end
+  end
+
+  describe "when referencing files" do
+    before(:each) do
+      @manifest = StupidTestManifest.new
     end
 
+    it "returns true when executed " do
+      @manifest.execute!.should be_true
+    end
+  end
+
+  describe "when passing a pathname to cwd" do
+    before(:each) do
+      @manifest = CwdCoercionTest.new
+    end
+
+    it "returns true when executed" do
+      @manifest.execute!.should be_true
+    end
+  end
+
+  describe "with multiple calls to the same resource" do
+    before(:each) do
+      @manifest = DuplicateResourceTest.new
+    end
+
+    it "creates the resource the first time" do
+      @manifest.first_resource
+      @manifest.execs["true"].cwd.should == '/tmp'
+      @manifest.execs["true"].logoutput.should be_nil
+    end
+
+    it "updates the resource subsequent times" do
+      @manifest.first_resource
+      @manifest.second_resource
+      @manifest.execs["true"].cwd.should == '/tmp'
+      @manifest.execs["true"].logoutput.should be_true
+    end
+
+    it "can execute successfully" do
+      @manifest.first_resource
+      @manifest.second_resource
+      @manifest.execute!
+    end
   end
 end

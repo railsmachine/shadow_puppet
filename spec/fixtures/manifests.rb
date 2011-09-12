@@ -135,7 +135,54 @@ class TestHelpers < ShadowPuppet::Manifest
   def foo
     exec('foo', :command => 'true',:onlyif => 'test `hostname` == "foo"')
     package('bar',:ensure => :installed)
-    file('baz', :content => 'bar',:mode => '644',:owner => 'rails')
+    file('/tmp/baz', :content => 'bar',:mode => '644',:owner => 'rails', :before => package('bar'))
   end
 
+end
+
+class DependencyTestManifest < ShadowPuppet::Manifest
+  def test
+    exec('foobar', :command => 'true', :before => exec('barbaz'))
+    exec('trololol', :command => 'true', :alias => "winning")
+    exec('barbaz', :command => 'true', :require => [exec('foobar'), exec('winning')])
+
+  end
+  recipe :test
+end
+
+class StupidTestManifest < ShadowPuppet::Manifest
+  def my_recipe
+    exec 'my_command',
+      :command => 'true',
+      :require => [ file('/tmp/foo'), exec('jk') ]
+    file '/tmp/foo',
+      :content => 'true'
+    exec 'jk',
+      :command => 'true'
+  end
+  recipe :my_recipe
+end
+
+class CwdCoercionTest < ShadowPuppet::Manifest
+  def test
+    tmp = Pathname.new('/tmp')
+    exec 'true',
+      :cwd => tmp
+    file tmp + '/foo',
+      :ensure => :present
+  end
+  recipe :test
+end
+
+class DuplicateResourceTest < ShadowPuppet::Manifest
+  def first_resource
+    exec 'true',
+      :cwd => Pathname.new('/tmp')
+  end
+
+  def second_resource
+    exec 'true',
+      :cwd => Pathname.new('/tmp'),
+      :logoutput => true
+  end
 end

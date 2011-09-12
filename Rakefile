@@ -8,20 +8,21 @@ Jeweler::Tasks.new do |gem|
   gem.email = "jesse@railsmachine.com"
   gem.homepage = "http://railsmachine.github.com/shadow_puppet"
   gem.rubyforge_project = "moonshine"
-  gem.authors = ["Jesse Newland", "Josh Nichols", "Eric Lindvall", "Lee Jones", "dreamcat4", "Patrick Schless", "Ches Martin", "Rob Lingle", "Scott Fleckenstein", "Will Farrington"]
+  gem.authors = ["Jesse Newland", "Josh Nichols", "Eric Lindvall", "Lee Jones", "Will Farrington", "dreamcat4", "Patrick Schless", "Ches Martin", "Rob Lingle", "Scott Fleckenstein"]
 
-  gem.version = "0.4.1"
+  gem.version = "0.5.0.rc10"
 
-  gem.add_dependency('puppet', ["= 0.24.8"])
-  gem.add_dependency('facter', [">= 1.5.4"])
+  gem.add_dependency('puppet', ["2.7.3"])
   gem.add_dependency('highline', [">= 1.5.0"])
   gem.add_dependency('builder', [">= 2.1.2"])
   gem.add_dependency('activesupport', [">= 2.0.0"])
+  gem.add_dependency('i18n', [">= 0.5.0"])
 
   gem.rdoc_options << '--inline-source' << '--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/'
 
-  gem.add_development_dependency "rspec", ">= 0"
-  gem.add_development_dependency "isolate-scenarios", ">= 0"
+  gem.add_development_dependency "rspec", "~> 2.6.0"
+  gem.add_development_dependency "rspec-core", "~> 2.6.0"
+  gem.add_development_dependency "jeweler", "~> 1.6.2"
 
   # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
 end
@@ -46,9 +47,15 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.options << '--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/'
 end
 
+require 'rspec/core/rake_task'
+
+desc 'Default: run specs.'
 task :default => :spec
-task :spec do
-  system("spec --options spec/spec.opts spec/*_spec.rb") || raise
+
+desc "Run specs"
+RSpec::Core::RakeTask.new do |t|
+  t.pattern = "./spec/**/*_spec.rb" # don't need this, it's default.
+  # Put spec opts in a file named .rspec in root
 end
 
 task :build => :cleanup do

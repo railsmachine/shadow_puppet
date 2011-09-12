@@ -75,7 +75,7 @@ module ShadowPuppet
 
     class_inheritable_accessor :recipes
     write_inheritable_attribute(:recipes, [])
-    attr_reader :puppet_resources
+    attr_reader :catalog
     class_inheritable_accessor :__config__
     write_inheritable_attribute(:__config__, Hash.new)
 
@@ -97,9 +97,9 @@ module ShadowPuppet
 
       configure(config)
       @executed = false
-      @puppet_resources = Hash.new do |hash, key|
-        hash[key] = {}
-      end
+      @catalog = Puppet::Resource::Catalog.new
+      @catalog.host_config = false
+      @catalog.name = self.name
     end
 
     # Declares that the named method or methods will be called whenever
@@ -208,11 +208,7 @@ module ShadowPuppet
         # remove the method rdoc placeholders
         remove_method(type.name) rescue nil
         define_method(type.name) do |*args|
-          if args && args.flatten.size == 1
-            reference(type.name, args.first)
-          else
-            new_resource(type, args.first, args.last)
-          end
+          resource_or_reference(type, *args)
         end
       end
     end
@@ -269,9 +265,7 @@ module ShadowPuppet
     def graph_to(name, destination)
       evaluate_recipes
 
-      bucket             = export()
-      catalog            = bucket.to_catalog
-      relationship_graph = catalog.relationship_graph
+      relationship_graph = @catalog.relationship_graph
 
       graph = relationship_graph.to_dot_graph("name" => "#{name} Relationships".gsub(/\W+/, '_'))
       graph.options['label'] = "#{name} Relationships"
@@ -294,29 +288,6 @@ module ShadowPuppet
       @executed
     end
 
-    #An Array of all currently defined resources.
-    def flat_resources
-      a = []
-      @puppet_resources.each_value do |by_type|
-        by_type.each_value do |by_name|
-          a << by_name
-        end
-      end
-      a
-    end
-
-    #A Puppet::TransBucket of all defined resoureces.
-    def export
-      transportable_objects = flat_resources.dup.reject { |a| a.nil? }.flatten.collect do |obj|
-        obj.to_trans
-      end
-      b = Puppet::TransBucket.new(transportable_objects)
-      b.name = name
-      b.type = "class"
-
-      return b
-    end
-
     private
 
     #Evaluate the methods calls queued in self.recipes
@@ -333,68 +304,46 @@ module ShadowPuppet
 
     # Create a catalog of all contained Puppet Resources and apply that
     # catalog to the currently running system
-    def apply(bucket = nil)
-      bucket ||= export()
-      catalog = bucket.to_catalog
+    def apply
       catalog.apply
       catalog.clear
     end
 
-    def scope #:nodoc:
-      unless defined?(@scope)
-        # Set the code to something innocuous; we just need the
-        # scopes, not the interpreter.  Hackish, but true.
-        Puppet[:code] = " "
-        @interp = Puppet::Parser::Interpreter.new
-        require 'puppet/node'
-        @node = Puppet::Node.new(Facter.value(:hostname))
-        if env = Puppet[:environment] and env == ""
-          env = nil
+    def resource_or_reference(type, *args)
+      if args
+        if args.flatten.size == 1
+          reference(type, args.first)
+        elsif resource = existing_resource(type.name, args.first)
+          new_resource(type, args.first, args.last).parameters.each do |name, param|
+            resource[name] = param.value if param.value
+          end
+          resource
+        else
+          add_resource(type, args.first, args.last)
         end
-        @node.parameters = Facter.to_hash
-        @compile = Puppet::Parser::Compiler.new(@node, @interp.send(:parser, env))
-        @scope = @compile.topscope
       end
-      @scope
+    end
+
+    def existing_resource(type, title)
+      catalog.resources.detect { |r| r.type == type && r.title == title }
     end
 
     # Create a reference to another Puppet Resource.
-    def reference(type, title)
-      Puppet::Parser::Resource::Reference.new(:type => type.to_s, :title => title.to_s, :scope => scope)
+    def reference(type, title, params = {})
+      Puppet::Parser::Resource::Reference.new(type.name.to_s.capitalize, title.to_s)
     end
 
-    # Creates a new Puppet Resource.
-    def new_resource(type, name, params = {})
-      unless obj = @puppet_resources[type][name]
-        obj = Puppet::Parser::Resource.new(
-          :title => name,
-          :type => type.name,
-          :source => self,
-          :scope => scope
-        )
-        @puppet_resources[type][name] = obj
-      end
+    # Creates a new Puppet Resource and adds it to the Catalog.
+    def add_resource(type, title, params = {})
+      catalog.add_resource(new_resource(type, title, params))
+    end
 
-      case type.name
-      when :exec
-        param = Puppet::Parser::Resource::Param.new(
-          :name => :path,
-          :value => ENV["PATH"],
-          :source => self
-        )
-        obj.send(:set_parameter, param)
-      end
-
-      params.each do |param_name, param_value|
-        param = Puppet::Parser::Resource::Param.new(
-          :name => param_name,
-          :value => param_value,
-          :source => self
-        )
-        obj.send(:set_parameter, param)
-      end
-
-      obj
+    def new_resource(type, title, params = {})
+      params.merge!({:title   => title.to_s})
+      params.merge!({:catalog => catalog})
+      params.merge!({:path    => ENV["PATH"]}) if type.name == :exec && params[:path].nil?
+      params.merge!({:cwd     => params[:cwd].to_s}) if params[:cwd]
+      Puppet::Type.type(type.name).new(params)
     end
 
   end
