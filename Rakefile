@@ -12,17 +12,7 @@ Jeweler::Tasks.new do |gem|
 
   gem.version = "0.5.0"
 
-  gem.add_dependency('puppet', ["2.7.3"])
-  gem.add_dependency('highline', [">= 1.5.0"])
-  gem.add_dependency('builder', [">= 2.1.2"])
-  gem.add_dependency('activesupport', [">= 2.0.0"])
-  gem.add_dependency('i18n', [">= 0.5.0"])
-
   gem.rdoc_options << '--inline-source' << '--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/'
-
-  gem.add_development_dependency "rspec", "~> 2.6.0"
-  gem.add_development_dependency "rspec-core", "~> 2.6.0"
-  gem.add_development_dependency "jeweler", "~> 1.6.2"
 
   # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
 end

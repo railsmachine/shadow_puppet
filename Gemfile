@@ -1,12 +1,15 @@
 source :rubygems
 
-gem 'rake'
-gem 'jeweler'
-gem 'rspec'
+gem 'puppet', '2.7.3'
+gem 'highline', '>= 1.5.0'
+gem 'builder', '>= 2.1.2'
+gem 'activesupport', '>= 2.0.0'
 gem 'i18n', '>= 0.5.0'
-gem 'builder', '~> 2.1.2'
-gem 'highline', '~> 1.5.0'
-gem 'puppet', '= 2.7.3'
-gem 'activesupport', '3.0.10'
-gem 'ruby-debug', :platforms => :ruby_18
-gem 'ruby-debug19', :platforms => :ruby_19
+
+group :development do
+  gem "rspec", "~> 2.6.0"
+  gem "rspec-core", "~> 2.6.0"
+  gem "jeweler", "~> 1.6.2"
+  gem 'ruby-debug', :platforms => :ruby_18
+  gem 'ruby-debug19', :platforms => :ruby_19
+end
