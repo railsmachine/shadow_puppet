@@ -6,6 +6,8 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/inflector'
 require 'active_support/core_ext/class/inheritable_attributes'
 
+ActiveSupport::Deprecation.silenced = true
+
 # zomg epic hax
 if ActiveSupport::VERSION::MAJOR < 3
   if ActiveSupport::VERSION::TINY > 5
@@ -14,7 +16,6 @@ if ActiveSupport::VERSION::MAJOR < 3
     require 'active_support/core_ext/kernel/reporting'
     require 'active_support/core_ext/module/attribute_accessors'
     require 'active_support/deprecation'
-    ActiveSupport::Deprecation.silenced = true
   end
   require 'active_support/core_ext/string/inflections'
   unless String.included_modules.include?(ActiveSupport::CoreExtensions::String::Inflections)
