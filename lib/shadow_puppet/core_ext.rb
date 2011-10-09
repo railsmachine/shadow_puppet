@@ -6,7 +6,6 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/inflector'
 require 'active_support/core_ext/class/inheritable_attributes'
 
-ActiveSupport::Deprecation.silenced = true
 
 # zomg epic hax
 if ActiveSupport::VERSION::MAJOR < 3
@@ -29,6 +28,8 @@ if ActiveSupport::VERSION::MAJOR < 3
 else
   require 'active_support/core_ext/object/duplicable'
 end
+
+ActiveSupport::Deprecation.silenced = true
 
 class Hash #:nodoc:
   def deep_symbolize_keys
