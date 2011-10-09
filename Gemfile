@@ -7,6 +7,8 @@ gem 'activesupport', '>= 2.0.0'
 gem 'i18n', '>= 0.5.0'
 
 group :development do
+  gem "rake" 
+  gem "appraisal", :git => 'git://github.com/technicalpickles/appraisal.git'
   gem "rspec", "~> 2.6.0"
   gem "rspec-core", "~> 2.6.0"
   gem "jeweler", "~> 1.6.2"

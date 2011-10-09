@@ -1,4 +1,7 @@
-require 'rake'
+require 'rubygems'
+require 'bundler'
+Bundler.setup(:default, :development)
+require 'appraisal'
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
@@ -10,7 +13,7 @@ Jeweler::Tasks.new do |gem|
   gem.rubyforge_project = "moonshine"
   gem.authors = ["Jesse Newland", "Josh Nichols", "Eric Lindvall", "Lee Jones", "Will Farrington", "dreamcat4", "Patrick Schless", "Ches Martin", "Rob Lingle", "Scott Fleckenstein"]
 
-  gem.version = "0.5.2"
+  gem.version = "0.5.3.pre"
 
   gem.rdoc_options << '--inline-source' << '--webcvs=http://github.com/railsmachine/shadow_puppet/tree/master/'
 
