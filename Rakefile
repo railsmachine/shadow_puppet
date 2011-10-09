@@ -22,12 +22,7 @@ end
 Jeweler::GemcutterTasks.new
 
 
-begin
-  require 'rubygems'
-  require 'hanna/rdoctask'
-rescue LoadError
-  require 'rake/rdoctask'
-end
+require 'rdoc/task'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/shadow_puppet/*.rb')
   rdoc.rdoc_files.include('bin/shadow_puppet')
