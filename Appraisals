@@ -6,6 +6,10 @@ appraise "2.2" do
   gem "activesupport", "~> 2.2"
 end
 
+appraise "2.3.11" do
+  gem "activesupport", "= 2.3.11"
+end
+
 appraise "2.3" do
   gem "activesupport", "~> 2.3"
 end
