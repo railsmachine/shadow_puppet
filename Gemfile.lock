@@ -61,7 +61,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (>= 2.0.0)
+  activesupport (>= 2.2.0)
   appraisal!
   builder (>= 2.1.2)
   highline (>= 1.5.0)

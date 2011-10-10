@@ -3,7 +3,7 @@ source :rubygems
 gem 'puppet', '2.7.3'
 gem 'highline', '>= 1.5.0'
 gem 'builder', '>= 2.1.2'
-gem 'activesupport', '>= 2.0.0'
+gem 'activesupport', '>= 2.2.0'
 gem 'i18n', '>= 0.5.0'
 
 group :development do
