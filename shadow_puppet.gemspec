@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{shadow_puppet}
-  s.version = "0.5.2"
+  s.version = "0.6.0.pre"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jesse Newland", "Josh Nichols", "Eric Lindvall", "Lee Jones", "Will Farrington", "dreamcat4", "Patrick Schless", "Ches Martin", "Rob Lingle", "Scott Fleckenstein"]
-  s.date = %q{2011-09-20}
+  s.date = %q{2011-10-09}
   s.default_executable = %q{shadow_puppet}
   s.description = %q{A Ruby Puppet DSL}
   s.email = %q{will@railsmachine.com}
@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.files = [
     ".gitmodules",
     ".rspec",
+    "Appraisals",
     "Gemfile",
     "Gemfile.lock",
     "LICENSE",
@@ -34,6 +35,7 @@ Gem::Specification.new do |s|
     "lib/shadow_puppet/test.rb",
     "shadow_puppet.gemspec",
     "spec/cli_spec.rb",
+    "spec/core_ext_spec.rb",
     "spec/fixtures/cli_spec_manifest.rb",
     "spec/fixtures/manifests.rb",
     "spec/manifest_spec.rb",
@@ -55,22 +57,28 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<puppet>, ["= 2.7.3"])
       s.add_runtime_dependency(%q<highline>, [">= 1.5.0"])
       s.add_runtime_dependency(%q<builder>, [">= 2.1.2"])
-      s.add_runtime_dependency(%q<activesupport>, [">= 2.0.0"])
+      s.add_runtime_dependency(%q<activesupport>, [">= 2.2.0"])
       s.add_runtime_dependency(%q<i18n>, [">= 0.5.0"])
+      s.add_development_dependency(%q<rake>, [">= 0"])
+      s.add_development_dependency(%q<appraisal>, [">= 0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_development_dependency(%q<rspec-core>, ["~> 2.6.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.2"])
+      s.add_development_dependency(%q<rdoc>, [">= 0"])
       s.add_development_dependency(%q<ruby-debug>, [">= 0"])
       s.add_development_dependency(%q<ruby-debug19>, [">= 0"])
     else
       s.add_dependency(%q<puppet>, ["= 2.7.3"])
       s.add_dependency(%q<highline>, [">= 1.5.0"])
       s.add_dependency(%q<builder>, [">= 2.1.2"])
-      s.add_dependency(%q<activesupport>, [">= 2.0.0"])
+      s.add_dependency(%q<activesupport>, [">= 2.2.0"])
       s.add_dependency(%q<i18n>, [">= 0.5.0"])
+      s.add_dependency(%q<rake>, [">= 0"])
+      s.add_dependency(%q<appraisal>, [">= 0"])
       s.add_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_dependency(%q<rspec-core>, ["~> 2.6.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.2"])
+      s.add_dependency(%q<rdoc>, [">= 0"])
       s.add_dependency(%q<ruby-debug>, [">= 0"])
       s.add_dependency(%q<ruby-debug19>, [">= 0"])
     end
@@ -78,11 +86,14 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<puppet>, ["= 2.7.3"])
     s.add_dependency(%q<highline>, [">= 1.5.0"])
     s.add_dependency(%q<builder>, [">= 2.1.2"])
-    s.add_dependency(%q<activesupport>, [">= 2.0.0"])
+    s.add_dependency(%q<activesupport>, [">= 2.2.0"])
     s.add_dependency(%q<i18n>, [">= 0.5.0"])
+    s.add_dependency(%q<rake>, [">= 0"])
+    s.add_dependency(%q<appraisal>, [">= 0"])
     s.add_dependency(%q<rspec>, ["~> 2.6.0"])
     s.add_dependency(%q<rspec-core>, ["~> 2.6.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.2"])
+    s.add_dependency(%q<rdoc>, [">= 0"])
     s.add_dependency(%q<ruby-debug>, [">= 0"])
     s.add_dependency(%q<ruby-debug19>, [">= 0"])
   end
