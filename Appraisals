@@ -1,4 +1,4 @@
-# Think we can't support this one...
+# 2.1 lacks deep_merge, so no more love
 #appraise "2.1" do
 #  gem "activesupport", "~> 2.1.0"
 #end
@@ -7,9 +7,6 @@ appraise "2.2" do
   gem "activesupport", "~> 2.2.0"
 end
 
-appraise "2.3.11" do
-  gem "activesupport", "= 2.3.11"
-end
 
 appraise "2.3" do
   gem "activesupport", "~> 2.3.0"
