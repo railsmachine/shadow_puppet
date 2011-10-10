@@ -14,4 +14,4 @@ ShadowPuppet::Manifest.
 
     $ gem install bundler
     $ bundle install
-    $ bundle exec rake spec
+    $ bundle exec rake appraisal spec
