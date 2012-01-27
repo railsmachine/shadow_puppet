@@ -11,6 +11,7 @@ group :development do
   gem "appraisal", :git => 'git://github.com/technicalpickles/appraisal.git'
   gem "rspec", "~> 2.6.0"
   gem "rspec-core", "~> 2.6.0"
+  gem "test-unit"
   gem "jeweler", "~> 1.6.2"
   gem "rdoc"
 end

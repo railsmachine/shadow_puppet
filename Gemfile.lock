@@ -56,6 +56,7 @@ GEM
       ruby-debug-base19 (>= 0.11.19)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
+    test-unit (2.4.5)
 
 PLATFORMS
   ruby
@@ -74,3 +75,4 @@ DEPENDENCIES
   rspec-core (~> 2.6.0)
   ruby-debug
   ruby-debug19
+  test-unit
