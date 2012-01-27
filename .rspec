@@ -1,1 +1,1 @@
---debugger --require ./spec/spec_helper.rb --backtrace --color --format d
+--require ./spec/spec_helper.rb --backtrace --color --format d
