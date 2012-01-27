@@ -12,6 +12,17 @@ ShadowPuppet::Manifest.
 
 == Running the Test Suite
 
+First time:
+
     $ gem install bundler
     $ bundle install
+    $ bundle exec rake appraisal:install
+
+Run against all versions of activesupport:
+
     $ bundle exec rake appraisal spec
+
+
+Run against a specific one, ie 3.2:
+
+    $ bundle exec rake appraisal:3.2 spec
