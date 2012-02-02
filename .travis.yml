@@ -13,3 +13,6 @@ bundler_args: --without debug
 # quiet notifications for now
 notifications:
   email: false
+  irc:
+    channels:
+    - "irc.freenode.org#moonshine"
