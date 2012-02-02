@@ -35,14 +35,14 @@ GEM
     rbx-require-relative (0.0.5)
     rdoc (3.10)
       json (~> 1.4)
-    rspec (2.6.0)
-      rspec-core (~> 2.6.0)
-      rspec-expectations (~> 2.6.0)
-      rspec-mocks (~> 2.6.0)
-    rspec-core (2.6.4)
-    rspec-expectations (2.6.0)
+    rspec (2.8.0)
+      rspec-core (~> 2.8.0)
+      rspec-expectations (~> 2.8.0)
+      rspec-mocks (~> 2.8.0)
+    rspec-core (2.8.0)
+    rspec-expectations (2.8.0)
       diff-lcs (~> 1.1.2)
-    rspec-mocks (2.6.0)
+    rspec-mocks (2.8.0)
     ruby-debug (0.10.4)
       columnize (>= 0.1)
       ruby-debug-base (~> 0.10.4.0)
@@ -73,8 +73,8 @@ DEPENDENCIES
   puppet (= 2.7.3)
   rake
   rdoc
-  rspec (~> 2.6.0)
-  rspec-core (~> 2.6.0)
+  rspec (~> 2.8.0)
+  rspec-core (~> 2.8.0)
   ruby-debug
   ruby-debug19
   test-unit
