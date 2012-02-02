@@ -18,7 +18,8 @@ class Hash #:nodoc:
   end
 end
 
-if ActiveSupport::VERSION::MAJOR == 3 and ActiveSupport::VERSION::MINOR >= 2
+# backport inheritable accessors deprecated in 3.1 and removed in 3.2
+if ActiveSupport::VERSION::MAJOR == 3 and ActiveSupport::VERSION::MINOR >= 1
   class Class
     def class_inheritable_reader(*syms)
       syms.each do |sym|
