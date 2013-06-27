@@ -2,7 +2,7 @@ require 'active_support'
 require 'active_support/version'
 
 # ActiveSupport 3 doesn't automatically load core_ext anymore
-if ActiveSupport::VERSION::MAJOR == 3
+if ActiveSupport::VERSION::MAJOR >= 3
   require 'active_support/core_ext'
 end
 
@@ -19,7 +19,7 @@ class Hash #:nodoc:
 end
 
 # backport inheritable accessors deprecated in 3.1 and removed in 3.2
-if ActiveSupport::VERSION::MAJOR == 3 and ActiveSupport::VERSION::MINOR >= 1
+if (ActiveSupport::VERSION::MAJOR == 3 and ActiveSupport::VERSION::MINOR >= 1) or ActiveSupport::VERSION::MAJOR > 3
   class Class
     def class_inheritable_reader(*syms)
       syms.each do |sym|
