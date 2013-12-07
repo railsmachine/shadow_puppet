@@ -1,5 +1,29 @@
 describe "A manifest" do
 
+  describe "when successful" do
+
+    before(:each) do
+      @manifest = SuccessfulManifest.new
+    end
+
+    it "returns true when executed" do
+      @manifest.execute.should be_true
+    end
+
+  end
+
+  describe "with resouces that fail" do
+
+    before(:each) do
+      @manifest = FailureManifest.new
+    end
+
+    it "returns false when executed" do
+      @manifest.execute.should be_false
+    end
+
+  end
+
   describe "when blank" do
 
     before(:each) do
