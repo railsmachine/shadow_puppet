@@ -3,6 +3,7 @@ require 'active_support/version'
 
 # ActiveSupport 3 doesn't automatically load core_ext anymore
 if ActiveSupport::VERSION::MAJOR >= 3
+  require 'active_support/deprecation'
   require 'active_support/core_ext'
 end
 
