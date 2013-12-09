@@ -237,11 +237,11 @@ module ShadowPuppet
     def execute(force=false)
       return false if executed? && !force
       evaluate_recipes
-      apply
+      transaction = apply
     rescue Exception => e
       false
     else
-      true
+      not transaction.any_failed?
     ensure
       @executed = true
     end
@@ -253,11 +253,11 @@ module ShadowPuppet
     def execute!(force=false)
       return false if executed? && !force
       evaluate_recipes
-      apply
+      transaction = apply
     rescue Exception => e
       raise e
     else
-      true
+      not transaction.any_failed?
     ensure
       @executed = true
     end
@@ -305,8 +305,9 @@ module ShadowPuppet
     # Create a catalog of all contained Puppet Resources and apply that
     # catalog to the currently running system
     def apply
-      catalog.apply
+      transaction = catalog.apply
       catalog.clear
+      transaction
     end
 
     def resource_or_reference(type, *args)

@@ -1,6 +1,22 @@
 class BlankManifest < ShadowPuppet::Manifest
 end
 
+class SuccessfulManifest < ShadowPuppet::Manifest
+  recipe :foo
+
+  def foo
+    exec('foo', :command => 'true')
+  end
+end
+
+class FailureManifest < SuccessfulManifest
+  recipe :bar
+
+  def bar
+    exec('bar', :command => 'false')
+  end
+end
+
 #this does nothing
 class NoOpManifest < ShadowPuppet::Manifest
   def foo
