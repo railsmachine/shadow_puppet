@@ -1,6 +1,6 @@
-source :rubygems
+source 'https://rubygems.org'
 
-gem 'puppet', '2.7.18'
+gem 'puppet', '3.3.2'
 gem 'highline', '>= 1.5.0'
 gem 'builder', '>= 2.1.2'
 gem 'activesupport', '>= 2.2.0'

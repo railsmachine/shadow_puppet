@@ -305,7 +305,7 @@ describe "A manifest" do
     it "creates the resource the first time" do
       @manifest.first_resource
       @manifest.execs["true"].cwd.should == '/tmp'
-      @manifest.execs["true"].logoutput.should be_nil
+      @manifest.execs["true"].logoutput.should eql(:on_failure)
     end
 
     it "updates the resource subsequent times" do
