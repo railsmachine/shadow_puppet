@@ -37,7 +37,7 @@ end
 begin
   require 'optparse'
 
-  ShadowPuppetOptions = Struct.new(:graph, :noop)
+  ShadowPuppetOptions = Struct.new(:graph, :noop, :ignore)
   options = ShadowPuppetOptions.new
 
   opts = OptionParser.new do |opts|
@@ -94,6 +94,10 @@ begin
       options.noop = true
     end
 
+    opts.on("-i", "--ignore", "Always exit with 0 exit code even if a Puppet task fails") do
+      options.ignore = true
+    end
+
     opts.on_tail("-h", "--help", "Show this message") do
       puts opts
       exit
@@ -133,7 +137,7 @@ begin
   if options.graph
     manifest.graph_to(klass.classify, options.graph)
   else
-    if manifest.execute!
+    if manifest.execute! or options.ignore
       exit(0)
     else
       exit(1)
