@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "shadow_puppet"
-  s.version = "0.7.1"
+  s.version = "0.8.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jesse Newland", "Josh Nichols", "Eric Lindvall", "Lee Jones", "Will Farrington", "dreamcat4", "Patrick Schless", "Ches Martin", "Rob Lingle", "Scott Fleckenstein"]
-  s.date = "2013-12-20"
+  s.date = "2014-04-18"
   s.description = "A Ruby Puppet DSL"
   s.email = "will@railsmachine.com"
   s.executables = ["shadow_puppet"]
@@ -23,7 +23,6 @@ Gem::Specification.new do |s|
     ".travis.yml",
     "Appraisals",
     "Gemfile",
-    "Gemfile.lock",
     "LICENSE",
     "README.rdoc",
     "Rakefile",
@@ -66,7 +65,8 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<puppet>, ["= 3.3.2"])
+      s.add_runtime_dependency(%q<puppet>, ["~> 3.5.1"])
+      s.add_runtime_dependency(%q<facter>, ["< 2", "> 1.6"])
       s.add_runtime_dependency(%q<highline>, [">= 1.5.0"])
       s.add_runtime_dependency(%q<builder>, [">= 2.1.2"])
       s.add_runtime_dependency(%q<activesupport>, [">= 2.2.0"])
@@ -80,7 +80,8 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rdoc>, [">= 0"])
       s.add_development_dependency(%q<pry>, [">= 0"])
     else
-      s.add_dependency(%q<puppet>, ["= 3.3.2"])
+      s.add_dependency(%q<puppet>, ["~> 3.5.1"])
+      s.add_dependency(%q<facter>, ["< 2", "> 1.6"])
       s.add_dependency(%q<highline>, [">= 1.5.0"])
       s.add_dependency(%q<builder>, [">= 2.1.2"])
       s.add_dependency(%q<activesupport>, [">= 2.2.0"])
@@ -95,7 +96,8 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<pry>, [">= 0"])
     end
   else
-    s.add_dependency(%q<puppet>, ["= 3.3.2"])
+    s.add_dependency(%q<puppet>, ["~> 3.5.1"])
+    s.add_dependency(%q<facter>, ["< 2", "> 1.6"])
     s.add_dependency(%q<highline>, [">= 1.5.0"])
     s.add_dependency(%q<builder>, [">= 2.1.2"])
     s.add_dependency(%q<activesupport>, [">= 2.2.0"])
