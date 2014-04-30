@@ -1,4 +1,5 @@
 require 'shadow_puppet/core_ext'
+require 'shadow_puppet/version'
 
 # Silence puppet's dependencies warnings like:
 #   racc/parser.rb:27: warning: already initialized constant Racc_Runtime_Version

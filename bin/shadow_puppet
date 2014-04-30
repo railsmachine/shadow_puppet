@@ -28,6 +28,7 @@
 #expected to contain a class named Foo that inherits from
 #ShadowPuppet::Manifest. An instance of this class is created, and the
 #<tt>execute</tt> method is called. All output is printed to the console.
+require 'bundler'
 
 def unindent(string)
   indentation = string[/\A\s*/]
@@ -36,6 +37,7 @@ end
 
 begin
   require 'optparse'
+  require 'shadow_puppet/version'
 
   ShadowPuppetOptions = Struct.new(:graph, :noop, :ignore)
   options = ShadowPuppetOptions.new
@@ -45,6 +47,7 @@ begin
 
     opts.separator ""
     opts.separator "Specific options:"
+    opts.version = ShadowPuppet::VERSION
 
     opts.on("--tutorial", "A simple tutorial for usage") do
       puts unindent(<<-EOF)
