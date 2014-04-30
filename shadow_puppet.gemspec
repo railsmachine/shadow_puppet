@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{A Ruby Puppet DSL}
   spec.summary       = %q{A Ruby Puppet DSL}
   spec.homepage      = "https://github.com/railsmachine/shadow_puppet/"
-  spec.license       = "MIT"
+  spec.license       = "LGPL"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
