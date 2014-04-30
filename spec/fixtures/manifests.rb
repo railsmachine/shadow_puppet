@@ -202,3 +202,19 @@ class DuplicateResourceTest < ShadowPuppet::Manifest
       :logoutput => true
   end
 end
+
+class MultipleRecipeConfigurationTest < ShadowPuppet::Manifest
+  configure({
+    :foo => {:man => 'chu'},
+    :bar => {:food => 'yummy'}
+  })
+  recipe :foo, :bar
+
+  def foo(options = {})
+    exec 'foo', :command => 'true'
+  end
+
+  def bar(options = {})
+    exec 'bar', :command => 'true'
+  end
+end
