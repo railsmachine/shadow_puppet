@@ -161,8 +161,8 @@ describe "A manifest" do
     describe "when executed" do
 
       it "calls evaluate_recipes and apply" do
-        @manifest.should_receive(:evaluate_recipes)
-        @manifest.should_receive(:apply)
+        @manifest.should_receive(:evaluate_recipes, &@manifest.method(:evaluate_recipes))
+        @manifest.should_receive(:apply, &@manifest.method(:apply))
         @manifest.execute
       end
 

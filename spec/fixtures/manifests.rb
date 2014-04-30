@@ -58,7 +58,7 @@ class RequiresMetViaRecipeFromClassOfInstance < ShadowPuppet::Manifest
   def bar
     # other recipe stuff
   end
-  
+
   def foo
     recipe :bar
   end
@@ -184,7 +184,7 @@ class CwdCoercionTest < ShadowPuppet::Manifest
     tmp = Pathname.new('/tmp')
     exec 'true',
       :cwd => tmp
-    file tmp + '/foo',
+    file tmp.join('foo'),
       :ensure => :present
   end
   recipe :test
