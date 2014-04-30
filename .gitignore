@@ -2,3 +2,6 @@
 doc
 tmp
 Gemfile.lock
+.rvmrc
+.ruby-version
+.ruby-gemset
