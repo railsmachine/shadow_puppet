@@ -112,8 +112,8 @@ module ShadowPuppet
     # calls to recipe.
     def self.recipe(*methods)
       return nil if methods.nil? || methods == [] # TODO can probably replace with if methods.blank?
-      options = methods.extract_options!
       methods.each do |meth|
+        options = methods.extract_options!
         options = configuration[meth.to_sym] if options == {} # TODO can probably be replaced with options.blank?
         options ||= {}
         recipes << [meth.to_sym, options]

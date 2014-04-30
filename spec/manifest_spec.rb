@@ -321,4 +321,20 @@ describe "A manifest" do
       @manifest.execute!
     end
   end
+
+  describe "when configure is used to configure multiple recipes" do
+    before(:each) do
+      @manifest = MultipleRecipeConfigurationTest.new
+    end
+
+    it "passes the appropriate options to each recipe" do
+      @manifest.should_receive(:foo).with({'man' => 'chu'})
+      @manifest.should_receive(:bar).with({'food' => 'yummy'})
+      @manifest.send(:evaluate_recipes)
+    end
+
+    it "returns true when executed" do
+      @manifest.execute!.should be_true
+    end
+  end
 end
