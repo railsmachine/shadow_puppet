@@ -6,7 +6,10 @@ require 'shadow_puppet/version'
 Gem::Specification.new do |spec|
   spec.name          = "shadow_puppet"
   spec.version       = ShadowPuppet::VERSION
-  spec.authors       = ["Jesse Newland", "Josh Nichols", "Eric Lindvall", "Lee Jones", "Will Farrington", "dreamcat4", "Patrick Schless", "Ches Martin", "Rob Lingle", "Scott Fleckenstein", "Bryan Traywick"]
+  spec.authors       = ["Jesse Newland", "Josh Nichols", "Eric Lindvall",
+                        "Lee Jones", "Will Farrington", "dreamcat4",
+                        "Patrick Schless", "Ches Martin", "Rob Lingle",
+                        "Scott Fleckenstein", "Bryan Traywick"]
   spec.email         = ["bryan@railsmachine.com"]
   spec.description   = %q{A Ruby Puppet DSL}
   spec.summary       = %q{A Ruby Puppet DSL}
