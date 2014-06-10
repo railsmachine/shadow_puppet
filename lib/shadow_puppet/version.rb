@@ -1,3 +1,3 @@
 module ShadowPuppet
-  VERSION = "0.9.0"
+  VERSION = "0.9.1.alpha1"
 end
