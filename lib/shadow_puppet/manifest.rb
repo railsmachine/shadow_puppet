@@ -94,6 +94,7 @@ module ShadowPuppet
       Puppet[:group] = Process.gid
       Puppet::Util::Log.newdestination(:console)
       Puppet[:diff_args] = "-u"
+      Puppet.push_context(Puppet.base_context(Puppet.settings), "Update for application's settings")
 
       configure(config)
       @executed = false
