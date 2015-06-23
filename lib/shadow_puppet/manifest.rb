@@ -86,9 +86,13 @@ module ShadowPuppet
       if Process.uid == 0
         Puppet[:confdir] = File.expand_path("/etc/shadow_puppet")
         Puppet[:vardir] = File.expand_path("/var/shadow_puppet")
+        Puppet[:codedir] = File.expand_path("/etc/shadow_puppet/code")
+        Puppet[:logdir] = File.expand_path("/var/log/shadow_puppet")
       else
         Puppet[:confdir] = File.expand_path("~/.shadow_puppet")
         Puppet[:vardir] = File.expand_path("~/.shadow_puppet/var")
+        Puppet[:codedir] = File.expand_path("~/.shadow_puppet/code")
+        Puppet[:logdir] = File.expand_path("~/shadow_puppet/log")
       end
       Puppet[:user] = Process.uid
       Puppet[:group] = Process.gid
@@ -332,7 +336,7 @@ module ShadowPuppet
 
     # Create a reference to another Puppet Resource.
     def reference(type, title, params = {})
-      Puppet::Parser::Resource::Reference.new(type.name.to_s.capitalize, title.to_s)
+      Puppet::Resource.new(type.name.to_s.capitalize, title.to_s)
     end
 
     # Creates a new Puppet Resource and adds it to the Catalog.
