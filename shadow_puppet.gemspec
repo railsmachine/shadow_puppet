@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "puppet", "~> 4.4.1"
-  spec.add_runtime_dependency "activesupport", ">= 2.2.0"
+  spec.add_runtime_dependency "activesupport", ">= 2.2.0", "< 5.0"
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
